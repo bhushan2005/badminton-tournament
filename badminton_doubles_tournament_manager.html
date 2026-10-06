@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v1.1 - Doubles Badminton Manager</title>
+  <title>SmashMaster v1.2 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -95,579 +95,590 @@
 
 <body class="h-full flex flex-col bg-slate-950 text-slate-100 overflow-x-hidden select-none">
 
-  <!-- Top App Header Bar -->
-  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800/80 px-3 py-2 shadow-md">
-    <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
-      
-      <!-- Logo & App Title -->
-      <div class="flex items-center gap-2 min-w-0">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 via-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black shadow-md shadow-brand-500/20 shrink-0">
-          <i data-lucide="trophy" class="w-4 h-4 stroke-[2.5]"></i>
+<!-- Top App Header Bar -->
+<header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800/80 px-3 py-2 shadow-md">
+  <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
+
+    <!-- Logo & App Title -->
+    <div class="flex items-center gap-2 min-w-0">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 via-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black shadow-md shadow-brand-500/20 shrink-0">
+        <i data-lucide="trophy" class="w-4 h-4 stroke-[2.5]"></i>
+      </div>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1.5">
+          <h1 id="topHeaderTitle" class="text-sm font-extrabold font-heading text-white truncate leading-tight">
+            Shuttle Smashers
+          </h1>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v1.2</span>
         </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-1.5">
-            <h1 id="topHeaderTitle" class="text-sm font-extrabold font-heading text-white truncate leading-tight">
-              Shuttle Smashers
-            </h1>
-            <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v1.1</span>
-          </div>
-          <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
-            <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
-            <span id="topHeaderStatus">Roster Setup Mode</span>
-          </div>
+        <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
+          <span id="topHeaderStatus">Roster Setup Mode</span>
         </div>
       </div>
-
-      <!-- Quick Action Buttons -->
-      <div class="flex items-center gap-1 shrink-0">
-        <button onclick="exportComprehensiveExcel()" title="Export Excel Report" class="h-8 px-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg font-bold text-[11px] flex items-center gap-1 transition-all active:scale-95">
-          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
-          <span>Excel</span>
-        </button>
-
-        <button onclick="confirmResetTournament()" title="Reset Tournament" class="h-8 w-8 bg-slate-800 hover:bg-red-950/50 text-slate-400 hover:text-red-400 border border-slate-700 hover:border-red-800/50 rounded-lg flex items-center justify-center transition-all active:scale-95">
-          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-        </button>
-      </div>
-
     </div>
-  </header>
 
-  <!-- Main Scrollable App View -->
-  <main class="flex-1 max-w-lg w-full mx-auto px-3 py-3 pb-24 space-y-3.5">
+    <!-- Quick Action Buttons -->
+    <div class="flex items-center gap-1 shrink-0">
+      <button onclick="exportComprehensiveExcel()" title="Export Excel Report" class="h-8 px-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg font-bold text-[11px] flex items-center gap-1 transition-all active:scale-95">
+        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+        <span>Excel</span>
+      </button>
 
-    <!-- ================= VIEW 1: SETUP & ROSTER ================= -->
-    <section id="viewSetup" class="space-y-3">
-      
-      <!-- Amusing Tournament Header Box -->
-      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-xl p-3 shadow-lg space-y-2 relative overflow-hidden">
-        <div class="flex items-center justify-between">
+      <button onclick="confirmResetTournament()" title="Reset Tournament" class="h-8 w-8 bg-slate-800 hover:bg-red-950/50 text-slate-400 hover:text-red-400 border border-slate-700 hover:border-red-800/50 rounded-lg flex items-center justify-center transition-all active:scale-95">
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- Main Scrollable App View -->
+<main class="flex-1 max-w-lg w-full mx-auto px-3 py-3 pb-24 space-y-3.5">
+
+  <!-- ================= VIEW 1: SETUP & ROSTER ================= -->
+  <section id="viewSetup" class="space-y-3">
+
+    <!-- Amusing Tournament Header Box -->
+    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-xl p-3 shadow-lg space-y-2 relative overflow-hidden">
+      <div class="flex items-center justify-between">
           <span class="text-[9px] font-extrabold uppercase tracking-widest text-brand-400 bg-brand-950/80 border border-brand-800/60 px-2 py-0.5 rounded-full">
             Tournament Name
           </span>
-          <button onclick="generateAmusingName()" class="text-[11px] text-brand-400 font-bold flex items-center gap-1 hover:underline active:scale-95">
-            <i data-lucide="sparkles" class="w-3 h-3"></i> Shuffle Name
-          </button>
-        </div>
-        <h2 id="displayTournamentName" class="text-lg font-black font-heading text-white tracking-tight leading-snug">
-          Shuttle Smashers Showdown
-        </h2>
+        <button onclick="generateAmusingName()" class="text-[11px] text-brand-400 font-bold flex items-center gap-1 hover:underline active:scale-95">
+          <i data-lucide="sparkles" class="w-3 h-3"></i> Shuffle Name
+        </button>
       </div>
+      <h2 id="displayTournamentName" class="text-lg font-black font-heading text-white tracking-tight leading-snug">
+        Shuttle Smashers Showdown
+      </h2>
+    </div>
 
-      <!-- Courts & Hours Config -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
-        <div class="flex justify-between items-center">
-          <h3 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-400"></i> Date & Courts Setup
-          </h3>
-          <button onclick="addCourtRow()" class="text-[10px] bg-brand-950 hover:bg-brand-900 text-brand-400 border border-brand-800/60 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 transition-all active:scale-95">
-            <i data-lucide="plus" class="w-3 h-3"></i> Add Court
-          </button>
-        </div>
-
-        <div>
-          <label class="block text-[10px] font-semibold text-slate-400 mb-1">Tournament Date</label>
-          <input type="date" id="inputTourneyDate" onchange="tournamentState.date=this.value; saveToLocalStorage();" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-brand-500">
-        </div>
-
-        <!-- Court Cards List -->
-        <div id="courtListContainer" class="space-y-2"></div>
-
-        <!-- Mobile Capacity Estimate Banner -->
-        <div class="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5 text-[11px] space-y-1">
-          <div class="flex justify-between text-slate-300">
-            <span>Total Court Time:</span>
-            <span id="txtTotalCourtMinutes" class="font-bold text-white">240 mins</span>
-          </div>
-          <div class="flex justify-between text-slate-300">
-            <span>Avg Match Length:</span>
-            <span class="font-bold text-slate-200">8 mins (1 Set to 11)</span>
-          </div>
-          <div class="border-t border-slate-800/80 pt-1 flex justify-between font-bold text-[11px]">
-            <span class="text-brand-400">Estimated Capacity:</span>
-            <span id="txtMaxMatchesEstimate" class="text-brand-400 font-mono">30 matches</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Player Roster Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
-        <div class="flex justify-between items-center">
-          <h3 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="users" class="w-3.5 h-3.5 text-brand-400"></i> Player Roster
-            <span id="lblPlayerCount" class="bg-slate-800 text-brand-400 text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold">0</span>
-          </h3>
-          <button onclick="loadDemoPlayers()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-lg font-semibold active:scale-95">
-            Demo Players
-          </button>
-        </div>
-
-        <!-- Input Player Name & Male/Female Gender Pills -->
-        <div class="space-y-1.5">
-          <input type="text" id="inputPlayerName" placeholder="Enter player name..." onkeydown="if(event.key==='Enter') addPlayerFromInput();" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-brand-500">
-          
-          <div class="flex items-center gap-2">
-            <!-- Gender Selector (Male/Female Only) -->
-            <div class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-0.5 flex text-xs">
-              <button type="button" onclick="setGenderInput('Male')" id="genderPillMale" class="flex-1 py-1 rounded-md font-bold text-center transition-all bg-brand-500 text-slate-950 shadow-sm text-[11px]">♂ Male</button>
-              <button type="button" onclick="setGenderInput('Female')" id="genderPillFemale" class="flex-1 py-1 rounded-md font-bold text-center transition-all text-slate-400 text-[11px]">♀ Female</button>
-            </div>
-            <input type="hidden" id="selectPlayerGender" value="Male">
-
-            <button onclick="addPlayerFromInput()" class="h-8 bg-brand-600 hover:bg-brand-500 text-slate-950 font-extrabold px-3 rounded-lg text-xs flex items-center justify-center gap-1 shadow-md shadow-brand-600/20 active:scale-95 shrink-0">
-              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Add
-            </button>
-          </div>
-        </div>
-
-        <!-- Player Cards List -->
-        <div id="playerListContainer" class="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
-
-        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-[10px] text-slate-400 flex items-center justify-between font-medium">
-          <span>♂ Male: <strong id="cntMale" class="text-white">0</strong> | ♀ Female: <strong id="cntFemale" class="text-white">0</strong></span>
-          <span class="text-brand-400 font-bold">Min 4 Active Players</span>
-        </div>
-
-        <!-- Generate Tournament Schedule Button -->
-        <button id="btnGenerateFixtures" onclick="generateTournamentFixtures()" class="w-full h-10 bg-gradient-to-r from-brand-500 to-teal-500 hover:from-brand-400 hover:to-teal-400 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-brand-500/20 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]">
-          <i data-lucide="zap" class="w-4 h-4 fill-current"></i> Generate Tournament Schedule
+    <!-- Courts & Hours Config -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
+      <div class="flex justify-between items-center">
+        <h3 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-400"></i> Date & Courts Setup
+        </h3>
+        <button onclick="addCourtRow()" class="text-[10px] bg-brand-950 hover:bg-brand-900 text-brand-400 border border-brand-800/60 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 transition-all active:scale-95">
+          <i data-lucide="plus" class="w-3 h-3"></i> Add Court
         </button>
       </div>
 
-    </section>
+      <div>
+        <label class="block text-[10px] font-semibold text-slate-400 mb-1">Tournament Date</label>
+        <input type="date" id="inputTourneyDate" onchange="tournamentState.date=this.value; saveToLocalStorage();" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-brand-500">
+      </div>
 
+      <!-- Court Cards List -->
+      <div id="courtListContainer" class="space-y-2"></div>
 
-    <!-- ================= VIEW 2: MATCHES & SCORES ================= -->
-    <section id="viewFixtures" class="space-y-3 hidden">
-
-      <!-- Completion Banner -->
-      <div id="bannerTournamentCompleted" class="bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-amber-500/20 border border-amber-500/40 rounded-xl p-3 shadow-md hidden space-y-2">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-amber-500/30 text-amber-300 flex items-center justify-center shrink-0">
-            <i data-lucide="trophy" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h3 class="text-xs font-extrabold font-heading text-amber-300">Tournament Finished! 🎉</h3>
-            <p class="text-[10px] text-slate-300">All matches completed. Export report or add extra matches!</p>
-          </div>
+      <!-- Mobile Capacity Estimate Banner -->
+      <div class="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5 text-[11px] space-y-1">
+        <div class="flex justify-between text-slate-300">
+          <span>Total Court Time:</span>
+          <span id="txtTotalCourtMinutes" class="font-bold text-white">240 mins</span>
         </div>
-        <div class="grid grid-cols-2 gap-1.5">
-          <button onclick="addExtraRoundMatches()" class="bg-slate-800 hover:bg-slate-700 text-brand-400 font-bold py-2 rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
-            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Extra Round
-          </button>
-          <button onclick="exportComprehensiveExcel()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2 rounded-lg text-[11px] flex items-center justify-center gap-1 shadow-md active:scale-95">
-            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Export Excel
+        <div class="flex justify-between text-slate-300">
+          <span>Avg Match Length:</span>
+          <span class="font-bold text-slate-200">8 mins (1 Set to 11)</span>
+        </div>
+        <div class="border-t border-slate-800/80 pt-1 flex justify-between font-bold text-[11px]">
+          <span class="text-brand-400">Estimated Capacity:</span>
+          <span id="txtMaxMatchesEstimate" class="text-brand-400 font-mono">30 matches</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player Roster Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
+      <div class="flex justify-between items-center">
+        <h3 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="users" class="w-3.5 h-3.5 text-brand-400"></i> Player Roster
+          <span id="lblPlayerCount" class="bg-slate-800 text-brand-400 text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold">0</span>
+        </h3>
+        <button onclick="loadDemoPlayers()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-lg font-semibold active:scale-95">
+          Demo Players
+        </button>
+      </div>
+
+      <!-- Input Player Name & Male/Female Gender Pills -->
+      <div class="space-y-1.5">
+        <input type="text" id="inputPlayerName" placeholder="Enter player name..." onkeydown="if(event.key==='Enter') addPlayerFromInput();" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-brand-500">
+
+        <div class="flex items-center gap-2">
+          <!-- Gender Selector (Male/Female Only) -->
+          <div class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-0.5 flex text-xs">
+            <button type="button" onclick="setGenderInput('Male')" id="genderPillMale" class="flex-1 py-1 rounded-md font-bold text-center transition-all bg-brand-500 text-slate-950 shadow-sm text-[11px]">♂ Male</button>
+            <button type="button" onclick="setGenderInput('Female')" id="genderPillFemale" class="flex-1 py-1 rounded-md font-bold text-center transition-all text-slate-400 text-[11px]">♀ Female</button>
+          </div>
+          <input type="hidden" id="selectPlayerGender" value="Male">
+
+          <button onclick="addPlayerFromInput()" class="h-8 bg-brand-600 hover:bg-brand-500 text-slate-950 font-extrabold px-3 rounded-lg text-xs flex items-center justify-center gap-1 shadow-md shadow-brand-600/20 active:scale-95 shrink-0">
+            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Add
           </button>
         </div>
       </div>
 
-      <!-- Filter Controls Bar -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 shadow-md space-y-2">
-        <div class="flex items-center justify-between">
-          <h2 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="calendar" class="w-3.5 h-3.5 text-brand-400"></i> Match Schedule
-          </h2>
-          <div class="flex items-center gap-1">
-            <button onclick="addExtraRoundMatches()" title="Add Extra Matches if Finished Early" class="text-[10px] bg-brand-950 hover:bg-brand-900 text-brand-400 border border-brand-800/60 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 active:scale-95">
-              <i data-lucide="plus" class="w-3 h-3"></i> Add Extra Matches
-            </button>
-            <button onclick="openAddMidPlayerModal()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 active:scale-95">
-              <i data-lucide="user-plus" class="w-3 h-3"></i> Late Player
-            </button>
-          </div>
-        </div>
+      <!-- Player Cards List -->
+      <div id="playerListContainer" class="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
 
-        <div class="grid grid-cols-2 gap-1.5 text-xs">
-          <select id="filterCourtSelect" onchange="renderFixturesList()" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-lg px-2 py-1.5 text-[11px] font-medium focus:outline-none focus:border-brand-500">
-            <option value="ALL">All Courts</option>
-          </select>
-          <select id="filterStatusSelect" onchange="renderFixturesList()" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-lg px-2 py-1.5 text-[11px] font-medium focus:outline-none focus:border-brand-500">
-            <option value="ALL">All Statuses</option>
-            <option value="PENDING">Pending Only</option>
-            <option value="COMPLETED">Completed Only</option>
-          </select>
-        </div>
+      <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-[10px] text-slate-400 flex items-center justify-between font-medium">
+        <span>♂ Male: <strong id="cntMale" class="text-white">0</strong> | ♀ Female: <strong id="cntFemale" class="text-white">0</strong></span>
+        <span class="text-brand-400 font-bold">Min 4 Active Players</span>
       </div>
 
-      <!-- Match Cards Container -->
-      <div id="fixturesListContainer" class="space-y-2.5"></div>
+      <!-- Generate Tournament Schedule Button -->
+      <button id="btnGenerateFixtures" onclick="generateTournamentFixtures()" class="w-full h-10 bg-gradient-to-r from-brand-500 to-teal-500 hover:from-brand-400 hover:to-teal-400 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-brand-500/20 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]">
+        <i data-lucide="zap" class="w-4 h-4 fill-current"></i> Generate Tournament Schedule
+      </button>
+    </div>
 
-    </section>
+  </section>
 
 
-    <!-- ================= VIEW 3: ADVANCE MATCH SEARCH ================= -->
-    <section id="viewSearch" class="space-y-3 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
+  <!-- ================= VIEW 2: MATCHES & SCORES ================= -->
+  <section id="viewFixtures" class="space-y-3 hidden">
+
+    <!-- Completion Banner -->
+    <div id="bannerTournamentCompleted" class="bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-amber-500/20 border border-amber-500/40 rounded-xl p-3 shadow-md hidden space-y-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-amber-500/30 text-amber-300 flex items-center justify-center shrink-0">
+          <i data-lucide="trophy" class="w-5 h-5"></i>
+        </div>
         <div>
-          <h2 class="text-xs font-bold font-heading text-white flex items-center gap-1.5">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-brand-400"></i> Advance Match Search
-          </h2>
-          <p class="text-[10px] text-slate-400">Tap 1 to 4 available players below to quickly find their upcoming match!</p>
+          <h3 class="text-xs font-extrabold font-heading text-amber-300">Tournament Finished! 🎉</h3>
+          <p class="text-[10px] text-slate-300">All matches completed. Export report or add extra matches!</p>
         </div>
+      </div>
+      <div class="grid grid-cols-2 gap-1.5">
+        <button onclick="addExtraRoundMatches()" class="bg-slate-800 hover:bg-slate-700 text-brand-400 font-bold py-2 rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
+          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Extra Round
+        </button>
+        <button onclick="exportComprehensiveExcel()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2 rounded-lg text-[11px] flex items-center justify-center gap-1 shadow-md active:scale-95">
+          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Export Excel
+        </button>
+      </div>
+    </div>
 
-        <!-- Multi-Select Player Chips -->
-        <div id="searchPlayerChips" class="flex flex-wrap gap-1 p-2 bg-slate-950 border border-slate-800 rounded-lg min-h-[44px]"></div>
+    <!-- Matches Per Player Summary -->
+    <div id="matchesPerPlayerSummary" class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 shadow-md space-y-2">
+      <div class="flex items-center justify-between">
+        <h2 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="users-round" class="w-3.5 h-3.5 text-brand-400"></i> Matches Per Player
+        </h2>
+        <span id="matchesPerPlayerTotal" class="text-[9px] text-slate-500 font-semibold">0 players</span>
+      </div>
+      <div id="matchesPerPlayerList" class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] leading-4"></div>
+    </div>
 
-        <div class="flex items-center justify-between text-[10px] text-slate-400">
-          <span id="searchMatchCount">Select players above</span>
-          <button onclick="clearSearchSelection()" class="text-brand-400 font-semibold hover:underline">Clear Selection</button>
+    <!-- Filter Controls Bar -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 shadow-md space-y-2">
+      <div class="flex items-center justify-between">
+        <h2 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-brand-400"></i> Match Schedule
+        </h2>
+        <div class="flex items-center gap-1">
+          <button onclick="addExtraRoundMatches()" title="Add Extra Matches if Finished Early" class="text-[10px] bg-brand-950 hover:bg-brand-900 text-brand-400 border border-brand-800/60 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 active:scale-95">
+            <i data-lucide="plus" class="w-3 h-3"></i> Add Extra Matches
+          </button>
+          <button onclick="openAddMidPlayerModal()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 active:scale-95">
+            <i data-lucide="user-plus" class="w-3 h-3"></i> Late Player
+          </button>
         </div>
       </div>
 
-      <!-- Search Results Matches -->
-      <div id="searchResultsContainer" class="space-y-2.5"></div>
-    </section>
+      <div class="grid grid-cols-2 gap-1.5 text-xs">
+        <select id="filterCourtSelect" onchange="renderFixturesList()" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-lg px-2 py-1.5 text-[11px] font-medium focus:outline-none focus:border-brand-500">
+          <option value="ALL">All Courts</option>
+        </select>
+        <select id="filterStatusSelect" onchange="renderFixturesList()" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-lg px-2 py-1.5 text-[11px] font-medium focus:outline-none focus:border-brand-500">
+          <option value="ALL">All Statuses</option>
+          <option value="PENDING">Pending Only</option>
+          <option value="COMPLETED">Completed Only</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Match Cards Container -->
+    <div id="fixturesListContainer" class="space-y-2.5"></div>
+
+  </section>
 
 
-    <!-- ================= VIEW 4: STANDINGS & PODIUM ================= -->
-    <section id="viewStandings" class="space-y-3 hidden">
-      
-      <!-- Top Performers Podium Banner -->
-      <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-xl p-3 shadow-lg space-y-2">
-        <div class="flex items-center justify-between">
-          <h3 class="text-[11px] font-bold font-heading text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400"></i> Winners Podium
-          </h3>
-          <span class="text-[9px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.2 rounded-full border border-amber-500/30">
+  <!-- ================= VIEW 3: ADVANCE MATCH SEARCH ================= -->
+  <section id="viewSearch" class="space-y-3 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
+      <div>
+        <h2 class="text-xs font-bold font-heading text-white flex items-center gap-1.5">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-brand-400"></i> Advance Match Search
+        </h2>
+        <p class="text-[10px] text-slate-400">Tap 1 to 4 available players below to quickly find their upcoming match!</p>
+      </div>
+
+      <!-- Multi-Select Player Chips -->
+      <div id="searchPlayerChips" class="flex flex-wrap gap-1 p-2 bg-slate-950 border border-slate-800 rounded-lg min-h-[44px]"></div>
+
+      <div class="flex items-center justify-between text-[10px] text-slate-400">
+        <span id="searchMatchCount">Select players above</span>
+        <button onclick="clearSearchSelection()" class="text-brand-400 font-semibold hover:underline">Clear Selection</button>
+      </div>
+    </div>
+
+    <!-- Search Results Matches -->
+    <div id="searchResultsContainer" class="space-y-2.5"></div>
+  </section>
+
+
+  <!-- ================= VIEW 4: STANDINGS & PODIUM ================= -->
+  <section id="viewStandings" class="space-y-3 hidden">
+
+    <!-- Top Performers Podium Banner -->
+    <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-xl p-3 shadow-lg space-y-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-[11px] font-bold font-heading text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400"></i> Winners Podium
+        </h3>
+        <span class="text-[9px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.2 rounded-full border border-amber-500/30">
             Live Rankings
           </span>
-        </div>
+      </div>
 
-        <!-- Top Men & Women Grid -->
-        <div class="grid grid-cols-1 gap-2">
-          <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 space-y-1">
-            <div class="text-[9px] font-extrabold uppercase text-blue-400 flex items-center gap-1">
-              <i data-lucide="mars" class="w-3 h-3"></i> Top 2 Men
-            </div>
-            <div id="topMaleContainer" class="space-y-1"></div>
+      <!-- Top Men & Women Grid -->
+      <div class="grid grid-cols-1 gap-2">
+        <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 space-y-1">
+          <div class="text-[9px] font-extrabold uppercase text-blue-400 flex items-center gap-1">
+            <i data-lucide="mars" class="w-3 h-3"></i> Top 2 Men
           </div>
+          <div id="topMaleContainer" class="space-y-1"></div>
+        </div>
 
-          <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 space-y-1">
-            <div class="text-[9px] font-extrabold uppercase text-pink-400 flex items-center gap-1">
-              <i data-lucide="venus" class="w-3 h-3"></i> Top 2 Women
-            </div>
-            <div id="topFemaleContainer" class="space-y-1"></div>
+        <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 space-y-1">
+          <div class="text-[9px] font-extrabold uppercase text-pink-400 flex items-center gap-1">
+            <i data-lucide="venus" class="w-3 h-3"></i> Top 2 Women
           </div>
+          <div id="topFemaleContainer" class="space-y-1"></div>
         </div>
       </div>
-
-      <!-- Full Player Leaderboard Stacked Cards -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
-        <div class="flex items-center justify-between">
-          <h3 class="text-[11px] font-bold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="list-ordered" class="w-3.5 h-3.5 text-brand-400"></i> Overall Standings
-          </h3>
-          <span class="text-[9px] text-slate-400 font-mono">2 Pts / Win</span>
-        </div>
-
-        <div id="mobileLeaderboardCards" class="space-y-1.5"></div>
-      </div>
-    </section>
-
-
-    <!-- ================= VIEW 5: EXPORT & HISTORY ================= -->
-    <section id="viewExport" class="space-y-3 hidden">
-      
-      <!-- Excel Download Featured Card -->
-      <div class="bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-            <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h2 class="text-sm font-extrabold font-heading text-white">Multi-Tab Excel Workbook</h2>
-            <p class="text-[10px] text-slate-300">3 Sheets: Summary & Winners, Leaderboard, Match Logs.</p>
-          </div>
-        </div>
-
-        <button onclick="exportComprehensiveExcel()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
-          <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Excel Report (.xlsx)
-        </button>
-      </div>
-
-      <!-- JSON Backup Export & Import Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
-        <div class="flex items-center gap-1.5">
-          <i data-lucide="database" class="w-4 h-4 text-blue-400"></i>
-          <h3 class="text-xs font-bold font-heading text-white">Backup & Restore File (JSON)</h3>
-        </div>
-        <p class="text-[10px] text-slate-400">Save complete tournament state into a `.json` file or restore from a saved file on another device.</p>
-
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="exportJSONBackup()" class="h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
-            <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> Export File
-          </button>
-          
-          <label class="h-9 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 cursor-pointer active:scale-95">
-            <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> Import File
-            <input type="file" id="importJsonInput" accept=".json" onchange="importJSONBackup(event)" class="hidden">
-          </label>
-        </div>
-      </div>
-
-      <!-- Tournament History Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-1.5">
-            <i data-lucide="history" class="w-4 h-4 text-amber-400"></i>
-            <h3 class="text-xs font-bold font-heading text-white">Tournament History</h3>
-          </div>
-          <button onclick="saveCurrentToHistory()" class="text-[10px] bg-brand-950 text-brand-400 border border-brand-800/60 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 active:scale-95">
-            <i data-lucide="bookmark" class="w-3 h-3"></i> Archive Current
-          </button>
-        </div>
-
-        <div id="historyListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
-      </div>
-
-      <!-- WhatsApp Text Export Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
-        <div class="flex items-center gap-1.5">
-          <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
-          <h3 class="text-xs font-bold font-heading text-white">WhatsApp Text Format</h3>
-        </div>
-
-        <textarea id="txtWhatsAppExport" readonly class="w-full h-32 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-[11px] font-mono text-slate-300 focus:outline-none resize-none"></textarea>
-
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="copyWhatsAppText()" class="h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Text
-          </button>
-          <button onclick="shareDirectWhatsApp()" class="h-9 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold rounded-lg text-[11px] flex items-center justify-center gap-1 shadow-md active:scale-95">
-            <i data-lucide="send" class="w-3.5 h-3.5"></i> Direct WhatsApp
-          </button>
-        </div>
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- Fixed Mobile Bottom Navigation Bar -->
-  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/80 px-2 py-1.5 shadow-2xl">
-    <div class="max-w-lg mx-auto flex items-center justify-around">
-      
-      <button onclick="switchMobileView('viewSetup')" id="navBtnSetup" class="mobile-nav-btn mobile-tab-active flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
-        <i data-lucide="settings" class="w-4 h-4"></i>
-        <span class="text-[9px] font-bold">Setup</span>
-      </button>
-
-      <button onclick="switchMobileView('viewFixtures')" id="navBtnFixtures" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
-        <i data-lucide="calendar" class="w-4 h-4"></i>
-        <span class="text-[9px] font-bold">Matches</span>
-      </button>
-
-      <button onclick="switchMobileView('viewSearch')" id="navBtnSearch" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
-        <i data-lucide="search" class="w-4 h-4"></i>
-        <span class="text-[9px] font-bold">Search</span>
-      </button>
-
-      <button onclick="switchMobileView('viewStandings')" id="navBtnStandings" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
-        <i data-lucide="award" class="w-4 h-4"></i>
-        <span class="text-[9px] font-bold">Podium</span>
-      </button>
-
-      <button onclick="switchMobileView('viewExport')" id="navBtnExport" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
-        <i data-lucide="share-2" class="w-4 h-4"></i>
-        <span class="text-[9px] font-bold">Export</span>
-      </button>
-
     </div>
-  </nav>
 
-
-  <!-- MODAL: MID-TOURNAMENT ADD PLAYER BOTTOM SHEET -->
-  <div id="modalMidPlayer" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center">
-    <div class="bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 shadow-2xl animate-sheet-up">
-      <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto sm:hidden mb-1"></div>
-      
-      <div class="flex justify-between items-center">
-        <h3 class="text-sm font-bold font-heading text-white flex items-center gap-1.5">
-          <i data-lucide="user-plus" class="w-4 h-4 text-brand-400"></i> Add Mid-Tournament Player
+    <!-- Full Player Leaderboard Stacked Cards -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-[11px] font-bold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="list-ordered" class="w-3.5 h-3.5 text-brand-400"></i> Overall Standings
         </h3>
-        <button onclick="closeAddMidPlayerModal()" class="text-slate-400 hover:text-white p-1">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <span class="text-[9px] text-slate-400 font-mono">2 Pts / Win</span>
       </div>
 
-      <p class="text-[11px] text-slate-400">
-        Adding a late player will preserve finished game scores and re-balance remaining matches.
-      </p>
+      <div id="mobileLeaderboardCards" class="space-y-1.5"></div>
+    </div>
+  </section>
 
-      <div class="space-y-2">
-        <div>
-          <label class="block text-[10px] font-semibold text-slate-300 mb-1">Player Name</label>
-          <input type="text" id="inputMidPlayerName" placeholder="Full name..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-brand-500">
+
+  <!-- ================= VIEW 5: EXPORT & HISTORY ================= -->
+  <section id="viewExport" class="space-y-3 hidden">
+
+    <!-- Excel Download Featured Card -->
+    <div class="bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+          <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
         </div>
-        
         <div>
-          <label class="block text-[10px] font-semibold text-slate-300 mb-1">Gender</label>
-          <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5 text-xs">
-            <button type="button" onclick="setMidGenderInput('Male')" id="midGenderMale" class="flex-1 py-1.5 rounded-md font-bold bg-brand-500 text-slate-950 text-[11px]">♂ Male</button>
-            <button type="button" onclick="setMidGenderInput('Female')" id="midGenderFemale" class="flex-1 py-1.5 rounded-md font-bold text-slate-400 text-[11px]">♀ Female</button>
-          </div>
-          <input type="hidden" id="selectMidPlayerGender" value="Male">
+          <h2 class="text-sm font-extrabold font-heading text-white">Multi-Tab Excel Workbook</h2>
+          <p class="text-[10px] text-slate-300">3 Sheets: Summary & Winners, Leaderboard, Match Logs.</p>
         </div>
       </div>
 
-      <div class="flex gap-2 pt-1">
-        <button onclick="closeAddMidPlayerModal()" class="flex-1 bg-slate-800 text-slate-300 font-bold py-2.5 rounded-xl text-xs">
-          Cancel
+      <button onclick="exportComprehensiveExcel()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Excel Report (.xlsx)
+      </button>
+    </div>
+
+    <!-- JSON Backup Export & Import Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="database" class="w-4 h-4 text-blue-400"></i>
+        <h3 class="text-xs font-bold font-heading text-white">Backup & Restore File (JSON)</h3>
+      </div>
+      <p class="text-[10px] text-slate-400">Save complete tournament state into a `.json` file or restore from a saved file on another device.</p>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="exportJSONBackup()" class="h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
+          <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> Export File
         </button>
-        <button onclick="confirmAddMidPlayer()" class="flex-1 bg-brand-600 text-slate-950 font-black py-2.5 rounded-xl text-xs">
-          Add & Regenerate
+
+        <label class="h-9 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 cursor-pointer active:scale-95">
+          <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> Import File
+          <input type="file" id="importJsonInput" accept=".json" onchange="importJSONBackup(event)" class="hidden">
+        </label>
+      </div>
+    </div>
+
+    <!-- Tournament History Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="history" class="w-4 h-4 text-amber-400"></i>
+          <h3 class="text-xs font-bold font-heading text-white">Tournament History</h3>
+        </div>
+        <button onclick="saveCurrentToHistory()" class="text-[10px] bg-brand-950 text-brand-400 border border-brand-800/60 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1 active:scale-95">
+          <i data-lucide="bookmark" class="w-3 h-3"></i> Archive Current
         </button>
       </div>
+
+      <div id="historyListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
+    </div>
+
+    <!-- WhatsApp Text Export Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+        <h3 class="text-xs font-bold font-heading text-white">WhatsApp Text Format</h3>
+      </div>
+
+      <textarea id="txtWhatsAppExport" readonly class="w-full h-32 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-[11px] font-mono text-slate-300 focus:outline-none resize-none"></textarea>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="copyWhatsAppText()" class="h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Text
+        </button>
+        <button onclick="shareDirectWhatsApp()" class="h-9 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold rounded-lg text-[11px] flex items-center justify-center gap-1 shadow-md active:scale-95">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i> Direct WhatsApp
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- Fixed Mobile Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/80 px-2 py-1.5 shadow-2xl">
+  <div class="max-w-lg mx-auto flex items-center justify-around">
+
+    <button onclick="switchMobileView('viewSetup')" id="navBtnSetup" class="mobile-nav-btn mobile-tab-active flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
+      <i data-lucide="settings" class="w-4 h-4"></i>
+      <span class="text-[9px] font-bold">Setup</span>
+    </button>
+
+    <button onclick="switchMobileView('viewFixtures')" id="navBtnFixtures" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
+      <i data-lucide="calendar" class="w-4 h-4"></i>
+      <span class="text-[9px] font-bold">Matches</span>
+    </button>
+
+    <button onclick="switchMobileView('viewSearch')" id="navBtnSearch" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
+      <i data-lucide="search" class="w-4 h-4"></i>
+      <span class="text-[9px] font-bold">Search</span>
+    </button>
+
+    <button onclick="switchMobileView('viewStandings')" id="navBtnStandings" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
+      <i data-lucide="award" class="w-4 h-4"></i>
+      <span class="text-[9px] font-bold">Podium</span>
+    </button>
+
+    <button onclick="switchMobileView('viewExport')" id="navBtnExport" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
+      <i data-lucide="share-2" class="w-4 h-4"></i>
+      <span class="text-[9px] font-bold">Export</span>
+    </button>
+
+  </div>
+</nav>
+
+
+<!-- MODAL: MID-TOURNAMENT ADD PLAYER BOTTOM SHEET -->
+<div id="modalMidPlayer" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center">
+  <div class="bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 shadow-2xl animate-sheet-up">
+    <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto sm:hidden mb-1"></div>
+
+    <div class="flex justify-between items-center">
+      <h3 class="text-sm font-bold font-heading text-white flex items-center gap-1.5">
+        <i data-lucide="user-plus" class="w-4 h-4 text-brand-400"></i> Add Mid-Tournament Player
+      </h3>
+      <button onclick="closeAddMidPlayerModal()" class="text-slate-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <p class="text-[11px] text-slate-400">
+      Adding a late player will preserve finished game scores and re-balance remaining matches.
+    </p>
+
+    <div class="space-y-2">
+      <div>
+        <label class="block text-[10px] font-semibold text-slate-300 mb-1">Player Name</label>
+        <input type="text" id="inputMidPlayerName" placeholder="Full name..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-brand-500">
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-semibold text-slate-300 mb-1">Gender</label>
+        <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5 text-xs">
+          <button type="button" onclick="setMidGenderInput('Male')" id="midGenderMale" class="flex-1 py-1.5 rounded-md font-bold bg-brand-500 text-slate-950 text-[11px]">♂ Male</button>
+          <button type="button" onclick="setMidGenderInput('Female')" id="midGenderFemale" class="flex-1 py-1.5 rounded-md font-bold text-slate-400 text-[11px]">♀ Female</button>
+        </div>
+        <input type="hidden" id="selectMidPlayerGender" value="Male">
+      </div>
+    </div>
+
+    <div class="flex gap-2 pt-1">
+      <button onclick="closeAddMidPlayerModal()" class="flex-1 bg-slate-800 text-slate-300 font-bold py-2.5 rounded-xl text-xs">
+        Cancel
+      </button>
+      <button onclick="confirmAddMidPlayer()" class="flex-1 bg-brand-600 text-slate-950 font-black py-2.5 rounded-xl text-xs">
+        Add & Regenerate
+      </button>
     </div>
   </div>
+</div>
 
 
-  <script>
-    const AMUSING_NAMES = [
-      "Shuttle Smashers Showdown",
-      "The Net Ninjas Rumble",
-      "Feather Frenzy Clash",
-      "Lord of the Rallies Cup",
-      "Drop Shot Demons League",
-      "Smash & Dash Bash",
-      "King of the Clear Court",
-      "The Fault in Our Serves"
-    ];
+<script>
+  const AMUSING_NAMES = [
+    "Shuttle Smashers Showdown",
+    "The Net Ninjas Rumble",
+    "Feather Frenzy Clash",
+    "Lord of the Rallies Cup",
+    "Drop Shot Demons League",
+    "Smash & Dash Bash",
+    "King of the Clear Court",
+    "The Fault in Our Serves"
+  ];
 
-    // Get Today's Date String (YYYY-MM-DD)
-    function getTodayISO() {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd}`;
+  // Get Today's Date String (YYYY-MM-DD)
+  function getTodayISO() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  let tournamentState = {
+    version: '1.2',
+    name: AMUSING_NAMES[0],
+    date: getTodayISO(),
+    courts: [
+      { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00' },
+      { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00' }
+    ],
+    players: [],
+    matches: [],
+    isGenerated: false
+  };
+
+  let selectedSearchPlayerIds = [];
+
+  // On Load Window Initialization
+  window.onload = function() {
+    lucide.createIcons();
+
+    loadFromLocalStorage();
+
+    if (!tournamentState.date) {
+      tournamentState.date = getTodayISO();
     }
+    document.getElementById('inputTourneyDate').value = tournamentState.date;
 
-    let tournamentState = {
-      version: '1.1',
-      name: AMUSING_NAMES[0],
-      date: getTodayISO(),
-      courts: [
-        { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00' },
-        { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00' }
-      ],
-      players: [],
-      matches: [],
-      isGenerated: false
+    renderCourtInputs();
+    updatePlayerListUI();
+    calculateCourtEstimates();
+    renderFixturesList();
+    renderStandingsData();
+    renderSearchChips();
+    renderHistoryList();
+    checkTournamentCompletion();
+  };
+
+  function generateAmusingName() {
+    const idx = Math.floor(Math.random() * AMUSING_NAMES.length);
+    tournamentState.name = AMUSING_NAMES[idx];
+    document.getElementById('displayTournamentName').innerText = tournamentState.name;
+    document.getElementById('topHeaderTitle').innerText = tournamentState.name;
+    saveToLocalStorage();
+  }
+
+  function switchMobileView(viewId) {
+    ['viewSetup', 'viewFixtures', 'viewSearch', 'viewStandings', 'viewExport'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    });
+
+    document.getElementById(viewId).classList.remove('hidden');
+
+    document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+      btn.classList.remove('mobile-tab-active');
+      btn.classList.add('text-slate-400');
+    });
+
+    const navMap = {
+      'viewSetup': 'navBtnSetup',
+      'viewFixtures': 'navBtnFixtures',
+      'viewSearch': 'navBtnSearch',
+      'viewStandings': 'navBtnStandings',
+      'viewExport': 'navBtnExport'
     };
 
-    let selectedSearchPlayerIds = [];
+    const activeNav = document.getElementById(navMap[viewId]);
+    if (activeNav) {
+      activeNav.classList.add('mobile-tab-active');
+      activeNav.classList.remove('text-slate-400');
+    }
 
-    // On Load Window Initialization
-    window.onload = function() {
-      lucide.createIcons();
+    const statusMap = {
+      'viewSetup': 'Roster Setup Mode',
+      'viewFixtures': 'Live Matches & Scoring',
+      'viewSearch': 'Advance Match Search',
+      'viewStandings': 'Podium & Leaderboard',
+      'viewExport': 'Export & History'
+    };
+    document.getElementById('topHeaderStatus').innerText = statusMap[viewId];
 
-      loadFromLocalStorage();
-      
-      if (!tournamentState.date) {
-        tournamentState.date = getTodayISO();
-      }
-      document.getElementById('inputTourneyDate').value = tournamentState.date;
-
-      renderCourtInputs();
-      updatePlayerListUI();
-      calculateCourtEstimates();
-      renderFixturesList();
-      renderStandingsData();
-      renderSearchChips();
+    if (viewId === 'viewFixtures') renderFixturesList();
+    if (viewId === 'viewStandings') renderStandingsData();
+    if (viewId === 'viewSearch') renderSearchChips();
+    if (viewId === 'viewExport') {
+      updateWhatsAppExportText();
       renderHistoryList();
-      checkTournamentCompletion();
-    };
-
-    function generateAmusingName() {
-      const idx = Math.floor(Math.random() * AMUSING_NAMES.length);
-      tournamentState.name = AMUSING_NAMES[idx];
-      document.getElementById('displayTournamentName').innerText = tournamentState.name;
-      document.getElementById('topHeaderTitle').innerText = tournamentState.name;
-      saveToLocalStorage();
     }
 
-    function switchMobileView(viewId) {
-      ['viewSetup', 'viewFixtures', 'viewSearch', 'viewStandings', 'viewExport'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-      });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    lucide.createIcons();
+  }
 
-      document.getElementById(viewId).classList.remove('hidden');
-
-      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-        btn.classList.remove('mobile-tab-active');
-        btn.classList.add('text-slate-400');
-      });
-
-      const navMap = {
-        'viewSetup': 'navBtnSetup',
-        'viewFixtures': 'navBtnFixtures',
-        'viewSearch': 'navBtnSearch',
-        'viewStandings': 'navBtnStandings',
-        'viewExport': 'navBtnExport'
-      };
-
-      const activeNav = document.getElementById(navMap[viewId]);
-      if (activeNav) {
-        activeNav.classList.add('mobile-tab-active');
-        activeNav.classList.remove('text-slate-400');
+  function setGenderInput(gender) {
+    document.getElementById('selectPlayerGender').value = gender;
+    ['Male', 'Female'].forEach(g => {
+      const btn = document.getElementById(`genderPill${g}`);
+      if (g === gender) {
+        btn.className = "flex-1 py-1 rounded-md font-bold text-center transition-all bg-brand-500 text-slate-950 shadow-sm text-[11px]";
+      } else {
+        btn.className = "flex-1 py-1 rounded-md font-bold text-center transition-all text-slate-400 text-[11px]";
       }
+    });
+  }
 
-      const statusMap = {
-        'viewSetup': 'Roster Setup Mode',
-        'viewFixtures': 'Live Matches & Scoring',
-        'viewSearch': 'Advance Match Search',
-        'viewStandings': 'Podium & Leaderboard',
-        'viewExport': 'Export & History'
-      };
-      document.getElementById('topHeaderStatus').innerText = statusMap[viewId];
-
-      if (viewId === 'viewFixtures') renderFixturesList();
-      if (viewId === 'viewStandings') renderStandingsData();
-      if (viewId === 'viewSearch') renderSearchChips();
-      if (viewId === 'viewExport') {
-        updateWhatsAppExportText();
-        renderHistoryList();
+  function setMidGenderInput(gender) {
+    document.getElementById('selectMidPlayerGender').value = gender;
+    ['Male', 'Female'].forEach(g => {
+      const btn = document.getElementById(`midGender${g}`);
+      if (g === gender) {
+        btn.className = "flex-1 py-1.5 rounded-md font-bold bg-brand-500 text-slate-950 text-[11px]";
+      } else {
+        btn.className = "flex-1 py-1.5 rounded-md font-bold text-slate-400 text-[11px]";
       }
+    });
+  }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      lucide.createIcons();
-    }
+  function renderCourtInputs() {
+    const container = document.getElementById('courtListContainer');
+    container.innerHTML = '';
 
-    function setGenderInput(gender) {
-      document.getElementById('selectPlayerGender').value = gender;
-      ['Male', 'Female'].forEach(g => {
-        const btn = document.getElementById(`genderPill${g}`);
-        if (g === gender) {
-          btn.className = "flex-1 py-1 rounded-md font-bold text-center transition-all bg-brand-500 text-slate-950 shadow-sm text-[11px]";
-        } else {
-          btn.className = "flex-1 py-1 rounded-md font-bold text-center transition-all text-slate-400 text-[11px]";
-        }
-      });
-    }
-
-    function setMidGenderInput(gender) {
-      document.getElementById('selectMidPlayerGender').value = gender;
-      ['Male', 'Female'].forEach(g => {
-        const btn = document.getElementById(`midGender${g}`);
-        if (g === gender) {
-          btn.className = "flex-1 py-1.5 rounded-md font-bold bg-brand-500 text-slate-950 text-[11px]";
-        } else {
-          btn.className = "flex-1 py-1.5 rounded-md font-bold text-slate-400 text-[11px]";
-        }
-      });
-    }
-
-    function renderCourtInputs() {
-      const container = document.getElementById('courtListContainer');
-      container.innerHTML = '';
-
-      tournamentState.courts.forEach((court) => {
-        const div = document.createElement('div');
-        div.className = "bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1.5";
-        div.innerHTML = `
+    tournamentState.courts.forEach((court) => {
+      const div = document.createElement('div');
+      div.className = "bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1.5";
+      div.innerHTML = `
           <div class="flex items-center justify-between gap-2">
             <input type="text" value="${court.name}" onchange="updateCourtInfo('${court.id}', 'name', this.value)" class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-xs font-bold text-slate-100 flex-1 focus:outline-none focus:border-brand-500">
             ${tournamentState.courts.length > 1 ? `
@@ -687,116 +698,116 @@
             </div>
           </div>
         `;
-        container.appendChild(div);
-      });
+      container.appendChild(div);
+    });
 
-      lucide.createIcons();
+    lucide.createIcons();
+    calculateCourtEstimates();
+  }
+
+  function addCourtRow() {
+    const newCourtId = 'c_' + Date.now();
+    tournamentState.courts.push({
+      id: newCourtId,
+      name: `Court ${tournamentState.courts.length + 1}`,
+      startTime: '17:00',
+      endTime: '19:00'
+    });
+    renderCourtInputs();
+    saveToLocalStorage();
+  }
+
+  function removeCourtRow(courtId) {
+    if (tournamentState.courts.length <= 1) return;
+    tournamentState.courts = tournamentState.courts.filter(c => c.id !== courtId);
+    renderCourtInputs();
+    saveToLocalStorage();
+  }
+
+  function updateCourtInfo(courtId, key, value) {
+    const court = tournamentState.courts.find(c => c.id === courtId);
+    if (court) {
+      court[key] = value;
       calculateCourtEstimates();
-    }
-
-    function addCourtRow() {
-      const newCourtId = 'c_' + Date.now();
-      tournamentState.courts.push({
-        id: newCourtId,
-        name: `Court ${tournamentState.courts.length + 1}`,
-        startTime: '17:00',
-        endTime: '19:00'
-      });
-      renderCourtInputs();
       saveToLocalStorage();
     }
+  }
 
-    function removeCourtRow(courtId) {
-      if (tournamentState.courts.length <= 1) return;
-      tournamentState.courts = tournamentState.courts.filter(c => c.id !== courtId);
-      renderCourtInputs();
-      saveToLocalStorage();
+  function calculateCourtEstimates() {
+    let totalMinutes = 0;
+    tournamentState.courts.forEach(c => {
+      const [h1, m1] = c.startTime.split(':').map(Number);
+      const [h2, m2] = c.endTime.split(':').map(Number);
+      const diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+      if (diff > 0) totalMinutes += diff;
+    });
+
+    const maxMatches = getTotalCourtCapacity();
+    document.getElementById('txtTotalCourtMinutes').innerText = `${totalMinutes} mins`;
+    document.getElementById('txtMaxMatchesEstimate').innerText = `${maxMatches} matches`;
+  }
+
+  function addPlayerFromInput() {
+    const nameInput = document.getElementById('inputPlayerName');
+    const name = nameInput.value.trim();
+    const gender = document.getElementById('selectPlayerGender').value;
+
+    if (!name) return;
+
+    const newPlayer = {
+      id: 'p_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+      name: name,
+      gender: gender,
+      retired: false
+    };
+
+    tournamentState.players.push(newPlayer);
+    nameInput.value = '';
+    updatePlayerListUI();
+    saveToLocalStorage();
+  }
+
+  function removePlayer(pId) {
+    tournamentState.players = tournamentState.players.filter(p => p.id !== pId);
+    updatePlayerListUI();
+    saveToLocalStorage();
+  }
+
+  function toggleRetirePlayer(pId) {
+    const player = tournamentState.players.find(p => p.id === pId);
+    if (!player) return;
+
+    player.retired = !player.retired;
+
+    if (player.retired) {
+      // Drop unplayed pending matches involving this player
+      const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED');
+      const activePlayers = tournamentState.players.filter(p => !p.retired);
+
+      tournamentState.matches = buildFixturesForPlayers(activePlayers, completedMatches);
+      alert(`${player.name} has been retired. Pending matches updated for active players.`);
     }
 
-    function updateCourtInfo(courtId, key, value) {
-      const court = tournamentState.courts.find(c => c.id === courtId);
-      if (court) {
-        court[key] = value;
-        calculateCourtEstimates();
-        saveToLocalStorage();
-      }
-    }
+    updatePlayerListUI();
+    renderFixturesList();
+    renderStandingsData();
+    saveToLocalStorage();
+  }
 
-    function calculateCourtEstimates() {
-      let totalMinutes = 0;
-      tournamentState.courts.forEach(c => {
-        const [h1, m1] = c.startTime.split(':').map(Number);
-        const [h2, m2] = c.endTime.split(':').map(Number);
-        const diff = (h2 * 60 + m2) - (h1 * 60 + m1);
-        if (diff > 0) totalMinutes += diff;
-      });
+  function updatePlayerListUI() {
+    const container = document.getElementById('playerListContainer');
+    container.innerHTML = '';
 
-      const maxMatches = Math.floor(totalMinutes / 8);
-      document.getElementById('txtTotalCourtMinutes').innerText = `${totalMinutes} mins`;
-      document.getElementById('txtMaxMatchesEstimate').innerText = `${maxMatches} matches`;
-    }
+    let maleCnt = 0, femaleCnt = 0;
 
-    function addPlayerFromInput() {
-      const nameInput = document.getElementById('inputPlayerName');
-      const name = nameInput.value.trim();
-      const gender = document.getElementById('selectPlayerGender').value;
-
-      if (!name) return;
-
-      const newPlayer = {
-        id: 'p_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
-        name: name,
-        gender: gender,
-        retired: false
-      };
-
-      tournamentState.players.push(newPlayer);
-      nameInput.value = '';
-      updatePlayerListUI();
-      saveToLocalStorage();
-    }
-
-    function removePlayer(pId) {
-      tournamentState.players = tournamentState.players.filter(p => p.id !== pId);
-      updatePlayerListUI();
-      saveToLocalStorage();
-    }
-
-    function toggleRetirePlayer(pId) {
-      const player = tournamentState.players.find(p => p.id === pId);
-      if (!player) return;
-
-      player.retired = !player.retired;
-
-      if (player.retired) {
-        // Drop unplayed pending matches involving this player
-        const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED');
-        const activePlayers = tournamentState.players.filter(p => !p.retired);
-        
-        tournamentState.matches = buildFixturesForPlayers(activePlayers, completedMatches);
-        alert(`${player.name} has been retired. Pending matches updated for active players.`);
+    tournamentState.players.forEach(p => {
+      if (!p.retired) {
+        if (p.gender === 'Male') maleCnt++; else if (p.gender === 'Female') femaleCnt++;
       }
 
-      updatePlayerListUI();
-      renderFixturesList();
-      renderStandingsData();
-      saveToLocalStorage();
-    }
-
-    function updatePlayerListUI() {
-      const container = document.getElementById('playerListContainer');
-      container.innerHTML = '';
-
-      let maleCnt = 0, femaleCnt = 0;
-
-      tournamentState.players.forEach(p => {
-        if (!p.retired) {
-          if (p.gender === 'Male') maleCnt++; else if (p.gender === 'Female') femaleCnt++;
-        }
-
-        const card = document.createElement('div');
-        card.className = `bg-slate-950 p-1.5 rounded-lg border ${p.retired ? 'border-red-900/50 opacity-60' : 'border-slate-800'} flex items-center justify-between gap-1`;
-        card.innerHTML = `
+      const card = document.createElement('div');
+      card.className = `bg-slate-950 p-1.5 rounded-lg border ${p.retired ? 'border-red-900/50 opacity-60' : 'border-slate-800'} flex items-center justify-between gap-1`;
+      card.innerHTML = `
           <div class="flex items-center gap-1.5 truncate">
             <span class="w-2 h-2 rounded-full shrink-0 ${p.gender === 'Male' ? 'bg-blue-400' : 'bg-pink-400'}"></span>
             <span class="text-[11px] font-semibold text-slate-200 truncate ${p.retired ? 'line-through text-red-400' : ''}">${p.name}</span>
@@ -810,231 +821,568 @@
             </button>
           </div>
         `;
-        container.appendChild(card);
-      });
+      container.appendChild(card);
+    });
 
-      const activePlayersCount = tournamentState.players.filter(p => !p.retired).length;
-      document.getElementById('lblPlayerCount').innerText = activePlayersCount;
-      document.getElementById('cntMale').innerText = maleCnt;
-      document.getElementById('cntFemale').innerText = femaleCnt;
+    const activePlayersCount = tournamentState.players.filter(p => !p.retired).length;
+    document.getElementById('lblPlayerCount').innerText = activePlayersCount;
+    document.getElementById('cntMale').innerText = maleCnt;
+    document.getElementById('cntFemale').innerText = femaleCnt;
 
-      lucide.createIcons();
+    lucide.createIcons();
+  }
+
+  function loadDemoPlayers() {
+    tournamentState.players = [
+      { id: 'p1', name: 'Alex Rivera', gender: 'Male', retired: false },
+      { id: 'p2', name: 'Brian Chen', gender: 'Male', retired: false },
+      { id: 'p3', name: 'Chloe Adams', gender: 'Female', retired: false },
+      { id: 'p4', name: 'David Miller', gender: 'Male', retired: false },
+      { id: 'p5', name: 'Elena Rostova', gender: 'Female', retired: false },
+      { id: 'p6', name: 'Fiona Gallagher', gender: 'Female', retired: false }
+    ];
+    updatePlayerListUI();
+    saveToLocalStorage();
+  }
+
+  function generateTournamentFixtures() {
+    const activePlayers = tournamentState.players.filter(p => !p.retired);
+    if (activePlayers.length < 4) {
+      alert("Please add at least 4 active players to generate doubles fixtures!");
+      return;
     }
 
-    function loadDemoPlayers() {
-      tournamentState.players = [
-        { id: 'p1', name: 'Alex Rivera', gender: 'Male', retired: false },
-        { id: 'p2', name: 'Brian Chen', gender: 'Male', retired: false },
-        { id: 'p3', name: 'Chloe Adams', gender: 'Female', retired: false },
-        { id: 'p4', name: 'David Miller', gender: 'Male', retired: false },
-        { id: 'p5', name: 'Elena Rostova', gender: 'Female', retired: false },
-        { id: 'p6', name: 'Fiona Gallagher', gender: 'Female', retired: false }
-      ];
-      updatePlayerListUI();
-      saveToLocalStorage();
+    if (getTotalCourtCapacity() < 1) {
+      alert("Please give at least one court a valid 8-minute-or-longer time window before generating fixtures.");
+      return;
     }
 
-    function generateTournamentFixtures() {
-      const activePlayers = tournamentState.players.filter(p => !p.retired);
-      if (activePlayers.length < 4) {
-        alert("Please add at least 4 active players to generate doubles fixtures!");
-        return;
-      }
+    tournamentState.matches = buildFixturesForPlayers(activePlayers, []);
+    tournamentState.isGenerated = true;
+    saveToLocalStorage();
 
-      tournamentState.matches = buildFixturesForPlayers(activePlayers, []);
-      tournamentState.isGenerated = true;
-      saveToLocalStorage();
+    switchMobileView('viewFixtures');
+  }
 
-      switchMobileView('viewFixtures');
-    }
+  function getCourtDurationMinutes(court) {
+    const [h1, m1] = String(court.startTime || '00:00').split(':').map(Number);
+    const [h2, m2] = String(court.endTime || '00:00').split(':').map(Number);
+    return (h2 * 60 + m2) - (h1 * 60 + m1);
+  }
 
-    function buildFixturesForPlayers(playersList, existingCompleted = []) {
-      const pCount = playersList.length;
-      const targetMatchesPerPlayer = Math.max(3, Math.min(6, Math.floor(pCount * 0.75)));
+  function getTotalCourtCapacity() {
+    return tournamentState.courts.reduce((total, court) => {
+      const duration = getCourtDurationMinutes(court);
+      return total + (duration >= 8 ? Math.floor(duration / 8) : 0);
+    }, 0);
+  }
 
-      let candidates = [];
-      for (let i = 0; i < pCount; i++) {
-        for (let j = i + 1; j < pCount; j++) {
-          for (let k = 0; k < pCount; k++) {
-            if (k === i || k === j) continue;
-            for (let l = k + 1; l < pCount; l++) {
-              if (l === i || l === j) continue;
-              const pA1 = playersList[i].id, pA2 = playersList[j].id;
-              const pB1 = playersList[k].id, pB2 = playersList[l].id;
-              if (pA1 < pB1) {
-                candidates.push({ team1: [pA1, pA2], team2: [pB1, pB2] });
+  function makeMatchKey(match) {
+    const players = [...match.team1, ...match.team2].sort();
+    return players.join('|') + '::' + [
+      [...match.team1].sort().join(','),
+      [...match.team2].sort().join(',')
+    ].sort().join('|');
+  }
+
+  function buildAllMatchCandidates(playersList) {
+    const candidates = [];
+    const seen = new Set();
+
+    for (let i = 0; i < playersList.length; i++) {
+      for (let j = i + 1; j < playersList.length; j++) {
+        for (let k = i + 1; k < playersList.length; k++) {
+          if (k === j) continue;
+          for (let l = k + 1; l < playersList.length; l++) {
+            const ids = [playersList[i].id, playersList[j].id, playersList[k].id, playersList[l].id];
+            if (new Set(ids).size !== 4) continue;
+
+            const orientations = [
+              { team1: [ids[0], ids[1]], team2: [ids[2], ids[3]] },
+              { team1: [ids[0], ids[2]], team2: [ids[1], ids[3]] },
+              { team1: [ids[0], ids[3]], team2: [ids[1], ids[2]] }
+            ];
+
+            orientations.forEach(match => {
+              const key = makeMatchKey(match);
+              if (!seen.has(key)) {
+                seen.add(key);
+                candidates.push(match);
               }
-            }
+            });
           }
         }
       }
+    }
+    return candidates;
+  }
 
-      candidates = candidates.sort(() => Math.random() - 0.5);
+  // Builds a balanced pool first, then the scheduler places those matches on courts.
+  // Match counts are kept as even as mathematically possible and new partners/opponents
+  // are preferred before relationships have to repeat.
+  function buildFixturesForPlayers(playersList, existingCompleted = []) {
+    const pCount = playersList.length;
+    if (pCount < 4) return [];
 
-      const matchCounts = {}, consecutiveRounds = {};
-      playersList.forEach(p => { matchCounts[p.id] = 0; consecutiveRounds[p.id] = 0; });
-
-      existingCompleted.forEach(m => {
-        [...m.team1, ...m.team2].forEach(id => { if (matchCounts[id] !== undefined) matchCounts[id]++; });
+    const counts = {};
+    playersList.forEach(p => counts[p.id] = 0);
+    existingCompleted.forEach(m => {
+      [...m.team1, ...m.team2].forEach(id => {
+        if (counts[id] !== undefined) counts[id]++;
       });
+    });
 
-      const selectedPool = [];
-      for (let cand of candidates) {
-        const mPlayers = [...cand.team1, ...cand.team2];
-        const maxCurrent = Math.max(...mPlayers.map(id => matchCounts[id] || 0));
-        if (maxCurrent < targetMatchesPerPlayer) {
-          selectedPool.push({
-            id: 'm_' + Date.now() + '_' + Math.floor(Math.random() * 100000),
-            team1: cand.team1,
-            team2: cand.team2,
-            score1: null,
-            score2: null,
-            status: 'PENDING'
+    const targetPerPlayer = Math.max(3, Math.min(6, Math.floor(pCount * 0.75)));
+    const courtCapacity = getTotalCourtCapacity();
+    const desiredTotalMatches = Math.min(
+            courtCapacity,
+            Math.ceil((pCount * targetPerPlayer) / 4)
+    );
+    const pendingNeeded = Math.max(0, desiredTotalMatches - existingCompleted.length);
+    if (pendingNeeded === 0) return schedulePendingMatches([], existingCompleted);
+
+    const partners = {}, opponents = {};
+    playersList.forEach(p => {
+      partners[p.id] = new Set();
+      opponents[p.id] = new Set();
+    });
+
+    existingCompleted.forEach(m => {
+      const [a, b] = m.team1;
+      const [c, d] = m.team2;
+      if (partners[a]) partners[a].add(b);
+      if (partners[b]) partners[b].add(a);
+      if (partners[c]) partners[c].add(d);
+      if (partners[d]) partners[d].add(c);
+      if (opponents[a]) [c, d].forEach(x => opponents[a].add(x));
+      if (opponents[b]) [c, d].forEach(x => opponents[b].add(x));
+      if (opponents[c]) [a, b].forEach(x => opponents[c].add(x));
+      if (opponents[d]) [a, b].forEach(x => opponents[d].add(x));
+    });
+
+    const candidates = buildAllMatchCandidates(playersList);
+    const usedMatchKeys = new Set(existingCompleted.map(makeMatchKey));
+    const selected = [];
+
+    // Build one non-overlapping round at a time. This prevents a player from being
+    // assigned to two matches in the same round before the scheduler even runs.
+    while (selected.length < pendingNeeded) {
+      let roundUsed = new Set();
+      let roundAdded = 0;
+
+      while (selected.length + roundAdded < pendingNeeded) {
+        let best = null;
+        let bestScore = -Infinity;
+
+        for (const candidate of candidates) {
+          const key = makeMatchKey(candidate);
+          if (usedMatchKeys.has(key)) continue;
+
+          const ids = [...candidate.team1, ...candidate.team2];
+          if (ids.some(id => roundUsed.has(id))) continue;
+
+          const countsForMatch = ids.map(id => counts[id] || 0);
+          const maxCount = Math.max(...countsForMatch);
+          const minCount = Math.min(...countsForMatch);
+          const totalDeficit = countsForMatch.reduce(
+                  (sum, count) => sum + Math.max(0, targetPerPlayer - count), 0
+          );
+          const newPartnerCount =
+                  (!partners[candidate.team1[0]].has(candidate.team1[1]) ? 1 : 0) +
+                  (!partners[candidate.team2[0]].has(candidate.team2[1]) ? 1 : 0);
+          let newOpponentCount = 0;
+          candidate.team1.forEach(a => candidate.team2.forEach(b => {
+            if (!opponents[a].has(b)) newOpponentCount++;
+          }));
+
+          // Strongly prefer the least-played players, then new relationships.
+          const score =
+                  totalDeficit * 1000 +
+                  (targetPerPlayer - maxCount) * 200 +
+                  (targetPerPlayer - minCount) * 100 +
+                  newPartnerCount * 30 +
+                  newOpponentCount * 5 -
+                  maxCount * 2;
+
+          if (score > bestScore) {
+            bestScore = score;
+            best = candidate;
+          }
+        }
+
+        if (!best) break;
+
+        const ids = [...best.team1, ...best.team2];
+        roundUsed = new Set(ids);
+        usedMatchKeys.add(makeMatchKey(best));
+        selected.push({
+          id: 'm_' + Date.now() + '_' + Math.floor(Math.random() * 100000),
+          team1: best.team1,
+          team2: best.team2,
+          score1: null,
+          score2: null,
+          status: 'PENDING'
+        });
+        roundAdded++;
+
+        ids.forEach(id => counts[id]++);
+        const [a, b] = best.team1;
+        const [c, d] = best.team2;
+        partners[a].add(b); partners[b].add(a);
+        partners[c].add(d); partners[d].add(c);
+        [c, d].forEach(x => { opponents[a].add(x); opponents[b].add(x); });
+        [a, b].forEach(x => { opponents[c].add(x); opponents[d].add(x); });
+      }
+
+      if (roundAdded === 0) break;
+    }
+
+    return schedulePendingMatches(selected, existingCompleted);
+  }
+
+  // Schedules matches in chronological court slots. A match occupies 8 minutes for
+  // planning, and it is never placed if its 8-minute slot would pass the court end time.
+  function schedulePendingMatches(pending, existingMatches = []) {
+    const scheduled = [...existingMatches];
+    let globalMatchNum = existingMatches.reduce((max, m) => Math.max(max, Number(m.matchNum) || 0), 0) + 1;
+    const courtClock = {};
+
+    tournamentState.courts.forEach(court => {
+      const [h, m] = String(court.startTime || '00:00').split(':').map(Number);
+      courtClock[court.id] = h * 60 + m;
+
+      const courtMatches = existingMatches.filter(m => m.courtId === court.id);
+      courtMatches.forEach(match => {
+        const [mh, mm] = String(match.startTime || court.startTime).split(':').map(Number);
+        courtClock[court.id] = Math.max(courtClock[court.id], mh * 60 + mm + 8);
+      });
+    });
+
+    function overlaps(startA, endA, startB, endB) {
+      return startA < endB && endA > startB;
+    }
+
+    while (pending.length > 0) {
+      let bestSlot = null;
+
+      tournamentState.courts.forEach(court => {
+        const start = courtClock[court.id];
+        const end = start + 8;
+        const courtEnd = (() => {
+          const [h, m] = String(court.endTime || '00:00').split(':').map(Number);
+          return h * 60 + m;
+        })();
+
+        if (end > courtEnd) return;
+
+        for (let i = 0; i < pending.length; i++) {
+          const match = pending[i];
+          const players = [...match.team1, ...match.team2];
+          const hasConflict = scheduled.some(existing => {
+            if (!existing.courtId || !existing.startTime) return false;
+            const [eh, em] = String(existing.startTime).split(':').map(Number);
+            const existingStart = eh * 60 + em;
+            const existingEnd = existingStart + 8;
+            if (!overlaps(start, end, existingStart, existingEnd)) return false;
+            const existingPlayers = new Set([...existing.team1, ...existing.team2]);
+            return players.some(id => existingPlayers.has(id));
           });
-          mPlayers.forEach(id => matchCounts[id] = (matchCounts[id] || 0) + 1);
+
+          if (hasConflict) continue;
+
+          if (!bestSlot || start < bestSlot.start) {
+            bestSlot = { court, pendingIndex: i, start };
+          }
         }
-      }
-
-      const scheduled = [...existingCompleted];
-      const pending = [...selectedPool];
-
-      let roundNum = 1, globalMatchNum = existingCompleted.length + 1;
-      const courtClock = {};
-      tournamentState.courts.forEach(c => {
-        const [h, m] = c.startTime.split(':').map(Number);
-        courtClock[c.id] = h * 60 + m;
       });
 
-      while (pending.length > 0 && roundNum < 100) {
-        const occupied = new Set();
-        let matchesAssigned = 0;
+      if (!bestSlot) break;
 
-        for (let cIdx = 0; cIdx < tournamentState.courts.length; cIdx++) {
-          const court = tournamentState.courts[cIdx];
-          let bestIdx = -1, bestScore = -Infinity;
+      const match = pending.splice(bestSlot.pendingIndex, 1)[0];
+      const t = bestSlot.start;
+      const hrs = String(Math.floor(t / 60)).padStart(2, '0');
+      const mins = String(t % 60).padStart(2, '0');
+      const scheduledMatch = {
+        ...match,
+        matchNum: globalMatchNum++,
+        roundNum: 1,
+        courtId: bestSlot.court.id,
+        startTime: `${hrs}:${mins}`
+      };
 
-          for (let i = 0; i < pending.length; i++) {
-            const m = pending[i];
-            const mPlayers = [...m.team1, ...m.team2];
-
-            if (mPlayers.some(id => occupied.has(id))) continue;
-
-            let score = 0;
-            mPlayers.forEach(id => {
-              const cons = consecutiveRounds[id] || 0;
-              if (cons >= 2) score -= 100;
-              else if (cons === 1) score -= 10;
-              else score += 20;
-            });
-
-            if (score > bestScore) {
-              bestScore = score;
-              bestIdx = i;
-            }
-          }
-
-          if (bestIdx !== -1) {
-            const match = pending.splice(bestIdx, 1)[0];
-            const mPlayers = [...match.team1, ...match.team2];
-            mPlayers.forEach(id => occupied.add(id));
-
-            const t = courtClock[court.id];
-            const hrs = String(Math.floor(t / 60)).padStart(2, '0');
-            const mins = String(t % 60).padStart(2, '0');
-
-            scheduled.push({
-              ...match,
-              matchNum: globalMatchNum++,
-              roundNum: roundNum,
-              courtId: court.id,
-              startTime: `${hrs}:${mins}`
-            });
-
-            courtClock[court.id] += 8;
-            matchesAssigned++;
-          }
-        }
-
-        playersList.forEach(p => {
-          if (occupied.has(p.id)) consecutiveRounds[p.id] = (consecutiveRounds[p.id] || 0) + 1;
-          else consecutiveRounds[p.id] = 0;
-        });
-
-        if (matchesAssigned === 0 && pending.length > 0) {
-          playersList.forEach(p => consecutiveRounds[p.id] = 0);
-        }
-        roundNum++;
-      }
-
-      return scheduled;
+      scheduled.push(scheduledMatch);
+      courtClock[bestSlot.court.id] = bestSlot.start + 8;
     }
 
-    function addExtraRoundMatches() {
-      const activePlayers = tournamentState.players.filter(p => !p.retired);
-      if (activePlayers.length < 4) {
-        alert("At least 4 active players required to add extra round!");
-        return;
-      }
+    // Assign round numbers from the actual scheduled time: matches that overlap in
+    // time are in the same round, while later time slots advance the round.
+    const sorted = [...scheduled].sort((a, b) => {
+      const toMin = x => { const [h, m] = String(x.startTime || '00:00').split(':').map(Number); return h * 60 + m; };
+      return toMin(a) - toMin(b) || Number(a.matchNum) - Number(b.matchNum);
+    });
+    const timeToRound = new Map();
+    let nextRound = 1;
+    sorted.forEach(match => {
+      const [h, m] = String(match.startTime || '00:00').split(':').map(Number);
+      const start = h * 60 + m;
+      if (!timeToRound.has(start)) timeToRound.set(start, nextRound++);
+      match.roundNum = timeToRound.get(start);
+    });
 
-      const existingCompleted = [...tournamentState.matches];
-      const updatedMatches = buildFixturesForPlayers(activePlayers, existingCompleted);
+    return scheduled;
+  }
 
-      if (updatedMatches.length <= existingCompleted.length) {
-        alert("All pairing combinations already generated! No additional unique matches left.");
-        return;
-      }
+  function getPlayerMatchCounts() {
+    const counts = {};
+    tournamentState.players.filter(p => !p.retired).forEach(p => counts[p.id] = 0);
+    tournamentState.matches.forEach(m => {
+      [...m.team1, ...m.team2].forEach(id => {
+        if (counts[id] !== undefined) counts[id]++;
+      });
+    });
+    return counts;
+  }
 
-      tournamentState.matches = updatedMatches;
-      saveToLocalStorage();
-      renderFixturesList();
-      alert("Extra match round generated successfully!");
+  function renderMatchesPerPlayerSummary() {
+    const list = document.getElementById('matchesPerPlayerList');
+    const totalLabel = document.getElementById('matchesPerPlayerTotal');
+    if (!list || !totalLabel) return;
+
+    const activePlayers = tournamentState.players.filter(p => !p.retired);
+    const counts = getPlayerMatchCounts();
+    totalLabel.innerText = `${activePlayers.length} player${activePlayers.length === 1 ? '' : 's'}`;
+    list.innerHTML = '';
+
+    if (activePlayers.length === 0) {
+      list.innerHTML = '<div class="col-span-2 text-[10px] text-slate-500 text-center py-2">No active players.</div>';
+      return;
     }
 
-    function renderFixturesList() {
-      const container = document.getElementById('fixturesListContainer');
-      const courtFilter = document.getElementById('filterCourtSelect').value;
-      const statusFilter = document.getElementById('filterStatusSelect').value;
+    activePlayers.forEach((p, index) => {
+      const item = document.createElement('span');
+      item.className = 'whitespace-nowrap';
+      item.innerHTML = `<span class="font-semibold text-slate-300">${p.name}</span> <span class="font-black font-mono text-brand-400">${counts[p.id] || 0}</span>${index < activePlayers.length - 1 ? '<span class="text-slate-600 mx-1">•</span>' : ''}`;
+      list.appendChild(item);
+    });
+  }
 
-      const courtSelect = document.getElementById('filterCourtSelect');
-      if (courtSelect.options.length <= 1) {
-        courtSelect.innerHTML = '<option value="ALL">All Courts</option>';
-        tournamentState.courts.forEach(c => {
-          courtSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-        });
+  function getMatchRelationshipSets() {
+    const partners = {}, opponents = {};
+    tournamentState.players.forEach(p => {
+      partners[p.id] = new Set();
+      opponents[p.id] = new Set();
+    });
+
+    tournamentState.matches.forEach(m => {
+      const [a, b] = m.team1;
+      const [c, d] = m.team2;
+      if (!partners[a]) partners[a] = new Set();
+      if (!partners[b]) partners[b] = new Set();
+      if (!partners[c]) partners[c] = new Set();
+      if (!partners[d]) partners[d] = new Set();
+      partners[a].add(b); partners[b].add(a);
+      partners[c].add(d); partners[d].add(c);
+
+      if (!opponents[a]) opponents[a] = new Set();
+      if (!opponents[b]) opponents[b] = new Set();
+      if (!opponents[c]) opponents[c] = new Set();
+      if (!opponents[d]) opponents[d] = new Set();
+      [c, d].forEach(x => { opponents[a].add(x); opponents[b].add(x); });
+      [a, b].forEach(x => { opponents[c].add(x); opponents[d].add(x); });
+    });
+    return { partners, opponents };
+  }
+
+  function isNewPairingMatch(match, partners, opponents) {
+    const [a, b] = match.team1;
+    const [c, d] = match.team2;
+    return !partners[a].has(b) && !partners[c].has(d) &&
+            !opponents[a].has(c) && !opponents[a].has(d) &&
+            !opponents[b].has(c) && !opponents[b].has(d);
+  }
+
+  // Finds one extra match for every player. Every player is used exactly once,
+  // and each new match has a partner and opponents that player has never had before.
+  function findOneExtraMatchPerPlayer(playersList) {
+    const playerIds = playersList.map(p => p.id);
+    if (playerIds.length < 4 || playerIds.length % 4 !== 0) return null;
+
+    const { partners, opponents } = getMatchRelationshipSets();
+    const candidates = [];
+    const seen = new Set();
+
+    for (let i = 0; i < playerIds.length; i++) {
+      for (let j = i + 1; j < playerIds.length; j++) {
+        for (let k = i + 1; k < playerIds.length; k++) {
+          if (k === j) continue;
+          for (let l = k + 1; l < playerIds.length; l++) {
+            const ids = [playerIds[i], playerIds[j], playerIds[k], playerIds[l]];
+            if (new Set(ids).size !== 4) continue;
+
+            [
+              { team1: [ids[0], ids[1]], team2: [ids[2], ids[3]] },
+              { team1: [ids[0], ids[2]], team2: [ids[1], ids[3]] },
+              { team1: [ids[0], ids[3]], team2: [ids[1], ids[2]] }
+            ].forEach(match => {
+              const key = makeMatchKey(match);
+              if (seen.has(key)) return;
+              seen.add(key);
+
+              const [a, b] = match.team1;
+              const [c, d] = match.team2;
+              const newPartners =
+                      (!partners[a].has(b) ? 1 : 0) +
+                      (!partners[c].has(d) ? 1 : 0);
+              let newOpponents = 0;
+              [c, d].forEach(x => { if (!opponents[a].has(x)) newOpponents++; });
+              [c, d].forEach(x => { if (!opponents[b].has(x)) newOpponents++; });
+
+              candidates.push({ match, newPartners, newOpponents });
+            });
+          }
+        }
       }
+    }
 
-      container.innerHTML = '';
+    const usedMatchKeys = new Set(tournamentState.matches.map(makeMatchKey));
+    const available = candidates.filter(c => !usedMatchKeys.has(makeMatchKey(c.match)));
 
-      if (tournamentState.matches.length === 0) {
-        container.innerHTML = `
+    // Prefer genuinely new relationships, but do not make the emergency extra-round
+    // feature fail just because the tournament has already exhausted those relationships.
+    available.sort((a, b) =>
+            (b.newPartners - a.newPartners) ||
+            (b.newOpponents - a.newOpponents)
+    );
+
+    const byPlayer = {};
+    playerIds.forEach(id => byPlayer[id] = []);
+    available.forEach(c => {
+      [...c.match.team1, ...c.match.team2].forEach(id => byPlayer[id].push(c));
+    });
+
+    function backtrack(remaining, chosen) {
+      if (remaining.length === 0) return chosen;
+      const first = remaining[0];
+      const options = (byPlayer[first] || []).filter(c => {
+        const cp = [...c.match.team1, ...c.match.team2];
+        return cp.every(id => remaining.includes(id));
+      });
+
+      for (const candidate of options) {
+        const used = new Set([...candidate.match.team1, ...candidate.match.team2]);
+        const next = remaining.filter(id => !used.has(id));
+        const result = backtrack(next, [...chosen, candidate.match]);
+        if (result) return result;
+      }
+      return null;
+    }
+
+    const orderedPlayers = [...playerIds].sort((a, b) =>
+            (byPlayer[a].length - byPlayer[b].length)
+    );
+    const result = backtrack(orderedPlayers, []);
+    if (result) return result;
+
+    // With only four active players, every possible doubles configuration may already
+    // have been used. An extra buffer match is still valid, so allow a repeated
+    // configuration as the final fallback rather than refusing the extra round.
+    if (available.length < candidates.length) {
+      playerIds.forEach(id => byPlayer[id] = []);
+      candidates.forEach(c => {
+        [...c.match.team1, ...c.match.team2].forEach(id => byPlayer[id].push(c));
+      });
+      return backtrack(orderedPlayers, []);
+    }
+    return null;
+  }
+
+  function addExtraRoundMatches() {
+    const activePlayers = tournamentState.players.filter(p => !p.retired);
+    if (activePlayers.length < 4) {
+      alert("At least 4 active players required to add extra matches!");
+      return;
+    }
+
+    if (activePlayers.length % 4 !== 0) {
+      alert("To give every player exactly 1 extra match, the number of active players must be a multiple of 4.");
+      return;
+    }
+
+    const extraMatches = findOneExtraMatchPerPlayer(activePlayers);
+    if (!extraMatches || extraMatches.length === 0) {
+      alert("No complete extra round is available for all active players.");
+      return;
+    }
+
+    const remainingCapacity = Math.max(0, getTotalCourtCapacity() - tournamentState.matches.length);
+    if (extraMatches.length > remainingCapacity) {
+      alert(`There is only room for ${remainingCapacity} more scheduled match${remainingCapacity === 1 ? '' : 'es'} within the configured court timings.`);
+      return;
+    }
+
+    const newMatches = extraMatches.map(m => ({
+      id: 'm_' + Date.now() + '_' + Math.floor(Math.random() * 100000),
+      team1: m.team1,
+      team2: m.team2,
+      score1: null,
+      score2: null,
+      status: 'PENDING'
+    }));
+
+    tournamentState.matches = schedulePendingMatches(newMatches, tournamentState.matches);
+    saveToLocalStorage();
+    renderMatchesPerPlayerSummary();
+    renderFixturesList();
+    checkTournamentCompletion();
+    alert(`Added ${newMatches.length} extra match${newMatches.length === 1 ? '' : 'es'}. Every player has exactly 1 additional match. New partners and opponents are preferred where available.`);
+  }
+
+  function renderFixturesList() {
+    renderMatchesPerPlayerSummary();
+    const container = document.getElementById('fixturesListContainer');
+    const courtFilter = document.getElementById('filterCourtSelect').value;
+    const statusFilter = document.getElementById('filterStatusSelect').value;
+
+    const courtSelect = document.getElementById('filterCourtSelect');
+    if (courtSelect.options.length <= 1) {
+      courtSelect.innerHTML = '<option value="ALL">All Courts</option>';
+      tournamentState.courts.forEach(c => {
+        courtSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+      });
+    }
+
+    container.innerHTML = '';
+
+    if (tournamentState.matches.length === 0) {
+      container.innerHTML = `
           <div class="py-10 text-center text-slate-500 bg-slate-900/50 rounded-xl border border-slate-800">
             <i data-lucide="calendar-x" class="w-8 h-8 mx-auto mb-1.5 opacity-50"></i>
             <p class="text-xs">No matches generated yet.</p>
           </div>
         `;
-        lucide.createIcons();
-        return;
-      }
+      lucide.createIcons();
+      return;
+    }
 
-      const filtered = tournamentState.matches.filter(m => {
-        if (courtFilter !== 'ALL' && m.courtId !== courtFilter) return false;
-        if (statusFilter !== 'ALL' && m.status !== statusFilter) return false;
-        return true;
-      });
+    const filtered = tournamentState.matches.filter(m => {
+      if (courtFilter !== 'ALL' && m.courtId !== courtFilter) return false;
+      if (statusFilter !== 'ALL' && m.status !== statusFilter) return false;
+      return true;
+    });
 
-      filtered.forEach(m => {
-        const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court 1' };
-        const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
-        const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
-        const isCompleted = m.status === 'COMPLETED';
+    filtered.forEach(m => {
+      const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court 1' };
+      const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
+      const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
+      const isCompleted = m.status === 'COMPLETED';
 
-        const s1 = m.score1 !== null ? m.score1 : 0;
-        const s2 = m.score2 !== null ? m.score2 : 0;
+      const s1 = m.score1 !== null ? m.score1 : 0;
+      const s2 = m.score2 !== null ? m.score2 : 0;
 
-        const card = document.createElement('div');
-        card.className = `bg-slate-900 border ${isCompleted ? 'border-slate-800/80' : 'border-brand-500/40'} rounded-xl p-3 shadow-md space-y-2 relative`;
+      const card = document.createElement('div');
+      card.className = `bg-slate-900 border ${isCompleted ? 'border-slate-800/80' : 'border-brand-500/40'} rounded-xl p-3 shadow-md space-y-2 relative`;
 
-        card.innerHTML = `
+      card.innerHTML = `
           <!-- Header Info Badge -->
           <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/80 pb-1.5">
             <div class="flex items-center gap-1">
@@ -1093,124 +1441,124 @@
             </div>
           </div>
         `;
-        container.appendChild(card);
-      });
+      container.appendChild(card);
+    });
 
-      lucide.createIcons();
+    lucide.createIcons();
+  }
+
+  function stepMatchScore(mId, teamNum, delta) {
+    const inputEl = document.getElementById(`txtS${teamNum}_${mId}`);
+    if (!inputEl) return;
+    let curr = parseInt(inputEl.value) || 0;
+    curr = Math.max(0, Math.min(30, curr + delta));
+    inputEl.value = curr;
+  }
+
+  function quickSetWin(mId, scoreWin, scoreLoss) {
+    const txt1 = document.getElementById(`txtS1_${mId}`);
+    const txt2 = document.getElementById(`txtS2_${mId}`);
+    if (txt1 && txt2) {
+      txt1.value = scoreWin;
+      txt2.value = scoreLoss;
+    }
+  }
+
+  function saveMatchScore(matchId) {
+    const m = tournamentState.matches.find(x => x.id === matchId);
+    if (!m) return;
+
+    const txt1 = document.getElementById(`txtS1_${matchId}`);
+    const txt2 = document.getElementById(`txtS2_${matchId}`);
+
+    const s1 = parseInt(txt1.value);
+    const s2 = parseInt(txt2.value);
+
+    if (isNaN(s1) || isNaN(s2)) {
+      alert("Please enter valid scores!");
+      return;
     }
 
-    function stepMatchScore(mId, teamNum, delta) {
-      const inputEl = document.getElementById(`txtS${teamNum}_${mId}`);
-      if (!inputEl) return;
-      let curr = parseInt(inputEl.value) || 0;
-      curr = Math.max(0, Math.min(30, curr + delta));
-      inputEl.value = curr;
-    }
+    m.score1 = s1;
+    m.score2 = s2;
+    m.status = 'COMPLETED';
 
-    function quickSetWin(mId, scoreWin, scoreLoss) {
-      const txt1 = document.getElementById(`txtS1_${mId}`);
-      const txt2 = document.getElementById(`txtS2_${mId}`);
-      if (txt1 && txt2) {
-        txt1.value = scoreWin;
-        txt2.value = scoreLoss;
+    saveToLocalStorage();
+    renderFixturesList();
+    renderStandingsData();
+    checkTournamentCompletion();
+  }
+
+  function getPlayer(id) {
+    return tournamentState.players.find(p => p.id === id) || { name: 'Unknown', gender: 'Male' };
+  }
+
+  function checkTournamentCompletion() {
+    if (!tournamentState.matches || tournamentState.matches.length === 0) return;
+
+    const allCompleted = tournamentState.matches.every(m => m.status === 'COMPLETED');
+    const banner = document.getElementById('bannerTournamentCompleted');
+
+    if (allCompleted) {
+      banner.classList.remove('hidden');
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
       }
+    } else {
+      banner.classList.add('hidden');
     }
+  }
 
-    function saveMatchScore(matchId) {
-      const m = tournamentState.matches.find(x => x.id === matchId);
-      if (!m) return;
+  function calculateStandingsData() {
+    const stats = {};
+    tournamentState.players.forEach(p => {
+      stats[p.id] = { id: p.id, name: p.name, gender: p.gender, retired: p.retired, played: 0, wins: 0, losses: 0, pointsWon: 0, pointsConceded: 0, diff: 0, tourneyPoints: 0 };
+    });
 
-      const txt1 = document.getElementById(`txtS1_${matchId}`);
-      const txt2 = document.getElementById(`txtS2_${matchId}`);
+    tournamentState.matches.forEach(m => {
+      if (m.status !== 'COMPLETED') return;
+      const s1 = m.score1, s2 = m.score2;
+      const t1Won = s1 > s2;
 
-      const s1 = parseInt(txt1.value);
-      const s2 = parseInt(txt2.value);
-
-      if (isNaN(s1) || isNaN(s2)) {
-        alert("Please enter valid scores!");
-        return;
-      }
-
-      m.score1 = s1;
-      m.score2 = s2;
-      m.status = 'COMPLETED';
-
-      saveToLocalStorage();
-      renderFixturesList();
-      renderStandingsData();
-      checkTournamentCompletion();
-    }
-
-    function getPlayer(id) {
-      return tournamentState.players.find(p => p.id === id) || { name: 'Unknown', gender: 'Male' };
-    }
-
-    function checkTournamentCompletion() {
-      if (!tournamentState.matches || tournamentState.matches.length === 0) return;
-
-      const allCompleted = tournamentState.matches.every(m => m.status === 'COMPLETED');
-      const banner = document.getElementById('bannerTournamentCompleted');
-
-      if (allCompleted) {
-        banner.classList.remove('hidden');
-        if (typeof confetti === 'function') {
-          confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+      m.team1.forEach(pId => {
+        if (stats[pId]) {
+          stats[pId].played++;
+          stats[pId].pointsWon += s1;
+          stats[pId].pointsConceded += s2;
+          if (t1Won) { stats[pId].wins++; stats[pId].tourneyPoints += 2; }
+          else { stats[pId].losses++; }
         }
-      } else {
-        banner.classList.add('hidden');
-      }
-    }
-
-    function calculateStandingsData() {
-      const stats = {};
-      tournamentState.players.forEach(p => {
-        stats[p.id] = { id: p.id, name: p.name, gender: p.gender, retired: p.retired, played: 0, wins: 0, losses: 0, pointsWon: 0, pointsConceded: 0, diff: 0, tourneyPoints: 0 };
       });
 
-      tournamentState.matches.forEach(m => {
-        if (m.status !== 'COMPLETED') return;
-        const s1 = m.score1, s2 = m.score2;
-        const t1Won = s1 > s2;
-
-        m.team1.forEach(pId => {
-          if (stats[pId]) {
-            stats[pId].played++;
-            stats[pId].pointsWon += s1;
-            stats[pId].pointsConceded += s2;
-            if (t1Won) { stats[pId].wins++; stats[pId].tourneyPoints += 2; }
-            else { stats[pId].losses++; }
-          }
-        });
-
-        m.team2.forEach(pId => {
-          if (stats[pId]) {
-            stats[pId].played++;
-            stats[pId].pointsWon += s2;
-            stats[pId].pointsConceded += s1;
-            if (!t1Won) { stats[pId].wins++; stats[pId].tourneyPoints += 2; }
-            else { stats[pId].losses++; }
-          }
-        });
+      m.team2.forEach(pId => {
+        if (stats[pId]) {
+          stats[pId].played++;
+          stats[pId].pointsWon += s2;
+          stats[pId].pointsConceded += s1;
+          if (!t1Won) { stats[pId].wins++; stats[pId].tourneyPoints += 2; }
+          else { stats[pId].losses++; }
+        }
       });
+    });
 
-      Object.values(stats).forEach(s => s.diff = s.pointsWon - s.pointsConceded);
+    Object.values(stats).forEach(s => s.diff = s.pointsWon - s.pointsConceded);
 
-      return Object.values(stats).sort((a, b) => {
-        if (b.tourneyPoints !== a.tourneyPoints) return b.tourneyPoints - a.tourneyPoints;
-        if (b.diff !== a.diff) return b.diff - a.diff;
-        return b.wins - a.wins;
-      });
-    }
+    return Object.values(stats).sort((a, b) => {
+      if (b.tourneyPoints !== a.tourneyPoints) return b.tourneyPoints - a.tourneyPoints;
+      if (b.diff !== a.diff) return b.diff - a.diff;
+      return b.wins - a.wins;
+    });
+  }
 
-    function renderStandingsData() {
-      const sorted = calculateStandingsData();
-      const container = document.getElementById('mobileLeaderboardCards');
-      container.innerHTML = '';
+  function renderStandingsData() {
+    const sorted = calculateStandingsData();
+    const container = document.getElementById('mobileLeaderboardCards');
+    container.innerHTML = '';
 
-      sorted.forEach((p, idx) => {
-        const card = document.createElement('div');
-        card.className = "bg-slate-950 p-2.5 rounded-lg border border-slate-800 space-y-1.5";
-        card.innerHTML = `
+    sorted.forEach((p, idx) => {
+      const card = document.createElement('div');
+      card.className = "bg-slate-950 p-2.5 rounded-lg border border-slate-800 space-y-1.5";
+      card.innerHTML = `
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-1.5 truncate">
               <span class="w-5 h-5 rounded-full bg-slate-900 border border-slate-800 font-extrabold text-[10px] text-slate-400 flex items-center justify-center font-mono">#${idx + 1}</span>
@@ -1228,17 +1576,17 @@
             <div><span class="block text-slate-500 text-[8px]">Diff</span><strong class="${p.diff >= 0 ? 'text-emerald-400' : 'text-red-400'}">${p.diff > 0 ? '+' : ''}${p.diff}</strong></div>
           </div>
         `;
-        container.appendChild(card);
-      });
+      container.appendChild(card);
+    });
 
-      // Render Top 2 Men & Women
-      const topMen = sorted.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
-      const topWomen = sorted.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
+    // Render Top 2 Men & Women
+    const topMen = sorted.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
+    const topWomen = sorted.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
 
-      const mContainer = document.getElementById('topMaleContainer');
-      mContainer.innerHTML = topMen.length ? '' : '<span class="text-xs text-slate-500">No active male players</span>';
-      topMen.forEach((p, idx) => {
-        mContainer.innerHTML += `
+    const mContainer = document.getElementById('topMaleContainer');
+    mContainer.innerHTML = topMen.length ? '' : '<span class="text-xs text-slate-500">No active male players</span>';
+    topMen.forEach((p, idx) => {
+      mContainer.innerHTML += `
           <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800 text-xs">
             <span class="font-bold text-white flex items-center gap-1">
               <span class="text-amber-400 font-black">#${idx + 1}</span> ${p.name}
@@ -1246,12 +1594,12 @@
             <span class="font-bold text-brand-400 font-mono text-[11px]">${p.tourneyPoints} pts (${p.diff > 0 ? '+' : ''}${p.diff})</span>
           </div>
         `;
-      });
+    });
 
-      const wContainer = document.getElementById('topFemaleContainer');
-      wContainer.innerHTML = topWomen.length ? '' : '<span class="text-xs text-slate-500">No active female players</span>';
-      topWomen.forEach((p, idx) => {
-        wContainer.innerHTML += `
+    const wContainer = document.getElementById('topFemaleContainer');
+    wContainer.innerHTML = topWomen.length ? '' : '<span class="text-xs text-slate-500">No active female players</span>';
+    topWomen.forEach((p, idx) => {
+      wContainer.innerHTML += `
           <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800 text-xs">
             <span class="font-bold text-white flex items-center gap-1">
               <span class="text-amber-400 font-black">#${idx + 1}</span> ${p.name}
@@ -1259,103 +1607,103 @@
             <span class="font-bold text-brand-400 font-mono text-[11px]">${p.tourneyPoints} pts (${p.diff > 0 ? '+' : ''}${p.diff})</span>
           </div>
         `;
-      });
-    }
+    });
+  }
 
-    function openAddMidPlayerModal() { document.getElementById('modalMidPlayer').classList.remove('hidden'); }
-    function closeAddMidPlayerModal() { document.getElementById('modalMidPlayer').classList.add('hidden'); }
+  function openAddMidPlayerModal() { document.getElementById('modalMidPlayer').classList.remove('hidden'); }
+  function closeAddMidPlayerModal() { document.getElementById('modalMidPlayer').classList.add('hidden'); }
 
-    function confirmAddMidPlayer() {
-      const nameInput = document.getElementById('inputMidPlayerName');
-      const name = nameInput.value.trim();
-      const gender = document.getElementById('selectMidPlayerGender').value;
+  function confirmAddMidPlayer() {
+    const nameInput = document.getElementById('inputMidPlayerName');
+    const name = nameInput.value.trim();
+    const gender = document.getElementById('selectMidPlayerGender').value;
 
-      if (!name) return;
+    if (!name) return;
 
-      const newPlayer = {
-        id: 'p_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
-        name: name,
-        gender: gender,
-        retired: false
-      };
+    const newPlayer = {
+      id: 'p_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+      name: name,
+      gender: gender,
+      retired: false
+    };
 
-      tournamentState.players.push(newPlayer);
-      updatePlayerListUI();
+    tournamentState.players.push(newPlayer);
+    updatePlayerListUI();
 
-      const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED');
-      const activePlayers = tournamentState.players.filter(p => !p.retired);
+    const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED');
+    const activePlayers = tournamentState.players.filter(p => !p.retired);
 
-      tournamentState.matches = buildFixturesForPlayers(activePlayers, completedMatches);
+    tournamentState.matches = buildFixturesForPlayers(activePlayers, completedMatches);
 
-      nameInput.value = '';
-      closeAddMidPlayerModal();
-      saveToLocalStorage();
+    nameInput.value = '';
+    closeAddMidPlayerModal();
+    saveToLocalStorage();
 
-      renderFixturesList();
-      renderStandingsData();
-      alert(`Added ${newPlayer.name}! Schedule updated.`);
-    }
+    renderFixturesList();
+    renderStandingsData();
+    alert(`Added ${newPlayer.name}! Schedule updated.`);
+  }
 
-    function renderSearchChips() {
-      const container = document.getElementById('searchPlayerChips');
-      container.innerHTML = '';
+  function renderSearchChips() {
+    const container = document.getElementById('searchPlayerChips');
+    container.innerHTML = '';
 
-      tournamentState.players.forEach(p => {
-        const isSelected = selectedSearchPlayerIds.includes(p.id);
-        const chip = document.createElement('button');
-        chip.onclick = () => toggleSearchPlayerSelection(p.id);
-        chip.className = `px-2 py-0.5 rounded-lg text-xs font-semibold flex items-center gap-1 border transition-all ${
-          isSelected ? 'bg-brand-500 text-slate-950 border-brand-400 font-bold shadow-sm' : 'bg-slate-900 text-slate-300 border-slate-800'
-        }`;
-        chip.innerHTML = `<span>${p.name}</span>${isSelected ? '<i data-lucide="check" class="w-3 h-3"></i>' : ''}`;
-        container.appendChild(chip);
-      });
+    tournamentState.players.forEach(p => {
+      const isSelected = selectedSearchPlayerIds.includes(p.id);
+      const chip = document.createElement('button');
+      chip.onclick = () => toggleSearchPlayerSelection(p.id);
+      chip.className = `px-2 py-0.5 rounded-lg text-xs font-semibold flex items-center gap-1 border transition-all ${
+              isSelected ? 'bg-brand-500 text-slate-950 border-brand-400 font-bold shadow-sm' : 'bg-slate-900 text-slate-300 border-slate-800'
+      }`;
+      chip.innerHTML = `<span>${p.name}</span>${isSelected ? '<i data-lucide="check" class="w-3 h-3"></i>' : ''}`;
+      container.appendChild(chip);
+    });
 
-      executeMatchSearch();
-      lucide.createIcons();
-    }
+    executeMatchSearch();
+    lucide.createIcons();
+  }
 
-    function toggleSearchPlayerSelection(pId) {
-      if (selectedSearchPlayerIds.includes(pId)) {
-        selectedSearchPlayerIds = selectedSearchPlayerIds.filter(id => id !== pId);
-      } else {
-        if (selectedSearchPlayerIds.length >= 4) {
-          alert("Select up to 4 players.");
-          return;
-        }
-        selectedSearchPlayerIds.push(pId);
-      }
-      renderSearchChips();
-    }
-
-    function clearSearchSelection() {
-      selectedSearchPlayerIds = [];
-      renderSearchChips();
-    }
-
-    function executeMatchSearch() {
-      const container = document.getElementById('searchResultsContainer');
-      container.innerHTML = '';
-
-      if (selectedSearchPlayerIds.length === 0) {
-        document.getElementById('searchMatchCount').innerText = "Select players above to search matches";
+  function toggleSearchPlayerSelection(pId) {
+    if (selectedSearchPlayerIds.includes(pId)) {
+      selectedSearchPlayerIds = selectedSearchPlayerIds.filter(id => id !== pId);
+    } else {
+      if (selectedSearchPlayerIds.length >= 4) {
+        alert("Select up to 4 players.");
         return;
       }
+      selectedSearchPlayerIds.push(pId);
+    }
+    renderSearchChips();
+  }
 
-      const matches = tournamentState.matches.filter(m => {
-        const mPlayers = [...m.team1, ...m.team2];
-        return selectedSearchPlayerIds.every(id => mPlayers.includes(id));
-      });
+  function clearSearchSelection() {
+    selectedSearchPlayerIds = [];
+    renderSearchChips();
+  }
 
-      document.getElementById('searchMatchCount').innerText = `${matches.length} pending match(es) found`;
+  function executeMatchSearch() {
+    const container = document.getElementById('searchResultsContainer');
+    container.innerHTML = '';
 
-      matches.forEach(m => {
-        const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
-        const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
+    if (selectedSearchPlayerIds.length === 0) {
+      document.getElementById('searchMatchCount').innerText = "Select players above to search matches";
+      return;
+    }
 
-        const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-brand-500/40 rounded-xl p-3 shadow-md space-y-1.5";
-        card.innerHTML = `
+    const matches = tournamentState.matches.filter(m => {
+      const mPlayers = [...m.team1, ...m.team2];
+      return selectedSearchPlayerIds.every(id => mPlayers.includes(id));
+    });
+
+    document.getElementById('searchMatchCount').innerText = `${matches.length} pending match(es) found`;
+
+    matches.forEach(m => {
+      const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
+      const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
+
+      const card = document.createElement('div');
+      card.className = "bg-slate-900 border border-brand-500/40 rounded-xl p-3 shadow-md space-y-1.5";
+      card.innerHTML = `
           <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800 pb-1">
             <span class="font-bold text-white">Match #${m.matchNum}</span>
             <span class="bg-brand-950 text-brand-400 border border-brand-800/50 px-1.5 py-0.2 rounded-full font-bold text-[9px]">Play Ahead</span>
@@ -1366,121 +1714,121 @@
             <div class="col-span-5 text-right font-bold text-slate-100 truncate">${p3.name} & ${p4.name}</div>
           </div>
         `;
-        container.appendChild(card);
-      });
-    }
+      container.appendChild(card);
+    });
+  }
 
-    function updateWhatsAppExportText() {
-      let text = `🏸 *${tournamentState.name.toUpperCase()}* 🏸\n`;
-      text += `📅 Date: ${tournamentState.date}\n\n`;
-      text += `🏆 *MATCH SCHEDULE* 🏆\n`;
+  function updateWhatsAppExportText() {
+    let text = `🏸 *${tournamentState.name.toUpperCase()}* 🏸\n`;
+    text += `📅 Date: ${tournamentState.date}\n\n`;
+    text += `🏆 *MATCH SCHEDULE* 🏆\n`;
 
-      tournamentState.matches.forEach(m => {
-        const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
-        const p1 = getPlayer(m.team1[0]).name, p2 = getPlayer(m.team1[1]).name;
-        const p3 = getPlayer(m.team2[0]).name, p4 = getPlayer(m.team2[1]).name;
-        const scoreStr = m.status === 'COMPLETED' ? `[ Score: ${m.score1} - ${m.score2} ]` : `[ Pending ]`;
+    tournamentState.matches.forEach(m => {
+      const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
+      const p1 = getPlayer(m.team1[0]).name, p2 = getPlayer(m.team1[1]).name;
+      const p3 = getPlayer(m.team2[0]).name, p4 = getPlayer(m.team2[1]).name;
+      const scoreStr = m.status === 'COMPLETED' ? `[ Score: ${m.score1} - ${m.score2} ]` : `[ Pending ]`;
 
-        text += `⏰ *M#${m.matchNum}* (${court.name} - ${m.startTime})\n   ${p1} & ${p2} 🆚 ${p3} & ${p4}\n   ${scoreStr}\n\n`;
-      });
+      text += `⏰ *M#${m.matchNum}* (${court.name} - ${m.startTime})\n   ${p1} & ${p2} 🆚 ${p3} & ${p4}\n   ${scoreStr}\n\n`;
+    });
 
-      document.getElementById('txtWhatsAppExport').value = text;
-    }
+    document.getElementById('txtWhatsAppExport').value = text;
+  }
 
-    function copyWhatsAppText() {
-      const textarea = document.getElementById('txtWhatsAppExport');
-      textarea.select();
-      document.execCommand('copy');
-      alert("Text copied to clipboard!");
-    }
+  function copyWhatsAppText() {
+    const textarea = document.getElementById('txtWhatsAppExport');
+    textarea.select();
+    document.execCommand('copy');
+    alert("Text copied to clipboard!");
+  }
 
-    function shareDirectWhatsApp() {
-      const text = encodeURIComponent(document.getElementById('txtWhatsAppExport').value);
-      window.location.href = `whatsapp://send?text=${text}`;
-    }
+  function shareDirectWhatsApp() {
+    const text = encodeURIComponent(document.getElementById('txtWhatsAppExport').value);
+    window.location.href = `whatsapp://send?text=${text}`;
+  }
 
-    // JSON Export & Import
-    function exportJSONBackup() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tournamentState, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `${tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_')}_Backup.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    }
+  // JSON Export & Import
+  function exportJSONBackup() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tournamentState, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `${tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_')}_Backup.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  }
 
-    function importJSONBackup(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+  function importJSONBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          if (imported && imported.players && imported.matches) {
-            tournamentState = imported;
-            saveToLocalStorage();
-            location.reload();
-          } else {
-            alert("Invalid tournament JSON file format.");
-          }
-        } catch (err) {
-          alert("Error parsing JSON file.");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function getHistoryArray() {
+    const reader = new FileReader();
+    reader.onload = function(e) {
       try {
-        return JSON.parse(localStorage.getItem('smashmaster_tourney_history') || '[]');
-      } catch (e) {
-        return [];
+        const imported = JSON.parse(e.target.result);
+        if (imported && imported.players && imported.matches) {
+          tournamentState = imported;
+          saveToLocalStorage();
+          location.reload();
+        } else {
+          alert("Invalid tournament JSON file format.");
+        }
+      } catch (err) {
+        alert("Error parsing JSON file.");
       }
+    };
+    reader.readAsText(file);
+  }
+
+  function getHistoryArray() {
+    try {
+      return JSON.parse(localStorage.getItem('smashmaster_tourney_history') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCurrentToHistory() {
+    const history = getHistoryArray();
+    const existingIdx = history.findIndex(h => h.id === tournamentState.name + '_' + tournamentState.date);
+
+    const record = {
+      id: tournamentState.name + '_' + tournamentState.date,
+      name: tournamentState.name,
+      date: tournamentState.date,
+      playerCount: tournamentState.players.length,
+      matchCount: tournamentState.matches.length,
+      completedCount: tournamentState.matches.filter(m => m.status === 'COMPLETED').length,
+      data: tournamentState
+    };
+
+    if (existingIdx !== -1) {
+      history[existingIdx] = record;
+    } else {
+      history.unshift(record);
     }
 
-    function saveCurrentToHistory() {
-      const history = getHistoryArray();
-      const existingIdx = history.findIndex(h => h.id === tournamentState.name + '_' + tournamentState.date);
+    localStorage.setItem('smashmaster_tourney_history', JSON.stringify(history));
+    renderHistoryList();
+    alert("Tournament saved to local history!");
+  }
 
-      const record = {
-        id: tournamentState.name + '_' + tournamentState.date,
-        name: tournamentState.name,
-        date: tournamentState.date,
-        playerCount: tournamentState.players.length,
-        matchCount: tournamentState.matches.length,
-        completedCount: tournamentState.matches.filter(m => m.status === 'COMPLETED').length,
-        data: tournamentState
-      };
+  function renderHistoryList() {
+    const container = document.getElementById('historyListContainer');
+    if (!container) return;
 
-      if (existingIdx !== -1) {
-        history[existingIdx] = record;
-      } else {
-        history.unshift(record);
-      }
+    const history = getHistoryArray();
+    container.innerHTML = '';
 
-      localStorage.setItem('smashmaster_tourney_history', JSON.stringify(history));
-      renderHistoryList();
-      alert("Tournament saved to local history!");
+    if (history.length === 0) {
+      container.innerHTML = '<div class="text-[11px] text-slate-500 py-2 text-center">No archived tournaments yet.</div>';
+      return;
     }
 
-    function renderHistoryList() {
-      const container = document.getElementById('historyListContainer');
-      if (!container) return;
-
-      const history = getHistoryArray();
-      container.innerHTML = '';
-
-      if (history.length === 0) {
-        container.innerHTML = '<div class="text-[11px] text-slate-500 py-2 text-center">No archived tournaments yet.</div>';
-        return;
-      }
-
-      history.forEach((h, idx) => {
-        const item = document.createElement('div');
-        item.className = "bg-slate-950 p-2 rounded-lg border border-slate-800 flex items-center justify-between text-xs";
-        item.innerHTML = `
+    history.forEach((h, idx) => {
+      const item = document.createElement('div');
+      item.className = "bg-slate-950 p-2 rounded-lg border border-slate-800 flex items-center justify-between text-xs";
+      item.innerHTML = `
           <div class="truncate min-w-0 pr-2">
             <div class="font-bold text-white truncate">${h.name}</div>
             <div class="text-[9px] text-slate-400 font-mono">${h.date} | ${h.completedCount}/${h.matchCount} Matches</div>
@@ -1494,167 +1842,167 @@
             </button>
           </div>
         `;
-        container.appendChild(item);
-      });
+      container.appendChild(item);
+    });
 
-      lucide.createIcons();
-    }
+    lucide.createIcons();
+  }
 
-    function loadFromHistory(idx) {
-      const history = getHistoryArray();
-      if (history[idx]) {
-        if (confirm(`Load "${history[idx].name}"? Unsaved changes in current tournament will be overwritten.`)) {
-          tournamentState = history[idx].data;
-          saveToLocalStorage();
-          location.reload();
-        }
-      }
-    }
-
-    function deleteFromHistory(idx) {
-      const history = getHistoryArray();
-      history.splice(idx, 1);
-      localStorage.setItem('smashmaster_tourney_history', JSON.stringify(history));
-      renderHistoryList();
-    }
-
-    function exportComprehensiveExcel() {
-      if (typeof XLSX === 'undefined') {
-        alert("Excel generator loading. Please try again.");
-        return;
-      }
-
-      const wb = XLSX.utils.book_new();
-      const standings = calculateStandingsData();
-      const topMen = standings.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
-      const topWomen = standings.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
-
-      const totalMatches = tournamentState.matches.length;
-      const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED').length;
-
-      const summaryRows = [
-        ["TOURNAMENT SUMMARY & PODIUM WINNERS"],
-        [""],
-        ["Tournament Name", tournamentState.name],
-        ["Date", tournamentState.date],
-        ["Total Courts", tournamentState.courts.length],
-        ["Total Players", tournamentState.players.length],
-        ["Total Matches Scheduled", totalMatches],
-        ["Completed Matches", completedMatches],
-        ["Tournament Status", totalMatches > 0 && completedMatches === totalMatches ? "COMPLETED 🎉" : "IN PROGRESS"],
-        [""],
-        ["🏆 TOP MALE PERFORMERS"],
-        ["Rank", "Player Name", "Tourney Points", "Point Differential", "Matches Played"]
-      ];
-
-      topMen.forEach((m, idx) => {
-        summaryRows.push([`#${idx + 1}`, m.name, m.tourneyPoints, m.diff, m.played]);
-      });
-
-      summaryRows.push([""]);
-      summaryRows.push(["🏆 TOP FEMALE PERFORMERS"]);
-      summaryRows.push(["Rank", "Player Name", "Tourney Points", "Point Differential", "Matches Played"]);
-
-      topWomen.forEach((w, idx) => {
-        summaryRows.push([`#${idx + 1}`, w.name, w.tourneyPoints, w.diff, w.played]);
-      });
-
-      const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
-      XLSX.utils.book_append_sheet(wb, wsSummary, "Summary & Winners");
-
-      const leaderboardRows = [
-        ["Rank", "Player Name", "Gender", "Status", "Matches Played", "Wins", "Losses", "Points Won", "Points Conceded", "Point Differential (+/-)", "Tournament Points (2 pts/win)"]
-      ];
-
-      standings.forEach((p, idx) => {
-        leaderboardRows.push([
-          idx + 1,
-          p.name,
-          p.gender,
-          p.retired ? "RETIRED" : "ACTIVE",
-          p.played,
-          p.wins,
-          p.losses,
-          p.pointsWon,
-          p.pointsConceded,
-          p.diff,
-          p.tourneyPoints
-        ]);
-      });
-
-      const wsLeaderboard = XLSX.utils.aoa_to_sheet(leaderboardRows);
-      XLSX.utils.book_append_sheet(wb, wsLeaderboard, "Final Leaderboard");
-
-      const fixtureRows = [
-        ["Match #", "Round", "Court Name", "Scheduled Time", "Team 1 Player 1", "Team 1 Player 2", "Team 2 Player 1", "Team 2 Player 2", "Score Team 1", "Score Team 2", "Winner Team", "Status"]
-      ];
-
-      tournamentState.matches.forEach(m => {
-        const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
-        let winnerText = "N/A";
-        if (m.status === 'COMPLETED') {
-          winnerText = m.score1 > m.score2 ? "Team 1" : m.score1 < m.score2 ? "Team 2" : "Draw";
-        }
-
-        fixtureRows.push([
-          m.matchNum,
-          m.roundNum || 1,
-          court.name,
-          m.startTime,
-          getPlayer(m.team1[0]).name,
-          getPlayer(m.team1[1]).name,
-          getPlayer(m.team2[0]).name,
-          getPlayer(m.team2[1]).name,
-          m.score1 !== null ? m.score1 : "",
-          m.score2 !== null ? m.score2 : "",
-          winnerText,
-          m.status
-        ]);
-      });
-
-      const wsFixtures = XLSX.utils.aoa_to_sheet(fixtureRows);
-      XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
-
-      const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-      XLSX.writeFile(wb, `${cleanName}_v1.1_Report.xlsx`);
-    }
-
-    function saveToLocalStorage() {
-      localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
-    }
-
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem('smashmaster_tourney_state');
-      if (saved) {
-        try {
-          tournamentState = JSON.parse(saved);
-          document.getElementById('displayTournamentName').innerText = tournamentState.name;
-          document.getElementById('topHeaderTitle').innerText = tournamentState.name;
-        } catch (e) {
-          console.error("Failed to load state", e);
-        }
-      }
-    }
-
-    function confirmResetTournament() {
-      if (confirm("Reset tournament? Current data will be cleared.")) {
-        localStorage.removeItem('smashmaster_tourney_state');
-        tournamentState = {
-          version: '1.1',
-          name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
-          date: getTodayISO(),
-          courts: [
-            { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00' },
-            { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00' }
-          ],
-          players: [],
-          matches: [],
-          isGenerated: false
-        };
+  function loadFromHistory(idx) {
+    const history = getHistoryArray();
+    if (history[idx]) {
+      if (confirm(`Load "${history[idx].name}"? Unsaved changes in current tournament will be overwritten.`)) {
+        tournamentState = history[idx].data;
         saveToLocalStorage();
         location.reload();
       }
     }
-  </script>
+  }
+
+  function deleteFromHistory(idx) {
+    const history = getHistoryArray();
+    history.splice(idx, 1);
+    localStorage.setItem('smashmaster_tourney_history', JSON.stringify(history));
+    renderHistoryList();
+  }
+
+  function exportComprehensiveExcel() {
+    if (typeof XLSX === 'undefined') {
+      alert("Excel generator loading. Please try again.");
+      return;
+    }
+
+    const wb = XLSX.utils.book_new();
+    const standings = calculateStandingsData();
+    const topMen = standings.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
+    const topWomen = standings.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
+
+    const totalMatches = tournamentState.matches.length;
+    const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED').length;
+
+    const summaryRows = [
+      ["TOURNAMENT SUMMARY & PODIUM WINNERS"],
+      [""],
+      ["Tournament Name", tournamentState.name],
+      ["Date", tournamentState.date],
+      ["Total Courts", tournamentState.courts.length],
+      ["Total Players", tournamentState.players.length],
+      ["Total Matches Scheduled", totalMatches],
+      ["Completed Matches", completedMatches],
+      ["Tournament Status", totalMatches > 0 && completedMatches === totalMatches ? "COMPLETED 🎉" : "IN PROGRESS"],
+      [""],
+      ["🏆 TOP MALE PERFORMERS"],
+      ["Rank", "Player Name", "Tourney Points", "Point Differential", "Matches Played"]
+    ];
+
+    topMen.forEach((m, idx) => {
+      summaryRows.push([`#${idx + 1}`, m.name, m.tourneyPoints, m.diff, m.played]);
+    });
+
+    summaryRows.push([""]);
+    summaryRows.push(["🏆 TOP FEMALE PERFORMERS"]);
+    summaryRows.push(["Rank", "Player Name", "Tourney Points", "Point Differential", "Matches Played"]);
+
+    topWomen.forEach((w, idx) => {
+      summaryRows.push([`#${idx + 1}`, w.name, w.tourneyPoints, w.diff, w.played]);
+    });
+
+    const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
+    XLSX.utils.book_append_sheet(wb, wsSummary, "Summary & Winners");
+
+    const leaderboardRows = [
+      ["Rank", "Player Name", "Gender", "Status", "Matches Played", "Wins", "Losses", "Points Won", "Points Conceded", "Point Differential (+/-)", "Tournament Points (2 pts/win)"]
+    ];
+
+    standings.forEach((p, idx) => {
+      leaderboardRows.push([
+        idx + 1,
+        p.name,
+        p.gender,
+        p.retired ? "RETIRED" : "ACTIVE",
+        p.played,
+        p.wins,
+        p.losses,
+        p.pointsWon,
+        p.pointsConceded,
+        p.diff,
+        p.tourneyPoints
+      ]);
+    });
+
+    const wsLeaderboard = XLSX.utils.aoa_to_sheet(leaderboardRows);
+    XLSX.utils.book_append_sheet(wb, wsLeaderboard, "Final Leaderboard");
+
+    const fixtureRows = [
+      ["Match #", "Round", "Court Name", "Scheduled Time", "Team 1 Player 1", "Team 1 Player 2", "Team 2 Player 1", "Team 2 Player 2", "Score Team 1", "Score Team 2", "Winner Team", "Status"]
+    ];
+
+    tournamentState.matches.forEach(m => {
+      const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
+      let winnerText = "N/A";
+      if (m.status === 'COMPLETED') {
+        winnerText = m.score1 > m.score2 ? "Team 1" : m.score1 < m.score2 ? "Team 2" : "Draw";
+      }
+
+      fixtureRows.push([
+        m.matchNum,
+        m.roundNum || 1,
+        court.name,
+        m.startTime,
+        getPlayer(m.team1[0]).name,
+        getPlayer(m.team1[1]).name,
+        getPlayer(m.team2[0]).name,
+        getPlayer(m.team2[1]).name,
+        m.score1 !== null ? m.score1 : "",
+        m.score2 !== null ? m.score2 : "",
+        winnerText,
+        m.status
+      ]);
+    });
+
+    const wsFixtures = XLSX.utils.aoa_to_sheet(fixtureRows);
+    XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
+
+    const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
+    XLSX.writeFile(wb, `${cleanName}_v1.2_Report.xlsx`);
+  }
+
+  function saveToLocalStorage() {
+    localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
+  }
+
+  function loadFromLocalStorage() {
+    const saved = localStorage.getItem('smashmaster_tourney_state');
+    if (saved) {
+      try {
+        tournamentState = JSON.parse(saved);
+        document.getElementById('displayTournamentName').innerText = tournamentState.name;
+        document.getElementById('topHeaderTitle').innerText = tournamentState.name;
+      } catch (e) {
+        console.error("Failed to load state", e);
+      }
+    }
+  }
+
+  function confirmResetTournament() {
+    if (confirm("Reset tournament? Current data will be cleared.")) {
+      localStorage.removeItem('smashmaster_tourney_state');
+      tournamentState = {
+        version: '1.2',
+        name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
+        date: getTodayISO(),
+        courts: [
+          { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00' },
+          { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00' }
+        ],
+        players: [],
+        matches: [],
+        isGenerated: false
+      };
+      saveToLocalStorage();
+      location.reload();
+    }
+  }
+</script>
 </body>
 </html>
