@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v1.2 - Doubles Badminton Manager</title>
+  <title>SmashMaster v1.5 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -109,7 +109,7 @@
           <h1 id="topHeaderTitle" class="text-sm font-extrabold font-heading text-white truncate leading-tight">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v1.2</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v1.3</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -431,6 +431,23 @@
       <div id="historyListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
     </div>
 
+    <!-- Shared Tournament Session -->
+    <div class="bg-slate-900 border border-brand-500/30 rounded-xl p-3 shadow-md space-y-2.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="cloud" class="w-4 h-4 text-brand-400"></i>
+          <h3 class="text-xs font-bold font-heading text-white">Shared Tournament Session</h3>
+        </div>
+        <span id="sharedSyncStatus" class="text-[9px] font-bold text-slate-500">Local</span>
+      </div>
+      <p class="text-[10px] text-slate-400">Open the same shared link on multiple devices to keep players, fixtures and scores synchronized in real time.</p>
+      <div class="grid grid-cols-[1fr_auto] gap-2">
+        <input id="sharedSessionId" type="text" readonly class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-brand-300 focus:outline-none">
+        <button onclick="copySharedSessionLink()" class="bg-brand-600 hover:bg-brand-500 text-slate-950 font-black rounded-lg px-3 text-[11px]">Copy Link</button>
+      </div>
+      <div class="text-[9px] text-slate-500">Session ID is used to keep this tournament separate from other tournaments.</div>
+    </div>
+
     <!-- WhatsApp Text Export Card -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
       <div class="flex items-center gap-1.5">
@@ -556,7 +573,7 @@
   }
 
   let tournamentState = {
-    version: '1.2',
+    version: '1.5',
     name: AMUSING_NAMES[0],
     date: getTodayISO(),
     courts: [
@@ -589,6 +606,7 @@
     renderSearchChips();
     renderHistoryList();
     checkTournamentCompletion();
+    initializeSharedSync();
   };
 
   function generateAmusingName() {
@@ -1042,19 +1060,34 @@
 
   // Schedules matches in chronological court slots. A match occupies 8 minutes for
   // planning, and it is never placed if its 8-minute slot would pass the court end time.
+  // Schedules matches in chronological court slots while actively protecting player rest.
+  // Planning slot = 8 minutes. Rest is preferred whenever the available player pool
+  // allows it, but a court is never left idle merely to enforce an artificial rest rule.
+  // Consecutive matches are therefore used only when no rested four-player combination
+  // can fill the current slot.
   function schedulePendingMatches(pending, existingMatches = []) {
     const scheduled = [...existingMatches];
     let globalMatchNum = existingMatches.reduce((max, m) => Math.max(max, Number(m.matchNum) || 0), 0) + 1;
     const courtClock = {};
+    const REST_SLOT_MINUTES = 8;
+    const MAX_CONSECUTIVE_MATCHES = 2;
+
+    const toMinutes = value => {
+      const [h, m] = String(value || '00:00').split(':').map(Number);
+      return h * 60 + m;
+    };
+
+    const courtEndMinutes = court => toMinutes(court.endTime || '00:00');
 
     tournamentState.courts.forEach(court => {
-      const [h, m] = String(court.startTime || '00:00').split(':').map(Number);
-      courtClock[court.id] = h * 60 + m;
+      courtClock[court.id] = toMinutes(court.startTime || '00:00');
 
       const courtMatches = existingMatches.filter(m => m.courtId === court.id);
       courtMatches.forEach(match => {
-        const [mh, mm] = String(match.startTime || court.startTime).split(':').map(Number);
-        courtClock[court.id] = Math.max(courtClock[court.id], mh * 60 + mm + 8);
+        courtClock[court.id] = Math.max(
+          courtClock[court.id],
+          toMinutes(match.startTime || court.startTime) + REST_SLOT_MINUTES
+        );
       });
     });
 
@@ -1062,27 +1095,93 @@
       return startA < endB && endA > startB;
     }
 
+    function playerHistory(playerId, source) {
+      return source
+        .filter(m => [...m.team1, ...m.team2].includes(playerId) && m.startTime)
+        .map(m => toMinutes(m.startTime))
+        .sort((a, b) => a - b);
+    }
+
+    function consecutiveBefore(playerId, start, source) {
+      const history = playerHistory(playerId, source);
+      let consecutive = 0;
+      let previousStart = null;
+
+      for (let i = history.length - 1; i >= 0; i--) {
+        const matchStart = history[i];
+        if (matchStart >= start) continue;
+        if (previousStart === null) {
+          previousStart = matchStart;
+          consecutive = 1;
+        } else if (previousStart - matchStart === REST_SLOT_MINUTES) {
+          previousStart = matchStart;
+          consecutive++;
+        } else {
+          break;
+        }
+      }
+      return consecutive;
+    }
+
+    function lastMatchStart(playerId, start, source) {
+      const history = playerHistory(playerId, source).filter(t => t < start);
+      return history.length ? history[history.length - 1] : null;
+    }
+
+    function evaluateCandidate(match, start, source) {
+      const players = [...match.team1, ...match.team2];
+      const restGaps = [];
+      let maxConsecutive = 0;
+      let backToBackPlayers = 0;
+      let shortRestPlayers = 0;
+
+      players.forEach(playerId => {
+        const lastStart = lastMatchStart(playerId, start, source);
+        if (lastStart === null) {
+          restGaps.push(Infinity);
+          return;
+        }
+
+        const restGap = start - (lastStart + REST_SLOT_MINUTES);
+        restGaps.push(restGap);
+        const previousConsecutive = consecutiveBefore(playerId, start, source);
+        const newConsecutive = lastStart === start - REST_SLOT_MINUTES
+          ? previousConsecutive + 1
+          : 1;
+
+        maxConsecutive = Math.max(maxConsecutive, newConsecutive);
+        if (restGap === 0) backToBackPlayers++;
+        if (restGap < REST_SLOT_MINUTES) shortRestPlayers++;
+      });
+
+      return {
+        restGaps,
+        minRest: Math.min(...restGaps.filter(Number.isFinite), Infinity),
+        totalFiniteRest: restGaps.filter(Number.isFinite).reduce((sum, gap) => sum + gap, 0),
+        maxConsecutive,
+        backToBackPlayers,
+        shortRestPlayers
+      };
+    }
+
     while (pending.length > 0) {
       let bestSlot = null;
 
+      // Find the earliest legal court slot. When several courts have the same time,
+      // all candidates are considered against the same current schedule so a player
+      // cannot accidentally be assigned twice at that time.
       tournamentState.courts.forEach(court => {
         const start = courtClock[court.id];
-        const end = start + 8;
-        const courtEnd = (() => {
-          const [h, m] = String(court.endTime || '00:00').split(':').map(Number);
-          return h * 60 + m;
-        })();
-
-        if (end > courtEnd) return;
+        const end = start + REST_SLOT_MINUTES;
+        if (end > courtEndMinutes(court)) return;
 
         for (let i = 0; i < pending.length; i++) {
           const match = pending[i];
           const players = [...match.team1, ...match.team2];
           const hasConflict = scheduled.some(existing => {
             if (!existing.courtId || !existing.startTime) return false;
-            const [eh, em] = String(existing.startTime).split(':').map(Number);
-            const existingStart = eh * 60 + em;
-            const existingEnd = existingStart + 8;
+            const existingStart = toMinutes(existing.startTime);
+            const existingEnd = existingStart + REST_SLOT_MINUTES;
             if (!overlaps(start, end, existingStart, existingEnd)) return false;
             const existingPlayers = new Set([...existing.team1, ...existing.team2]);
             return players.some(id => existingPlayers.has(id));
@@ -1090,13 +1189,95 @@
 
           if (hasConflict) continue;
 
-          if (!bestSlot || start < bestSlot.start) {
-            bestSlot = { court, pendingIndex: i, start };
+          const evaluation = evaluateCandidate(match, start, scheduled);
+
+          // Prefer a match that does not create a third consecutive match.
+          // The fallback below is used only when no such match can fill any current slot.
+          if (evaluation.maxConsecutive > MAX_CONSECUTIVE_MATCHES) continue;
+
+          // Score rest quality first, then fairness. Infinity means the player has
+          // not played yet and is therefore strongly preferred over a player who has.
+          const finiteRest = evaluation.restGaps.filter(Number.isFinite);
+          const minRest = finiteRest.length ? Math.min(...finiteRest) : 999;
+          const totalRest = evaluation.totalFiniteRest;
+          const currentCounts = {};
+          players.forEach(id => { currentCounts[id] = 0; });
+          scheduled.forEach(m => {
+            [...m.team1, ...m.team2].forEach(id => {
+              if (currentCounts[id] !== undefined) currentCounts[id]++;
+            });
+          });
+          const maxPlayerCount = Math.max(...players.map(id => currentCounts[id] || 0));
+          const minPlayerCount = Math.min(...players.map(id => currentCounts[id] || 0));
+
+          const score =
+            minRest * 10000 +
+            totalRest * 100 +
+            (evaluation.backToBackPlayers === 0 ? 5000 : 0) -
+            evaluation.backToBackPlayers * 3000 -
+            evaluation.shortRestPlayers * 1500 -
+            Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
+            maxPlayerCount * 5;
+
+          if (!bestSlot ||
+              start < bestSlot.start ||
+              (start === bestSlot.start && score > bestSlot.score)) {
+            bestSlot = { court, pendingIndex: i, start, score };
           }
         }
       });
 
-      if (!bestSlot) break;
+      if (!bestSlot) {
+        // Every current court slot must be used whenever a pending match can fit.
+        // If no rested/non-third-consecutive match exists, this means there are
+        // not enough rested players (or the remaining fixture combinations cannot
+        // supply four rested players). In that case, use the least harmful
+        // consecutive match instead of leaving the court vacant.
+        let fallbackSlot = null;
+
+        tournamentState.courts.forEach(court => {
+          const start = courtClock[court.id];
+          const end = start + REST_SLOT_MINUTES;
+          if (end > courtEndMinutes(court)) return;
+
+          for (let i = 0; i < pending.length; i++) {
+            const match = pending[i];
+            const players = [...match.team1, ...match.team2];
+            const hasConflict = scheduled.some(existing => {
+              if (!existing.courtId || !existing.startTime) return false;
+              const existingStart = toMinutes(existing.startTime);
+              const existingEnd = existingStart + REST_SLOT_MINUTES;
+              if (!overlaps(start, end, existingStart, existingEnd)) return false;
+              const existingPlayers = new Set([...existing.team1, ...existing.team2]);
+              return players.some(id => existingPlayers.has(id));
+            });
+            if (hasConflict) continue;
+
+            const evaluation = evaluateCandidate(match, start, scheduled);
+            const finiteRest = evaluation.restGaps.filter(Number.isFinite);
+            const minRest = finiteRest.length ? Math.min(...finiteRest) : 999;
+            const score =
+              -evaluation.maxConsecutive * 100000 +
+              minRest * 1000 +
+              evaluation.totalFiniteRest * 10 -
+              evaluation.backToBackPlayers * 100;
+
+            if (!fallbackSlot ||
+                start < fallbackSlot.start ||
+                (start === fallbackSlot.start && score > fallbackSlot.score)) {
+              fallbackSlot = { court, pendingIndex: i, start, score };
+            }
+          }
+        });
+
+        if (fallbackSlot) {
+          bestSlot = fallbackSlot;
+        } else {
+          // Nothing fits any remaining court window. Stop only when the schedule
+          // is genuinely full, not merely because players need rest.
+          break;
+        }
+      }
 
       const match = pending.splice(bestSlot.pendingIndex, 1)[0];
       const t = bestSlot.start;
@@ -1111,20 +1292,18 @@
       };
 
       scheduled.push(scheduledMatch);
-      courtClock[bestSlot.court.id] = bestSlot.start + 8;
+      courtClock[bestSlot.court.id] = bestSlot.start + REST_SLOT_MINUTES;
     }
 
-    // Assign round numbers from the actual scheduled time: matches that overlap in
-    // time are in the same round, while later time slots advance the round.
+    // Assign round numbers from the actual scheduled time: matches beginning at the
+    // same time are in the same round, while later time slots advance the round.
     const sorted = [...scheduled].sort((a, b) => {
-      const toMin = x => { const [h, m] = String(x.startTime || '00:00').split(':').map(Number); return h * 60 + m; };
-      return toMin(a) - toMin(b) || Number(a.matchNum) - Number(b.matchNum);
+      return toMinutes(a.startTime) - toMinutes(b.startTime) || Number(a.matchNum) - Number(b.matchNum);
     });
     const timeToRound = new Map();
     let nextRound = 1;
     sorted.forEach(match => {
-      const [h, m] = String(match.startTime || '00:00').split(':').map(Number);
-      const start = h * 60 + m;
+      const start = toMinutes(match.startTime);
       if (!timeToRound.has(start)) timeToRound.set(start, nextRound++);
       match.roundNum = timeToRound.get(start);
     });
@@ -1203,96 +1382,92 @@
 
   // Finds one extra match for every player. Every player is used exactly once,
   // and each new match has a partner and opponents that player has never had before.
-  function findOneExtraMatchPerPlayer(playersList) {
+  function findBalancedExtraMatches(playersList) {
     const playerIds = playersList.map(p => p.id);
-    if (playerIds.length < 4 || playerIds.length % 4 !== 0) return null;
+    if (playerIds.length < 4) return null;
+
+    const currentCounts = getPlayerMatchCounts();
+    const maxCurrent = Math.max(...playerIds.map(id => currentCounts[id] || 0));
+    const remainingCapacity = Math.max(0, getTotalCourtCapacity() - tournamentState.matches.length);
+    if (remainingCapacity < Math.ceil(playerIds.length / 4)) return null;
 
     const { partners, opponents } = getMatchRelationshipSets();
-    const candidates = [];
-    const seen = new Set();
-
-    for (let i = 0; i < playerIds.length; i++) {
-      for (let j = i + 1; j < playerIds.length; j++) {
-        for (let k = i + 1; k < playerIds.length; k++) {
-          if (k === j) continue;
-          for (let l = k + 1; l < playerIds.length; l++) {
-            const ids = [playerIds[i], playerIds[j], playerIds[k], playerIds[l]];
-            if (new Set(ids).size !== 4) continue;
-
-            [
-              { team1: [ids[0], ids[1]], team2: [ids[2], ids[3]] },
-              { team1: [ids[0], ids[2]], team2: [ids[1], ids[3]] },
-              { team1: [ids[0], ids[3]], team2: [ids[1], ids[2]] }
-            ].forEach(match => {
-              const key = makeMatchKey(match);
-              if (seen.has(key)) return;
-              seen.add(key);
-
-              const [a, b] = match.team1;
-              const [c, d] = match.team2;
-              const newPartners =
-                      (!partners[a].has(b) ? 1 : 0) +
-                      (!partners[c].has(d) ? 1 : 0);
-              let newOpponents = 0;
-              [c, d].forEach(x => { if (!opponents[a].has(x)) newOpponents++; });
-              [c, d].forEach(x => { if (!opponents[b].has(x)) newOpponents++; });
-
-              candidates.push({ match, newPartners, newOpponents });
-            });
-          }
-        }
-      }
-    }
-
-    const usedMatchKeys = new Set(tournamentState.matches.map(makeMatchKey));
-    const available = candidates.filter(c => !usedMatchKeys.has(makeMatchKey(c.match)));
-
-    // Prefer genuinely new relationships, but do not make the emergency extra-round
-    // feature fail just because the tournament has already exhausted those relationships.
-    available.sort((a, b) =>
-            (b.newPartners - a.newPartners) ||
-            (b.newOpponents - a.newOpponents)
-    );
-
-    const byPlayer = {};
-    playerIds.forEach(id => byPlayer[id] = []);
-    available.forEach(c => {
-      [...c.match.team1, ...c.match.team2].forEach(id => byPlayer[id].push(c));
+    const candidates = buildAllMatchCandidates(playersList).filter(match =>
+      !tournamentState.matches.some(existing => makeMatchKey(existing) === makeMatchKey(match))
+    ).map(match => {
+      const [a, b] = match.team1;
+      const [c, d] = match.team2;
+      const newPartners =
+        (!partners[a].has(b) ? 1 : 0) +
+        (!partners[c].has(d) ? 1 : 0);
+      let newOpponents = 0;
+      [c, d].forEach(x => { if (!opponents[a].has(x)) newOpponents++; });
+      [c, d].forEach(x => { if (!opponents[b].has(x)) newOpponents++; });
+      return { match, ids: [...match.team1, ...match.team2], newPartners, newOpponents };
     });
 
-    function backtrack(remaining, chosen) {
-      if (remaining.length === 0) return chosen;
-      const first = remaining[0];
-      const options = (byPlayer[first] || []).filter(c => {
-        const cp = [...c.match.team1, ...c.match.team2];
-        return cp.every(id => remaining.includes(id));
-      });
+    // Try progressively higher final match counts. This matters when the current
+    // tournament is already uneven: the mathematically smallest target is not
+    // always achievable with the available doubles combinations.
+    const maxTarget = maxCurrent + Math.min(8, remainingCapacity);
 
-      for (const candidate of options) {
-        const used = new Set([...candidate.match.team1, ...candidate.match.team2]);
-        const next = remaining.filter(id => !used.has(id));
-        const result = backtrack(next, [...chosen, candidate.match]);
-        if (result) return result;
+    for (let targetMax = maxCurrent + 1; targetMax <= maxTarget; targetMax++) {
+      const eligibleForLower = playerIds.filter(id => (currentCounts[id] || 0) <= targetMax - 2);
+      const totalIfAllTarget = playerIds.reduce((sum, id) => sum + targetMax - (currentCounts[id] || 0), 0);
+
+      for (let lowerCount = 0; lowerCount <= eligibleForLower.length; lowerCount++) {
+        const totalAdded = totalIfAllTarget - lowerCount;
+        const matchCount = totalAdded / 4;
+        if (totalAdded < playerIds.length || !Number.isInteger(matchCount) || matchCount < 1 || matchCount > remainingCapacity) continue;
+
+        // Prefer lowering the players who currently have the fewest matches.
+        const lowerTargetPlayers = new Set(
+          [...eligibleForLower].sort((a, b) => (currentCounts[a] || 0) - (currentCounts[b] || 0)).slice(0, lowerCount)
+        );
+        const needed = {};
+        playerIds.forEach(id => {
+          const desired = targetMax - (lowerTargetPlayers.has(id) ? 1 : 0);
+          needed[id] = desired - (currentCounts[id] || 0);
+        });
+        if (playerIds.some(id => needed[id] < 1)) continue;
+
+        const chosen = [];
+        const usedCandidateKeys = new Set();
+        const remaining = { ...needed };
+
+        function search() {
+          const unfinished = playerIds.filter(id => remaining[id] > 0);
+          if (unfinished.length === 0) return true;
+          if (chosen.length >= matchCount) return false;
+
+          const first = unfinished.sort((a, b) => remaining[b] - remaining[a])[0];
+          const options = candidates.filter(c =>
+            !usedCandidateKeys.has(makeMatchKey(c.match)) &&
+            c.ids.includes(first) &&
+            c.ids.every(id => remaining[id] > 0)
+          ).sort((a, b) => {
+            const aNeed = a.ids.reduce((sum, id) => sum + remaining[id], 0);
+            const bNeed = b.ids.reduce((sum, id) => sum + remaining[id], 0);
+            return (bNeed - aNeed) || (b.newPartners - a.newPartners) || (b.newOpponents - a.newOpponents);
+          });
+
+          for (const candidate of options) {
+            const key = makeMatchKey(candidate.match);
+            usedCandidateKeys.add(key);
+            candidate.ids.forEach(id => remaining[id]--);
+            chosen.push(candidate.match);
+            if (search()) return true;
+            chosen.pop();
+            candidate.ids.forEach(id => remaining[id]++);
+            usedCandidateKeys.delete(key);
+          }
+          return false;
+        }
+
+        if (search()) return chosen;
       }
-      return null;
     }
 
-    const orderedPlayers = [...playerIds].sort((a, b) =>
-            (byPlayer[a].length - byPlayer[b].length)
-    );
-    const result = backtrack(orderedPlayers, []);
-    if (result) return result;
-
-    // With only four active players, every possible doubles configuration may already
-    // have been used. An extra buffer match is still valid, so allow a repeated
-    // configuration as the final fallback rather than refusing the extra round.
-    if (available.length < candidates.length) {
-      playerIds.forEach(id => byPlayer[id] = []);
-      candidates.forEach(c => {
-        [...c.match.team1, ...c.match.team2].forEach(id => byPlayer[id].push(c));
-      });
-      return backtrack(orderedPlayers, []);
-    }
     return null;
   }
 
@@ -1303,20 +1478,15 @@
       return;
     }
 
-    if (activePlayers.length % 4 !== 0) {
-      alert("To give every player exactly 1 extra match, the number of active players must be a multiple of 4.");
-      return;
-    }
-
-    const extraMatches = findOneExtraMatchPerPlayer(activePlayers);
+    const extraMatches = findBalancedExtraMatches(activePlayers);
     if (!extraMatches || extraMatches.length === 0) {
-      alert("No complete extra round is available for all active players.");
+      alert("No balanced extra matches can be added with the current player combinations and court capacity.");
       return;
     }
 
     const remainingCapacity = Math.max(0, getTotalCourtCapacity() - tournamentState.matches.length);
     if (extraMatches.length > remainingCapacity) {
-      alert(`There is only room for ${remainingCapacity} more scheduled match${remainingCapacity === 1 ? '' : 'es'} within the configured court timings.`);
+      alert(`There is only room for ${remainingCapacity} more scheduled match${remainingCapacity === 1 ? '' : 'es'} within the configured court timings. At least ${extraMatches.length} are needed to give every player an extra match while keeping match totals within 1 of each other.`);
       return;
     }
 
@@ -1329,12 +1499,25 @@
       status: 'PENDING'
     }));
 
-    tournamentState.matches = schedulePendingMatches(newMatches, tournamentState.matches);
+    const beforeCount = tournamentState.matches.length;
+    const scheduledMatches = schedulePendingMatches(newMatches, tournamentState.matches);
+    if (scheduledMatches.length - beforeCount < newMatches.length) {
+      const scheduledExtra = scheduledMatches.length - beforeCount;
+      alert(`Only ${scheduledExtra} of ${newMatches.length} required extra matches fit into the remaining court schedule. No partial extra round was added.`);
+      return;
+    }
+
+    tournamentState.matches = scheduledMatches;
     saveToLocalStorage();
     renderMatchesPerPlayerSummary();
     renderFixturesList();
     checkTournamentCompletion();
-    alert(`Added ${newMatches.length} extra match${newMatches.length === 1 ? '' : 'es'}. Every player has exactly 1 additional match. New partners and opponents are preferred where available.`);
+
+    const counts = getPlayerMatchCounts();
+    const values = activePlayers.map(p => counts[p.id] || 0);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    alert(`Added ${newMatches.length} extra match${newMatches.length === 1 ? '' : 'es'}. Every active player received an extra match, and final match totals are ${min}–${max} per player.`);
   }
 
   function renderFixturesList() {
@@ -1964,11 +2147,170 @@
     XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
 
     const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-    XLSX.writeFile(wb, `${cleanName}_v1.2_Report.xlsx`);
+    XLSX.writeFile(wb, `${cleanName}_v1.5_Report.xlsx`);
+  }
+
+  // ================= SHARED TOURNAMENT SESSION SYNC =================
+  // The app continues to work offline with localStorage. When served by the included
+  // Node server, this layer synchronizes the same tournament session across devices.
+  let sharedSessionId = '';
+  let sharedRevision = 0;
+  let sharedEventSource = null;
+  let sharedSaveTimer = null;
+  let lastSharedState = null;
+  let sharedSyncReady = false;
+
+  function getSharedSessionId() {
+    const params = new URLSearchParams(window.location.search);
+    let id = params.get('session') || localStorage.getItem('smashmaster_shared_session');
+    if (!id) {
+      id = Math.random().toString(36).slice(2, 10).toUpperCase();
+      localStorage.setItem('smashmaster_shared_session', id);
+    }
+    return id;
+  }
+
+  function setSharedStatus(text, css = 'text-slate-500') {
+    const el = document.getElementById('sharedSyncStatus');
+    if (!el) return;
+    el.className = `text-[9px] font-bold ${css}`;
+    el.innerText = text;
+  }
+
+  function sharedApiAvailable() {
+    return window.location.protocol === 'http:' || window.location.protocol === 'https:';
+  }
+
+  async function initializeSharedSync() {
+    sharedSessionId = getSharedSessionId();
+    const input = document.getElementById('sharedSessionId');
+    if (input) input.value = sharedSessionId;
+
+    if (!sharedApiAvailable()) {
+      setSharedStatus('Local only');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/session/${encodeURIComponent(sharedSessionId)}`);
+      if (!response.ok) throw new Error('Shared server unavailable');
+      const payload = await response.json();
+      if (payload && payload.state) {
+        tournamentState = payload.state;
+        sharedRevision = Number(payload.revision) || 0;
+        lastSharedState = JSON.parse(JSON.stringify(tournamentState));
+        document.getElementById('displayTournamentName').innerText = tournamentState.name;
+        document.getElementById('topHeaderTitle').innerText = tournamentState.name;
+        renderCourtInputs();
+        updatePlayerListUI();
+        calculateCourtEstimates();
+        renderFixturesList();
+        renderStandingsData();
+        renderSearchChips();
+        checkTournamentCompletion();
+      } else {
+        await pushSharedState();
+      }
+      sharedSyncReady = true;
+      setSharedStatus('Live sync', 'text-brand-400');
+      connectSharedEvents();
+    } catch (err) {
+      sharedSyncReady = false;
+      setSharedStatus('Local only');
+      console.warn('Shared sync unavailable:', err.message);
+    }
+  }
+
+  function connectSharedEvents() {
+    if (sharedEventSource) sharedEventSource.close();
+    sharedEventSource = new EventSource(`/api/session/${encodeURIComponent(sharedSessionId)}/events`);
+    sharedEventSource.onmessage = event => {
+      try {
+        const payload = JSON.parse(event.data);
+        if (!payload.state || Number(payload.revision) <= sharedRevision) return;
+        tournamentState = payload.state;
+        sharedRevision = Number(payload.revision);
+        lastSharedState = JSON.parse(JSON.stringify(tournamentState));
+        localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
+        renderCourtInputs();
+        updatePlayerListUI();
+        calculateCourtEstimates();
+        renderFixturesList();
+        renderStandingsData();
+        renderSearchChips();
+        checkTournamentCompletion();
+      } catch (err) {
+        console.warn('Invalid shared update:', err);
+      }
+    };
+    sharedEventSource.onerror = () => setSharedStatus('Reconnecting…', 'text-amber-400');
+  }
+
+  function mergeSharedStates(remote, local, base) {
+    const merged = JSON.parse(JSON.stringify(remote || local));
+    const entityMerge = (remoteItems = [], localItems = [], baseItems = []) => {
+      const map = new Map(remoteItems.map(x => [x.id, x]));
+      const baseMap = new Map(baseItems.map(x => [x.id, x]));
+      localItems.forEach(localItem => {
+        const remoteItem = map.get(localItem.id);
+        const baseItem = baseMap.get(localItem.id);
+        if (!remoteItem || JSON.stringify(localItem) !== JSON.stringify(baseItem)) map.set(localItem.id, localItem);
+      });
+      return [...map.values()];
+    };
+    merged.players = entityMerge(remote.players, local.players, base?.players || []);
+    merged.matches = entityMerge(remote.matches, local.matches, base?.matches || []);
+    merged.courts = local.courts && JSON.stringify(local.courts) !== JSON.stringify(base?.courts) ? local.courts : remote.courts;
+    ['name', 'date', 'isGenerated', 'version'].forEach(key => {
+      if (JSON.stringify(local[key]) !== JSON.stringify(base?.[key])) merged[key] = local[key];
+    });
+    return merged;
+  }
+
+  async function pushSharedState() {
+    if (!sharedApiAvailable() || !sharedSessionId) return;
+    const body = { state: tournamentState, revision: sharedRevision };
+    let response = await fetch(`/api/session/${encodeURIComponent(sharedSessionId)}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    if (response.status === 409) {
+      const conflict = await response.json();
+      tournamentState = mergeSharedStates(conflict.state, tournamentState, lastSharedState);
+      sharedRevision = Number(conflict.revision) || 0;
+      response = await fetch(`/api/session/${encodeURIComponent(sharedSessionId)}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ state: tournamentState, revision: sharedRevision })
+      });
+    }
+    if (!response.ok) throw new Error(`Sync failed (${response.status})`);
+    const payload = await response.json();
+    sharedRevision = Number(payload.revision) || sharedRevision;
+    lastSharedState = JSON.parse(JSON.stringify(tournamentState));
+    setSharedStatus('Live sync', 'text-brand-400');
+  }
+
+  function scheduleSharedSave() {
+    if (!sharedSyncReady) return;
+    clearTimeout(sharedSaveTimer);
+    sharedSaveTimer = setTimeout(() => {
+      pushSharedState().catch(err => {
+        setSharedStatus('Sync error', 'text-red-400');
+        console.warn(err);
+      });
+    }, 120);
+  }
+
+  function copySharedSessionLink() {
+    const url = `${window.location.origin}${window.location.pathname}?session=${encodeURIComponent(sharedSessionId)}`;
+    navigator.clipboard?.writeText(url).then(() => {
+      setSharedStatus('Link copied', 'text-brand-400');
+      setTimeout(() => setSharedStatus(sharedSyncReady ? 'Live sync' : 'Local only', sharedSyncReady ? 'text-brand-400' : 'text-slate-500'), 1500);
+    }).catch(() => prompt('Copy this shared tournament link:', url));
   }
 
   function saveToLocalStorage() {
     localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
+    scheduleSharedSave();
   }
 
   function loadFromLocalStorage() {
@@ -1976,6 +2318,7 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
+        tournamentState.version = '1.5';
         document.getElementById('displayTournamentName').innerText = tournamentState.name;
         document.getElementById('topHeaderTitle').innerText = tournamentState.name;
       } catch (e) {
@@ -1988,7 +2331,7 @@
     if (confirm("Reset tournament? Current data will be cleared.")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '1.2',
+        version: '1.5',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
         courts: [
