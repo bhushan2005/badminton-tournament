@@ -90,7 +90,7 @@
     .animate-sheet-up {
       animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-  
+
     #firstLoadSplash { opacity: 1; transition: opacity .35s ease; }
     #firstLoadSplash.splash-hide { opacity: 0; pointer-events: none; }
     .badminton-racket { width: 52px; height: 72px; transform: rotate(-28deg); animation: racket-left 1.5s ease-in-out infinite alternate; }
@@ -104,7 +104,7 @@
     @keyframes shuttle-flight { 0% { left:22%; top:68%; transform:translate(-50%,-50%) rotate(-25deg); } 50% { left:50%; top:28%; transform:translate(-50%,-50%) rotate(8deg); } 100% { left:78%; top:68%; transform:translate(-50%,-50%) rotate(25deg); } }
     @keyframes racket-left { from { transform:rotate(-28deg); } to { transform:rotate(-12deg); } }
     @keyframes racket-right { from { transform:rotate(28deg) scaleX(-1); } to { transform:rotate(12deg) scaleX(-1); } }
-</style>
+  </style>
 </head>
 
 <body class="h-full flex flex-col bg-slate-950 text-slate-100 overflow-x-hidden select-none">
@@ -420,16 +420,16 @@
       <div class="overflow-x-auto rounded-lg border border-slate-800">
         <table class="w-full min-w-[620px] text-[10px]">
           <thead class="bg-slate-950 text-slate-500 uppercase font-bold">
-            <tr>
-              <th class="px-2 py-2 text-left">#</th>
-              <th class="px-2 py-2 text-left">Player</th>
-              <th class="px-2 py-2 text-center">Played</th>
-              <th class="px-2 py-2 text-center">W</th>
-              <th class="px-2 py-2 text-center">L</th>
-              <th class="px-2 py-2 text-center">Pts Won</th>
-              <th class="px-2 py-2 text-center">Diff</th>
-              <th class="px-2 py-2 text-center">Tournament Pts</th>
-            </tr>
+          <tr>
+            <th class="px-2 py-2 text-left">#</th>
+            <th class="px-2 py-2 text-left">Player</th>
+            <th class="px-2 py-2 text-center">Played</th>
+            <th class="px-2 py-2 text-center">W</th>
+            <th class="px-2 py-2 text-center">L</th>
+            <th class="px-2 py-2 text-center">Pts Won</th>
+            <th class="px-2 py-2 text-center">Diff</th>
+            <th class="px-2 py-2 text-center">Tournament Pts</th>
+          </tr>
           </thead>
           <tbody id="mobileLeaderboardCards" class="divide-y divide-slate-800"></tbody>
         </table>
@@ -652,6 +652,17 @@
   ];
 
   // Get Today's Date String (YYYY-MM-DD)
+  function formatTournamentDate(dateStr) {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const [yyyy, mm, dd] = parts;
+    const date = new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+    if (Number.isNaN(date.getTime())) return dateStr;
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${String(dd).padStart(2, '0')}-${months[date.getMonth()]}-${String(yyyy).slice(-2)}`;
+  }
+
   function getTodayISO() {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -1218,8 +1229,8 @@
       const courtMatches = existingMatches.filter(m => m.courtId === court.id);
       courtMatches.forEach(match => {
         courtClock[court.id] = Math.max(
-          courtClock[court.id],
-          toMinutes(match.startTime || court.startTime) + REST_SLOT_MINUTES
+                courtClock[court.id],
+                toMinutes(match.startTime || court.startTime) + REST_SLOT_MINUTES
         );
       });
     });
@@ -1230,9 +1241,9 @@
 
     function playerHistory(playerId, source) {
       return source
-        .filter(m => [...m.team1, ...m.team2].includes(playerId) && m.startTime)
-        .map(m => toMinutes(m.startTime))
-        .sort((a, b) => a - b);
+              .filter(m => [...m.team1, ...m.team2].includes(playerId) && m.startTime)
+              .map(m => toMinutes(m.startTime))
+              .sort((a, b) => a - b);
     }
 
     function consecutiveBefore(playerId, start, source) {
@@ -1279,8 +1290,8 @@
         restGaps.push(restGap);
         const previousConsecutive = consecutiveBefore(playerId, start, source);
         const newConsecutive = lastStart === start - REST_SLOT_MINUTES
-          ? previousConsecutive + 1
-          : 1;
+                ? previousConsecutive + 1
+                : 1;
 
         maxConsecutive = Math.max(maxConsecutive, newConsecutive);
         if (restGap === 0) backToBackPlayers++;
@@ -1344,17 +1355,17 @@
           const minPlayerCount = Math.min(...players.map(id => currentCounts[id] || 0));
 
           const score =
-            minRest * 10000 +
-            totalRest * 100 +
-            (evaluation.backToBackPlayers === 0 ? 5000 : 0) -
-            evaluation.backToBackPlayers * 3000 -
-            evaluation.shortRestPlayers * 1500 -
-            Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
-            maxPlayerCount * 5;
+                  minRest * 10000 +
+                  totalRest * 100 +
+                  (evaluation.backToBackPlayers === 0 ? 5000 : 0) -
+                  evaluation.backToBackPlayers * 3000 -
+                  evaluation.shortRestPlayers * 1500 -
+                  Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
+                  maxPlayerCount * 5;
 
           if (!bestSlot ||
-              start < bestSlot.start ||
-              (start === bestSlot.start && score > bestSlot.score)) {
+                  start < bestSlot.start ||
+                  (start === bestSlot.start && score > bestSlot.score)) {
             bestSlot = { court, pendingIndex: i, start, score };
           }
         }
@@ -1390,14 +1401,14 @@
             const finiteRest = evaluation.restGaps.filter(Number.isFinite);
             const minRest = finiteRest.length ? Math.min(...finiteRest) : 999;
             const score =
-              -evaluation.maxConsecutive * 100000 +
-              minRest * 1000 +
-              evaluation.totalFiniteRest * 10 -
-              evaluation.backToBackPlayers * 100;
+                    -evaluation.maxConsecutive * 100000 +
+                    minRest * 1000 +
+                    evaluation.totalFiniteRest * 10 -
+                    evaluation.backToBackPlayers * 100;
 
             if (!fallbackSlot ||
-                start < fallbackSlot.start ||
-                (start === fallbackSlot.start && score > fallbackSlot.score)) {
+                    start < fallbackSlot.start ||
+                    (start === fallbackSlot.start && score > fallbackSlot.score)) {
               fallbackSlot = { court, pendingIndex: i, start, score };
             }
           }
@@ -2041,7 +2052,7 @@
 
   function updateWhatsAppExportText() {
     let text = `🏸 *${tournamentState.name.toUpperCase()}* 🏸\n`;
-    text += `📅 Date: ${tournamentState.date}\n\n`;
+    text += `📅 Date: ${formatTournamentDate(tournamentState.date)}\n\n`;
     text += `🏆 *MATCH SCHEDULE* 🏆\n`;
 
     tournamentState.matches.forEach(m => {
@@ -2205,7 +2216,7 @@
       ["TOURNAMENT SUMMARY & PODIUM WINNERS"],
       [""],
       ["Tournament Name", tournamentState.name],
-      ["Date", tournamentState.date],
+      ["Date", formatTournamentDate(tournamentState.date)],
       ["Total Courts", tournamentState.courts.length],
       ["Total Players", tournamentState.players.length],
       ["Total Matches Scheduled", totalMatches],
