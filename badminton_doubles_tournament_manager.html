@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v1.8 - Doubles Badminton Manager</title>
+  <title>SmashMaster v1.9 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -125,6 +125,7 @@
     <div class="shuttle-animate absolute left-1/2 top-1/2">
       <div class="shuttle-cork"></div><div class="shuttle-feathers"></div>
     </div>
+    <div class="absolute inset-x-0 top-[-34px] text-center text-sm font-black font-heading text-white tracking-tight px-2" id="splashTournamentName">Shuttle Smashers Showdown</div>
     <div class="absolute inset-x-0 bottom-[-28px] text-center text-[10px] font-black tracking-[0.28em] text-slate-400 uppercase">SmashMaster</div>
   </div>
 </div>
@@ -140,10 +141,10 @@
       </div>
       <div class="min-w-0">
         <div class="flex items-center gap-1.5">
-          <h1 id="topHeaderTitle" class="text-sm font-extrabold font-heading text-white truncate leading-tight">
+          <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v1.8</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v1.9</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -180,7 +181,7 @@
           <i data-lucide="sparkles" class="w-3 h-3"></i> Shuffle Name
         </button>
       </div>
-      <h2 id="displayTournamentName" class="text-lg font-black font-heading text-white tracking-tight leading-snug">
+      <h2 id="displayTournamentName" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-lg font-black font-heading text-white tracking-tight leading-snug cursor-pointer">
         Shuttle Smashers Showdown
       </h2>
     </div>
@@ -540,6 +541,20 @@
       </div>
     </div>
 
+    <!-- About -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="info" class="w-4 h-4 text-brand-400"></i>
+        <h3 class="text-xs font-bold font-heading text-white">About</h3>
+      </div>
+      <div class="text-[11px] text-slate-300 space-y-1.5">
+        <p><span class="text-slate-500">Author:</span> <span class="font-semibold text-white">Bhushan</span></p>
+        <p><span class="text-slate-500">Feedback:</span> <a href="mailto:bhushan2005@gmail.com" class="text-brand-400 hover:underline">bhushan2005@gmail.com</a></p>
+        <p>If you liked the app and wish to donate to keep the interest going, thank you! 🏸❤️</p>
+        <p><span class="text-slate-500">Donation UPI:</span> <span class="font-mono font-semibold text-brand-300">bhushan2005@okicici</span></p>
+      </div>
+    </div>
+
   </section>
 
 </main>
@@ -646,7 +661,7 @@
   }
 
   let tournamentState = {
-    version: '1.8',
+    version: '1.9',
     name: AMUSING_NAMES[0],
     date: getTodayISO(),
     courts: [
@@ -667,13 +682,10 @@
     const splash = document.getElementById('firstLoadSplash');
     const splashKey = 'smashmaster_first_load_animation_seen';
     if (localStorage.getItem(splashKey) === '1') {
-      splash.remove();
+      splash.classList.add('splash-hide');
     } else {
       localStorage.setItem(splashKey, '1');
-      setTimeout(() => {
-        splash.classList.add('splash-hide');
-        setTimeout(() => splash.remove(), 400);
-      }, 3000);
+      setTimeout(() => splash.classList.add('splash-hide'), 3000);
     }
 
     loadFromLocalStorage();
@@ -694,11 +706,23 @@
     initializeSharedSync();
   };
 
+  function playBadmintonAnimation() {
+    const splash = document.getElementById('firstLoadSplash');
+    const splashName = document.getElementById('splashTournamentName');
+    if (!splash) return;
+    if (splashName) splashName.innerText = tournamentState.name || 'Shuttle Smashers Showdown';
+    splash.classList.remove('splash-hide');
+    void splash.offsetWidth;
+    setTimeout(() => splash.classList.add('splash-hide'), 3000);
+  }
+
   function generateAmusingName() {
     const idx = Math.floor(Math.random() * AMUSING_NAMES.length);
     tournamentState.name = AMUSING_NAMES[idx];
     document.getElementById('displayTournamentName').innerText = tournamentState.name;
     document.getElementById('topHeaderTitle').innerText = tournamentState.name;
+    const splashName = document.getElementById('splashTournamentName');
+    if (splashName) splashName.innerText = tournamentState.name;
     saveToLocalStorage();
   }
 
@@ -953,6 +977,23 @@
     saveToLocalStorage();
   }
 
+  async function logTournamentStart() {
+    if (!sharedApiAvailable() || !sharedSessionId) return;
+    try {
+      await fetch(`/api/tournament-start/${encodeURIComponent(sharedSessionId)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tournamentName: tournamentState.name,
+          tournamentDate: tournamentState.date,
+          players: tournamentState.players.filter(p => !p.retired).map(p => ({ name: p.name, gender: p.gender }))
+        })
+      });
+    } catch (err) {
+      console.warn('Could not log tournament start:', err.message);
+    }
+  }
+
   function generateTournamentFixtures() {
     const activePlayers = tournamentState.players.filter(p => !p.retired);
     if (activePlayers.length < 4) {
@@ -966,8 +1007,10 @@
     }
 
     tournamentState.matches = buildFixturesForPlayers(activePlayers, []);
+    const wasAlreadyGenerated = tournamentState.isGenerated;
     tournamentState.isGenerated = true;
     saveToLocalStorage();
+    if (!wasAlreadyGenerated) logTournamentStart();
 
     switchMobileView('viewFixtures');
   }
@@ -1705,14 +1748,14 @@
               <!-- Team 1 Controls -->
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
                 <button onclick="stepMatchScore('${m.id}', 1, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
-                <input type="number" id="txtS1_${m.id}" value="${s1}" min="0" max="30" class="w-10 text-center font-mono font-black text-xs text-brand-400 bg-transparent focus:outline-none">
+                <input type="number" id="txtS1_${m.id}" value="${s1}" min="0" max="11" class="w-10 text-center font-mono font-black text-xs text-brand-400 bg-transparent focus:outline-none">
                 <button onclick="stepMatchScore('${m.id}', 1, 1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
               </div>
 
               <!-- Team 2 Controls -->
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
                 <button onclick="stepMatchScore('${m.id}', 2, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
-                <input type="number" id="txtS2_${m.id}" value="${s2}" min="0" max="30" class="w-10 text-center font-mono font-black text-xs text-brand-400 bg-transparent focus:outline-none">
+                <input type="number" id="txtS2_${m.id}" value="${s2}" min="0" max="11" class="w-10 text-center font-mono font-black text-xs text-brand-400 bg-transparent focus:outline-none">
                 <button onclick="stepMatchScore('${m.id}', 2, 1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
               </div>
             </div>
@@ -1735,7 +1778,7 @@
     const inputEl = document.getElementById(`txtS${teamNum}_${mId}`);
     if (!inputEl) return;
     let curr = parseInt(inputEl.value) || 0;
-    curr = Math.max(0, Math.min(30, curr + delta));
+    curr = Math.max(0, Math.min(11, curr + delta));
     inputEl.value = curr;
   }
 
@@ -1750,8 +1793,13 @@
     const s1 = parseInt(txt1.value);
     const s2 = parseInt(txt2.value);
 
-    if (isNaN(s1) || isNaN(s2)) {
-      alert("Please enter valid scores!");
+    if (isNaN(s1) || isNaN(s2) || s1 < 0 || s2 < 0 || s1 > 11 || s2 > 11) {
+      alert("Scores must be between 0 and 11.");
+      return;
+    }
+
+    if ((s1 === 11 && s2 === 11) || (s1 !== 11 && s2 !== 11)) {
+      alert("For a completed match, exactly one team must have 11 points.");
       return;
     }
 
@@ -2237,7 +2285,7 @@
     XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
 
     const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-    XLSX.writeFile(wb, `${cleanName}_v1.8_Report.xlsx`);
+    XLSX.writeFile(wb, `${cleanName}_v1.9_Report.xlsx`);
   }
 
   // ================= SHARED TOURNAMENT SESSION SYNC =================
@@ -2411,6 +2459,8 @@
         tournamentState.version = '1.8';
         document.getElementById('displayTournamentName').innerText = tournamentState.name;
         document.getElementById('topHeaderTitle').innerText = tournamentState.name;
+        const splashName = document.getElementById('splashTournamentName');
+        if (splashName) splashName.innerText = tournamentState.name;
       } catch (e) {
         console.error("Failed to load state", e);
       }
@@ -2421,7 +2471,7 @@
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '1.8',
+        version: '1.9',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
         courts: [

@@ -90,6 +90,48 @@ const server = http.createServer((req, res) => {
     return serveApp(res);
   }
 
+  const startMatch = pathname.match(/^\/api\/tournament-start\/([^/]+)$/);
+  if (startMatch && req.method === 'POST') {
+    const sessionId = decodeURIComponent(startMatch[1]);
+    if (!validSessionId(sessionId)) return sendJson(res, 400, {error: 'Invalid session ID'});
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk;
+      if (body.length > 512 * 1024) req.destroy();
+    });
+    req.on('end', () => {
+      try {
+        const input = JSON.parse(body || '{}');
+        const tournamentName = String(input.tournamentName || 'Unnamed Tournament').replace(/[\r\n]+/g, ' ').slice(0, 200);
+        const tournamentDate = String(input.tournamentDate || '').slice(0, 20);
+        const players = Array.isArray(input.players) ? input.players.map(p => ({
+          name: String(p?.name || 'Unknown').replace(/[\r\n]+/g, ' ').slice(0, 120),
+          gender: String(p?.gender || '').slice(0, 20)
+        })) : [];
+        const timestamp = new Date().toISOString();
+        const ip = (req.headers['x-forwarded-for'] ? String(req.headers['x-forwarded-for']).split(',')[0].trim() : (req.socket.remoteAddress || 'unknown'));
+        const lines = [
+          `\n=== TOURNAMENT STARTED ===`,
+          `Time (UTC): ${timestamp}`,
+          `IP: ${ip}`,
+          `Session: ${sessionId}`,
+          `Tournament: ${tournamentName}`,
+          `Tournament Date: ${tournamentDate || 'Not specified'}`,
+          `Players (${players.length}):`,
+          ...players.map((p, i) => `  ${i + 1}. ${p.name}${p.gender ? ` (${p.gender})` : ''}`),
+          `=== END TOURNAMENT START ===\n`
+        ].join('\n');
+        fs.appendFile(ACCESS_LOG_FILE, lines, err => {
+          if (err) console.error('Could not write tournament start log:', err.message);
+        });
+        return sendJson(res, 200, {ok: true});
+      } catch (err) {
+        return sendJson(res, 400, {error: 'Invalid JSON'});
+      }
+    });
+    return;
+  }
+
   const match = pathname.match(/^\/api\/session\/([^/]+)(\/events)?$/);
   if (!match) {
     res.writeHead(404, {'Content-Type': 'text/plain; charset=utf-8'});
@@ -158,6 +200,6 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`SmashMaster v1.5 shared server running on http://localhost:${PORT}`);
+  console.log(`SmashMaster v1.9 shared server running on http://localhost:${PORT}`);
   console.log(`For other devices on the same network, use this computer's LAN IP with port ${PORT}.`);
 });

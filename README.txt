@@ -1,29 +1,33 @@
-SmashMaster v1.8 - Shared Doubles Badminton Tournament Manager
+SmashMaster v1.9 - Shared Doubles Badminton Tournament Manager
 
-Files (fixed names):
+FILES (fixed filenames)
 - badminton_doubles_tournament_manager.html
 - server.js
 - README.txt
-- tournament_sessions.json (created automatically when shared sessions are used)
-- access.log (created automatically by the server when the application is accessed)
+- access.log (created automatically by the server)
+- tournament_sessions.json (created automatically by the server)
 
-Run locally:
-1. Keep the HTML file and server.js in the same folder.
-2. Install Node.js if needed.
-3. Open a terminal in that folder.
-4. Run: node server.js
-5. Open: http://localhost:8080/
+RUNNING THE SHARED VERSION
+1. Put badminton_doubles_tournament_manager.html and server.js in the same folder.
+2. Open a terminal in that folder.
+3. Run: node server.js
+4. Open: http://localhost:8080/
+5. Use the Shared Tournament Session link to open the same tournament on multiple devices.
+6. For other devices on the same network, use the server computer's LAN IP with port 8080.
 
-For use by other devices on the same network, open the host computer's LAN IP with port 8080, for example http://192.168.1.10:8080/.
+v1.9 CHANGES
+- Clicking the tournament name plays the 3-second badminton animation and shows the tournament name in the animation.
+- Match scores are restricted to 0-11; when saving a completed match exactly one team must have 11.
+- Added About section with author, feedback email and donation UPI details.
+- Server access.log records normal HTTP access details.
+- When a tournament is started for the first time, access.log also records UTC start time, IP, session ID, tournament name, tournament date and player names.
+- Duplicate player names are blocked for both normal and late-player additions.
+- Reset Tournament remains at the end of the last tab and requires confirmation.
+- First browser load has a 3-second badminton animation.
+- Existing shared-session, scheduling, rest, court timing, extra-match and export features are retained.
 
-v1.8 changes:
-- Duplicate player names are rejected for both normal and late-player additions. Name matching ignores case and repeated/leading/trailing spaces.
-- Reset Tournament moved to the last tab (Export & History) and protected by a stronger confirmation prompt.
-- A badminton-themed animation plays for 3 seconds the first time the app is opened in a browser. It is skipped on later loads in that browser.
-- The application code is kept in the HTML because browser-side JavaScript must be delivered to the browser to run. The client code is minified/obfuscated where practical, but this is deterrence, not true source-code protection. Anyone receiving the application can still inspect downloaded browser code.
-- server.js now records application/API access in access.log with UTC timestamp, IP address, HTTP method, path and user-agent. This identifies the connecting device/network address, not a verified person.
+SERVER LOGGING
+The server creates access.log automatically. It records requests with timestamp, IP, method, path and browser user-agent. A separate TOURNAMENT STARTED entry is written when fixtures are generated for a tournament that has not previously been generated in that browser/session state.
 
-Important:
-- access.log is a normal text file in the same server folder.
-- The server does not provide user authentication, so the log cannot prove which individual was using a device.
-- Shared sessions remain accessible to anyone who has the session link.
+IMPORTANT
+The browser must receive JavaScript to run the application, so client-side JavaScript cannot be made completely secret. Real protection of proprietary logic requires moving sensitive logic to the server.
