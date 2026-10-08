@@ -7,8 +7,18 @@ const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || '0.0.0.0';
 const APP_FILE = path.join(__dirname, 'badminton_doubles_tournament_manager.html');
 const DATA_FILE = path.join(__dirname, 'tournament_sessions.json');
+const ACCESS_LOG_FILE = path.join(__dirname, 'access.log');
 const sessions = new Map();
 const subscribers = new Map();
+
+function logAccess(req, parsed) {
+  const forwarded = req.headers['x-forwarded-for'];
+  const ip = (forwarded ? String(forwarded).split(',')[0].trim() : (req.socket.remoteAddress || 'unknown'));
+  const timestamp = new Date().toISOString();
+  const userAgent = String(req.headers['user-agent'] || 'unknown').replace(/[\r\n]+/g, ' ').slice(0, 300);
+  const line = `${timestamp}\tIP=${ip}\tMETHOD=${req.method}\tPATH=${parsed.pathname}\tUA=${userAgent}\n`;
+  fs.appendFile(ACCESS_LOG_FILE, line, err => { if (err) console.error('Could not write access.log:', err.message); });
+}
 
 try {
   if (fs.existsSync(DATA_FILE)) {
@@ -64,6 +74,8 @@ function serveApp(res) {
 const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
   const pathname = parsed.pathname || '/';
+
+  logAccess(req, parsed);
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
