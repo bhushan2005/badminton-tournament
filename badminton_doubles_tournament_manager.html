@@ -63,12 +63,28 @@
     @keyframes matchSlideToBottom { 0% { opacity: .35; transform: translateY(-110px) scale(.97); box-shadow: 0 0 0 rgba(16,185,129,0); } 55% { opacity: 1; transform: translateY(12px) scale(1.01); box-shadow: 0 0 24px rgba(16,185,129,.42); } 78% { transform: translateY(-4px) scale(1); } 100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(16,185,129,0); } }
     .match-tile-motion { animation: matchSlideToBottom 3s cubic-bezier(.22,.7,.25,1) both; position:relative; z-index:5; will-change:transform; }
     .match-tile-flash { outline: 2px solid var(--completed-match-color, #7dd3fc); outline-offset: 2px; box-shadow: 0 0 22px color-mix(in srgb, var(--completed-match-color, #7dd3fc) 55%, transparent) !important; }
-    .color-picker { width: 28px; height: 24px; padding: 1px; border: 1px solid #475569; border-radius: 6px; background: #0f172a; cursor: pointer; }
+    .color-picker { appearance: none; -webkit-appearance: none; width: 34px; height: 34px; min-width: 34px; padding: 0; border: 2px solid #cbd5e1; border-radius: 50% !important; overflow: hidden; background: transparent; cursor: pointer; }
+    .color-picker::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+    .color-picker::-webkit-color-swatch { border: 0; border-radius: 50%; }
+    .color-picker::-moz-color-swatch { border: 0; border-radius: 50%; }
     .theme-accent { accent-color: var(--app-accent, #10b981); }
-    .bg-brand-500, .bg-emerald-500 { background-color: var(--app-accent, #10b981) !important; }
-    .bg-brand-600 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 82%, #000) !important; }
-    .text-brand-400, .text-brand-300, .text-emerald-400, .text-emerald-300 { color: var(--app-accent, #10b981) !important; }
-    .border-brand-500, .border-emerald-500, .border-emerald-600 { border-color: var(--app-accent, #10b981) !important; }
+    .bg-brand-500, .bg-brand-600, .bg-emerald-500, .bg-emerald-600 { background-color: var(--app-accent, #10b981) !important; }
+    .bg-brand-600, .bg-emerald-600 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 82%, #000) !important; }
+    .text-brand-400, .text-brand-300, .text-emerald-400, .text-emerald-300, .text-emerald-500 { color: var(--app-accent, #10b981) !important; }
+    .border-brand-500, .border-brand-800, .border-emerald-500, .border-emerald-600 { border-color: var(--app-accent, #10b981) !important; }
+    .mobile-tab-active, .mobile-tab-active i, .mobile-tab-active span { color: var(--app-accent, #10b981) !important; }
+    .mobile-tab-active::after { background: var(--app-accent, #10b981) !important; }
+    .hover\:text-brand-300:hover, .hover\:text-brand-400:hover, .hover\:text-emerald-300:hover, .hover\:text-emerald-400:hover { color: var(--app-accent, #10b981) !important; }
+    .bg-brand-950, .bg-emerald-950 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 18%, #020617) !important; }
+    .text-teal-400, .text-teal-300, .text-cyan-400 { color: var(--app-accent, #10b981) !important; }
+    .from-brand-500, .from-emerald-500 { --tw-gradient-from: var(--app-accent, #10b981) var(--tw-gradient-from-position) !important; --tw-gradient-to: color-mix(in srgb, var(--app-accent, #10b981) 0%, transparent) var(--tw-gradient-to-position) !important; }
+    .to-teal-500, .to-emerald-500 { --tw-gradient-to: color-mix(in srgb, var(--app-accent, #10b981) 72%, #0f766e) var(--tw-gradient-to-position) !important; }
+    button[class*="from-brand-500"], button[class*="from-emerald-500"] { background-image: linear-gradient(to right, var(--app-accent, #10b981), color-mix(in srgb, var(--app-accent, #10b981) 72%, #0f766e)) !important; }
+    .shadow-brand-500\/20 { --tw-shadow-color: color-mix(in srgb, var(--app-accent, #10b981) 20%, transparent) !important; }
+    .ring-brand-500, .focus\:border-brand-500:focus { --tw-ring-color: var(--app-accent, #10b981) !important; border-color: var(--app-accent, #10b981) !important; }
+    .text-teal-400, .text-teal-300 { color: var(--app-accent, #10b981) !important; }
+    .border-emerald-500\/40, .border-emerald-500\/30 { border-color: color-mix(in srgb, var(--app-accent, #10b981) 40%, transparent) !important; }
+    .bg-emerald-500\/10, .bg-emerald-500\/20 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 15%, transparent) !important; }
     .completed-match-compact { padding: .35rem .55rem !important; border-radius: .55rem !important; }
     .completed-match-compact > div:first-child { padding-bottom: .2rem !important; }
     .completed-match-compact > div:nth-child(2) { gap: .15rem !important; font-size: 10px !important; }
@@ -178,14 +194,6 @@
       </div>
     </div>
 
-    <!-- Quick Action Buttons -->
-    <div class="flex items-center gap-1 shrink-0">
-      <button onclick="exportComprehensiveExcel()" title="Export Excel Report" class="h-8 px-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg font-bold text-[11px] flex items-center gap-1 transition-all active:scale-95">
-        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
-        <span>Excel</span>
-      </button>
-
-    </div>
 
   </div>
 </header>
@@ -229,11 +237,6 @@
 
       <!-- Court Cards List -->
       <div id="courtListContainer" class="space-y-2"></div>
-      <div class="grid grid-cols-2 gap-2 rounded-lg border border-slate-800 bg-slate-950/70 p-2">
-        <label class="flex items-center justify-between gap-2 text-[10px] text-slate-300">App green layout <input id="appThemeColorPicker" class="color-picker" type="color" value="#10b981" onchange="updateThemeColor(this.value)"></label>
-        <label class="flex items-center justify-between gap-2 text-[10px] text-slate-300">Completed matches <input id="completedColorPicker" class="color-picker" type="color" value="#7dd3fc" onchange="updateCompletedColor(this.value)"></label>
-      </div>
-
       <!-- Mobile Capacity Estimate Banner -->
       <div class="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5 text-[11px] space-y-1">
         <div class="flex justify-between text-slate-300">
@@ -485,6 +488,18 @@
       <button onclick="exportComprehensiveExcel()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
         <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Excel Report (.xlsx)
       </button>
+    </div>
+
+    <!-- App appearance settings -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-3">
+      <div>
+        <h3 class="text-xs font-bold font-heading text-white">App color scheme</h3>
+        <p class="text-[10px] text-slate-400 mt-1">Choose the main accent color used across buttons, text highlights and navigation.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="flex items-center gap-2 text-[10px] text-slate-300">App color scheme <input id="appThemeColorPicker" aria-label="App color scheme" title="App color scheme" class="color-picker" type="color" value="#10b981" onchange="updateThemeColor(this.value)"></label>
+        <label class="flex items-center gap-2 text-[10px] text-slate-300">Completed matches <input id="completedColorPicker" aria-label="Completed matches color" title="Completed matches color" class="color-picker" type="color" value="#7dd3fc" onchange="updateCompletedColor(this.value)"></label>
+      </div>
     </div>
 
     <!-- JSON Backup Export & Import Card -->
@@ -857,6 +872,7 @@
   function updateThemeColor(color) {
     tournamentState.themeColor = color;
     document.documentElement.style.setProperty('--app-accent', color);
+    document.documentElement.style.setProperty('--app-accent-contrast', color);
     const picker = document.getElementById('appThemeColorPicker'); if (picker) picker.value = color;
     saveToLocalStorage(); renderCourtInputs(); renderFixturesList();
   }
@@ -1433,10 +1449,18 @@
             Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
             maxPlayerCount * 5;
 
-          if (!bestSlot ||
-              start < bestSlot.start ||
-              (start === bestSlot.start && score > bestSlot.score)) {
-            bestSlot = { court, pendingIndex: i, start, score };
+          const courtScheduledCount = scheduled.filter(m => m.courtId === court.id).length;
+          const courtCapacity = Math.max(1, Math.floor(getCourtDurationMinutes(court) / REST_SLOT_MINUTES));
+          const utilization = courtScheduledCount / courtCapacity;
+          const bestCourt = bestSlot && bestSlot.court;
+          const bestCourtCount = bestCourt ? scheduled.filter(m => m.courtId === bestCourt.id).length : 0;
+          const bestCourtCapacity = bestCourt ? Math.max(1, Math.floor(getCourtDurationMinutes(bestCourt) / REST_SLOT_MINUTES)) : 1;
+          const bestUtilization = bestCourt ? bestCourtCount / bestCourtCapacity : Infinity;
+          const betterSameTime = score > (bestSlot?.score ?? -Infinity) ||
+            (score === bestSlot?.score && utilization < bestUtilization) ||
+            (score === bestSlot?.score && utilization === bestUtilization && courtScheduledCount < bestCourtCount);
+          if (!bestSlot || start < bestSlot.start || (start === bestSlot.start && betterSameTime)) {
+            bestSlot = { court, pendingIndex: i, start, score, utilization };
           }
         }
       });
@@ -2505,7 +2529,7 @@
     return merged;
   }
 
-  async function pushSharedState() {
+  async function pushSharedState(forceReplace = false) {
     if (!sharedApiAvailable() || !sharedSessionId) return;
     const body = { state: tournamentState, revision: sharedRevision };
     let response = await fetch(`/api/session/${encodeURIComponent(sharedSessionId)}`, {
@@ -2513,7 +2537,7 @@
     });
     if (response.status === 409) {
       const conflict = await response.json();
-      tournamentState = mergeSharedStates(conflict.state, tournamentState, lastSharedState);
+      if (!forceReplace) tournamentState = mergeSharedStates(conflict.state, tournamentState, lastSharedState);
       sharedRevision = Number(conflict.revision) || 0;
       response = await fetch(`/api/session/${encodeURIComponent(sharedSessionId)}`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
@@ -2570,7 +2594,7 @@
     }
   }
 
-  function confirmResetTournament() {
+  async function confirmResetTournament() {
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
@@ -2586,7 +2610,9 @@
         matches: [],
         isGenerated: false
       };
-      saveToLocalStorage();
+      localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
+      clearTimeout(sharedSaveTimer);
+      try { await pushSharedState(true); } catch (err) { console.warn('Could not sync reset to shared session:', err.message); }
       location.reload();
     }
   }
