@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v1.9 - Doubles Badminton Manager</title>
+  <title>SmashMaster v2.0 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -60,6 +60,10 @@
     }
     h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; }
 
+    @keyframes matchSlideToBottom { from { opacity: .55; transform: translateY(-12px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .match-tile-motion { animation: matchSlideToBottom .38s ease-out both; }
+    @media (prefers-reduced-motion: reduce) { .match-tile-motion { animation: none; } }
+
     /* Custom Hide Scrollbar */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -90,7 +94,7 @@
     .animate-sheet-up {
       animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-
+  
     #firstLoadSplash { opacity: 1; transition: opacity .35s ease; }
     #firstLoadSplash.splash-hide { opacity: 0; pointer-events: none; }
     .badminton-racket { width: 52px; height: 72px; transform: rotate(-28deg); animation: racket-left 1.5s ease-in-out infinite alternate; }
@@ -104,7 +108,7 @@
     @keyframes shuttle-flight { 0% { left:22%; top:68%; transform:translate(-50%,-50%) rotate(-25deg); } 50% { left:50%; top:28%; transform:translate(-50%,-50%) rotate(8deg); } 100% { left:78%; top:68%; transform:translate(-50%,-50%) rotate(25deg); } }
     @keyframes racket-left { from { transform:rotate(-28deg); } to { transform:rotate(-12deg); } }
     @keyframes racket-right { from { transform:rotate(28deg) scaleX(-1); } to { transform:rotate(12deg) scaleX(-1); } }
-  </style>
+</style>
 </head>
 
 <body class="h-full flex flex-col bg-slate-950 text-slate-100 overflow-x-hidden select-none">
@@ -144,7 +148,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v1.9</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.0</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -199,7 +203,7 @@
 
       <div>
         <label class="block text-[10px] font-semibold text-slate-400 mb-1">Tournament Date</label>
-        <input type="date" id="inputTourneyDate" onchange="tournamentState.date=this.value; saveToLocalStorage();" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-brand-500">
+        <input type="date" id="inputTourneyDate" onchange="tournamentState.date=this.value; saveToLocalStorage();" class="block box-border w-full max-w-full min-w-0 appearance-none bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-brand-500">
       </div>
 
       <!-- Court Cards List -->
@@ -420,16 +424,16 @@
       <div class="overflow-x-auto rounded-lg border border-slate-800">
         <table class="w-full min-w-[620px] text-[10px]">
           <thead class="bg-slate-950 text-slate-500 uppercase font-bold">
-          <tr>
-            <th class="px-2 py-2 text-left">#</th>
-            <th class="px-2 py-2 text-left">Player</th>
-            <th class="px-2 py-2 text-center">Played</th>
-            <th class="px-2 py-2 text-center">W</th>
-            <th class="px-2 py-2 text-center">L</th>
-            <th class="px-2 py-2 text-center">Pts Won</th>
-            <th class="px-2 py-2 text-center">Diff</th>
-            <th class="px-2 py-2 text-center">Tournament Pts</th>
-          </tr>
+            <tr>
+              <th class="px-2 py-2 text-left">#</th>
+              <th class="px-2 py-2 text-left">Player</th>
+              <th class="px-2 py-2 text-center">Played</th>
+              <th class="px-2 py-2 text-center">W</th>
+              <th class="px-2 py-2 text-center">L</th>
+              <th class="px-2 py-2 text-center">Pts Won</th>
+              <th class="px-2 py-2 text-center">Diff</th>
+              <th class="px-2 py-2 text-center">Tournament Pts</th>
+            </tr>
           </thead>
           <tbody id="mobileLeaderboardCards" class="divide-y divide-slate-800"></tbody>
         </table>
@@ -548,10 +552,10 @@
         <h3 class="text-xs font-bold font-heading text-white">About</h3>
       </div>
       <div class="text-[11px] text-slate-300 space-y-1.5">
-        <p><span class="text-slate-500">Author:</span> <span class="font-semibold text-white">Bhushan</span></p>
+        <p><span class="text-slate-500">Author:</span> <span class="font-semibold text-white">Bhushan T.</span></p>
         <p><span class="text-slate-500">Feedback:</span> <a href="mailto:bhushan2005@gmail.com" class="text-brand-400 hover:underline">bhushan2005@gmail.com</a></p>
-        <p>If you liked the app and wish to donate to keep the interest going, thank you! 🏸❤️</p>
-        <p><span class="text-slate-500">Donation UPI:</span> <span class="font-mono font-semibold text-brand-300">bhushan2005@okicici</span></p>
+        <p>🏸✨ Enjoying the app or have ideas for more features? I’d love to hear from you! Connect with me at <a href="mailto:bhushan2005@gmail.com" class="text-brand-400 hover:underline">bhushan2005@gmail.com</a>. 💡🙌<br>💖 If you’d like to support development, donate via UPI:</p>
+        <p><span class="font-mono font-semibold text-brand-300 select-all">bhushan2005@okicici</span></p>
       </div>
     </div>
 
@@ -672,7 +676,7 @@
   }
 
   let tournamentState = {
-    version: '1.9',
+    version: '2.0',
     name: AMUSING_NAMES[0],
     date: getTodayISO(),
     courts: [
@@ -809,16 +813,31 @@
     });
   }
 
+  const COURT_COLOR_PALETTE = [
+    { border: 'border-cyan-400', bg: 'bg-cyan-950/50', text: 'text-cyan-300', badge: 'bg-cyan-950 text-cyan-300 border-cyan-700/70' },
+    { border: 'border-violet-400', bg: 'bg-violet-950/50', text: 'text-violet-300', badge: 'bg-violet-950 text-violet-300 border-violet-700/70' },
+    { border: 'border-amber-400', bg: 'bg-amber-950/50', text: 'text-amber-300', badge: 'bg-amber-950 text-amber-300 border-amber-700/70' },
+    { border: 'border-emerald-400', bg: 'bg-emerald-950/50', text: 'text-emerald-300', badge: 'bg-emerald-950 text-emerald-300 border-emerald-700/70' },
+    { border: 'border-rose-400', bg: 'bg-rose-950/50', text: 'text-rose-300', badge: 'bg-rose-950 text-rose-300 border-rose-700/70' },
+    { border: 'border-sky-400', bg: 'bg-sky-950/50', text: 'text-sky-300', badge: 'bg-sky-950 text-sky-300 border-sky-700/70' }
+  ];
+  function getCourtColor(courtId) {
+    const index = Math.max(0, tournamentState.courts.findIndex(c => c.id === courtId));
+    return COURT_COLOR_PALETTE[index % COURT_COLOR_PALETTE.length];
+  }
+
   function renderCourtInputs() {
     const container = document.getElementById('courtListContainer');
     container.innerHTML = '';
 
     tournamentState.courts.forEach((court) => {
       const div = document.createElement('div');
-      div.className = "bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1.5";
+      const courtColor = getCourtColor(court.id);
+      div.className = `bg-slate-950 p-2 rounded-lg border border-slate-800 border-l-4 ${courtColor.border} space-y-1.5`;
       div.innerHTML = `
           <div class="flex items-center justify-between gap-2">
-            <input type="text" value="${court.name}" onchange="updateCourtInfo('${court.id}', 'name', this.value)" class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-xs font-bold text-slate-100 flex-1 focus:outline-none focus:border-brand-500">
+            <span class="${courtColor.text} text-[10px] font-black rounded px-1.5 py-1 ${courtColor.bg}">${tournamentState.courts.findIndex(c => c.id === court.id) + 1}</span>
+            <input type="text" value="${court.name}" onchange="updateCourtInfo('${court.id}', 'name', this.value)" class="min-w-0 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-xs font-bold text-slate-100 flex-1 focus:outline-none focus:border-brand-500">
             ${tournamentState.courts.length > 1 ? `
               <button onclick="removeCourtRow('${court.id}')" class="text-slate-500 hover:text-red-400 p-1">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -1229,8 +1248,8 @@
       const courtMatches = existingMatches.filter(m => m.courtId === court.id);
       courtMatches.forEach(match => {
         courtClock[court.id] = Math.max(
-                courtClock[court.id],
-                toMinutes(match.startTime || court.startTime) + REST_SLOT_MINUTES
+          courtClock[court.id],
+          toMinutes(match.startTime || court.startTime) + REST_SLOT_MINUTES
         );
       });
     });
@@ -1241,9 +1260,9 @@
 
     function playerHistory(playerId, source) {
       return source
-              .filter(m => [...m.team1, ...m.team2].includes(playerId) && m.startTime)
-              .map(m => toMinutes(m.startTime))
-              .sort((a, b) => a - b);
+        .filter(m => [...m.team1, ...m.team2].includes(playerId) && m.startTime)
+        .map(m => toMinutes(m.startTime))
+        .sort((a, b) => a - b);
     }
 
     function consecutiveBefore(playerId, start, source) {
@@ -1290,8 +1309,8 @@
         restGaps.push(restGap);
         const previousConsecutive = consecutiveBefore(playerId, start, source);
         const newConsecutive = lastStart === start - REST_SLOT_MINUTES
-                ? previousConsecutive + 1
-                : 1;
+          ? previousConsecutive + 1
+          : 1;
 
         maxConsecutive = Math.max(maxConsecutive, newConsecutive);
         if (restGap === 0) backToBackPlayers++;
@@ -1355,17 +1374,17 @@
           const minPlayerCount = Math.min(...players.map(id => currentCounts[id] || 0));
 
           const score =
-                  minRest * 10000 +
-                  totalRest * 100 +
-                  (evaluation.backToBackPlayers === 0 ? 5000 : 0) -
-                  evaluation.backToBackPlayers * 3000 -
-                  evaluation.shortRestPlayers * 1500 -
-                  Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
-                  maxPlayerCount * 5;
+            minRest * 10000 +
+            totalRest * 100 +
+            (evaluation.backToBackPlayers === 0 ? 5000 : 0) -
+            evaluation.backToBackPlayers * 3000 -
+            evaluation.shortRestPlayers * 1500 -
+            Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
+            maxPlayerCount * 5;
 
           if (!bestSlot ||
-                  start < bestSlot.start ||
-                  (start === bestSlot.start && score > bestSlot.score)) {
+              start < bestSlot.start ||
+              (start === bestSlot.start && score > bestSlot.score)) {
             bestSlot = { court, pendingIndex: i, start, score };
           }
         }
@@ -1401,14 +1420,14 @@
             const finiteRest = evaluation.restGaps.filter(Number.isFinite);
             const minRest = finiteRest.length ? Math.min(...finiteRest) : 999;
             const score =
-                    -evaluation.maxConsecutive * 100000 +
-                    minRest * 1000 +
-                    evaluation.totalFiniteRest * 10 -
-                    evaluation.backToBackPlayers * 100;
+              -evaluation.maxConsecutive * 100000 +
+              minRest * 1000 +
+              evaluation.totalFiniteRest * 10 -
+              evaluation.backToBackPlayers * 100;
 
             if (!fallbackSlot ||
-                    start < fallbackSlot.start ||
-                    (start === fallbackSlot.start && score > fallbackSlot.score)) {
+                start < fallbackSlot.start ||
+                (start === fallbackSlot.start && score > fallbackSlot.score)) {
               fallbackSlot = { court, pendingIndex: i, start, score };
             }
           }
@@ -1711,10 +1730,16 @@
       if (courtFilter !== 'ALL' && m.courtId !== courtFilter) return false;
       if (statusFilter !== 'ALL' && m.status !== statusFilter) return false;
       return true;
+    }).sort((a, b) => {
+      // Keep pending matches at the top; completed matches slide to the bottom after saving.
+      const aDone = a.status === 'COMPLETED' ? 1 : 0;
+      const bDone = b.status === 'COMPLETED' ? 1 : 0;
+      return aDone - bDone || (Number(a.matchNum) - Number(b.matchNum));
     });
 
     filtered.forEach(m => {
       const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court 1' };
+      const courtColor = getCourtColor(m.courtId);
       const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
       const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
       const isCompleted = m.status === 'COMPLETED';
@@ -1723,15 +1748,15 @@
       const s2 = m.score2 !== null ? m.score2 : 0;
 
       const card = document.createElement('div');
-      card.className = `bg-slate-900 border ${isCompleted ? 'border-slate-800/80' : 'border-brand-500/40'} rounded-xl p-3 shadow-md space-y-2 relative`;
+      card.className = `match-tile-motion bg-slate-900 border ${isCompleted ? 'border-slate-800/80' : `${courtColor.border}/70`} border-l-4 ${courtColor.border} rounded-xl p-3 shadow-md space-y-2 relative`;
 
       card.innerHTML = `
           <!-- Header Info Badge -->
           <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/80 pb-1.5">
             <div class="flex items-center gap-1">
               <span class="font-extrabold text-white">#${m.matchNum}</span>
-              <span class="bg-slate-800 text-slate-300 px-1.5 py-0.2 rounded font-mono text-[9px]">R${m.roundNum || 1}</span>
-              <span class="bg-brand-950 text-brand-400 border border-brand-800/50 px-1.5 py-0.2 rounded-full font-bold text-[9px]">${court.name}</span>
+              <span class="bg-fuchsia-500 text-slate-950 px-2 py-0.5 rounded-md font-mono text-[10px] font-black shadow-md shadow-fuchsia-950/40 ring-1 ring-fuchsia-300/60">R${m.roundNum || 1}</span>
+              <span class="${courtColor.badge} border px-1.5 py-0.2 rounded-full font-bold text-[9px]">${court.name}</span>
             </div>
             <span class="flex items-center gap-1 text-slate-300 font-mono">
               <i data-lucide="clock" class="w-3 h-3 text-brand-400"></i> ${m.startTime}
@@ -2296,7 +2321,7 @@
     XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
 
     const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-    XLSX.writeFile(wb, `${cleanName}_v1.9_Report.xlsx`);
+    XLSX.writeFile(wb, `${cleanName}_v2.0_Report.xlsx`);
   }
 
   // ================= SHARED TOURNAMENT SESSION SYNC =================
@@ -2467,7 +2492,7 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
-        tournamentState.version = '1.8';
+        tournamentState.version = '2.0';
         document.getElementById('displayTournamentName').innerText = tournamentState.name;
         document.getElementById('topHeaderTitle').innerText = tournamentState.name;
         const splashName = document.getElementById('splashTournamentName');
@@ -2482,7 +2507,7 @@
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '1.9',
+        version: '2.0',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
         courts: [
