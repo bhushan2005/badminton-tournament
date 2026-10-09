@@ -56,24 +56,43 @@
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       padding-bottom: env(safe-area-inset-bottom);
       padding-top: env(safe-area-inset-top);
-      font-size: 0.8125rem; /* Reduced base font size (13px) for less scrolling */
+      font-size: 0.8125rem;
     }
     h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; }
 
     @keyframes matchSlideToBottom { 0% { opacity: .35; transform: translateY(-110px) scale(.97); box-shadow: 0 0 0 rgba(16,185,129,0); } 55% { opacity: 1; transform: translateY(12px) scale(1.01); box-shadow: 0 0 24px rgba(16,185,129,.42); } 78% { transform: translateY(-4px) scale(1); } 100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(16,185,129,0); } }
     .match-tile-motion { animation: matchSlideToBottom 3s cubic-bezier(.22,.7,.25,1) both; position:relative; z-index:5; will-change:transform; }
     .match-tile-flash { outline: 2px solid var(--completed-match-color, #7dd3fc); outline-offset: 2px; box-shadow: 0 0 22px color-mix(in srgb, var(--completed-match-color, #7dd3fc) 55%, transparent) !important; }
-    .color-picker { appearance: none; -webkit-appearance: none; width: 34px; height: 34px; min-width: 34px; padding: 0; border: 2px solid #cbd5e1; border-radius: 50% !important; overflow: hidden; background: transparent; cursor: pointer; }
+
+    /* Reduced Color Picker Circle Size */
+    .color-picker { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; padding: 0; border: 1.5px solid #cbd5e1; border-radius: 50% !important; overflow: hidden; background: transparent; cursor: pointer; }
     .color-picker::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
     .color-picker::-webkit-color-swatch { border: 0; border-radius: 50%; }
     .color-picker::-moz-color-swatch { border: 0; border-radius: 50%; }
+
     .theme-accent { accent-color: var(--app-accent, #10b981); }
     .bg-brand-500, .bg-brand-600, .bg-emerald-500, .bg-emerald-600 { background-color: var(--app-accent, #10b981) !important; }
     .bg-brand-600, .bg-emerald-600 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 82%, #000) !important; }
     .text-brand-400, .text-brand-300, .text-emerald-400, .text-emerald-300, .text-emerald-500 { color: var(--app-accent, #10b981) !important; }
     .border-brand-500, .border-brand-800, .border-emerald-500, .border-emerald-600 { border-color: var(--app-accent, #10b981) !important; }
-    .mobile-tab-active, .mobile-tab-active i, .mobile-tab-active span { color: var(--app-accent, #10b981) !important; }
-    .mobile-tab-active::after { background: var(--app-accent, #10b981) !important; }
+
+    /* Dynamic Mobile Active Tab Styling */
+    .mobile-tab-active, .mobile-tab-active i, .mobile-tab-active svg, .mobile-tab-active span { color: var(--app-accent, #10b981) !important; }
+    .mobile-tab-active { position: relative; }
+    .mobile-tab-active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 3px;
+      background: var(--app-accent, #10b981) !important;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--app-accent, #10b981) 60%, transparent) !important;
+    }
+
     .hover\:text-brand-300:hover, .hover\:text-brand-400:hover, .hover\:text-emerald-300:hover, .hover\:text-emerald-400:hover { color: var(--app-accent, #10b981) !important; }
     .bg-brand-950, .bg-emerald-950 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 18%, #020617) !important; }
     .text-teal-400, .text-teal-300, .text-cyan-400 { color: var(--app-accent, #10b981) !important; }
@@ -82,7 +101,6 @@
     button[class*="from-brand-500"], button[class*="from-emerald-500"] { background-image: linear-gradient(to right, var(--app-accent, #10b981), color-mix(in srgb, var(--app-accent, #10b981) 72%, #0f766e)) !important; }
     .shadow-brand-500\/20 { --tw-shadow-color: color-mix(in srgb, var(--app-accent, #10b981) 20%, transparent) !important; }
     .ring-brand-500, .focus\:border-brand-500:focus { --tw-ring-color: var(--app-accent, #10b981) !important; border-color: var(--app-accent, #10b981) !important; }
-    .text-teal-400, .text-teal-300 { color: var(--app-accent, #10b981) !important; }
     .border-emerald-500\/40, .border-emerald-500\/30 { border-color: color-mix(in srgb, var(--app-accent, #10b981) 40%, transparent) !important; }
     .bg-emerald-500\/10, .bg-emerald-500\/20 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 15%, transparent) !important; }
     .completed-match-compact { padding: .35rem .55rem !important; border-radius: .55rem !important; }
@@ -101,25 +119,6 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Active Mobile Nav Tab Indicator */
-    .mobile-tab-active {
-      color: #34d399 !important;
-      position: relative;
-    }
-    .mobile-tab-active::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-      height: 3px;
-      background: #10b981;
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.6);
-    }
-
     @keyframes slideUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
@@ -127,7 +126,7 @@
     .animate-sheet-up {
       animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-  
+
     #firstLoadSplash { opacity: 1; transition: opacity .35s ease; }
     #firstLoadSplash.splash-hide { opacity: 0; pointer-events: none; }
     .badminton-racket { width: 52px; height: 72px; transform: rotate(-28deg); animation: racket-left 1.5s ease-in-out infinite alternate; }
@@ -141,11 +140,10 @@
     @keyframes shuttle-flight { 0% { left:22%; top:68%; transform:translate(-50%,-50%) rotate(-25deg); } 50% { left:50%; top:28%; transform:translate(-50%,-50%) rotate(8deg); } 100% { left:78%; top:68%; transform:translate(-50%,-50%) rotate(25deg); } }
     @keyframes racket-left { from { transform:rotate(-28deg); } to { transform:rotate(-12deg); } }
     @keyframes racket-right { from { transform:rotate(28deg) scaleX(-1); } to { transform:rotate(12deg) scaleX(-1); } }
-    /* Keep native time controls inside narrow court tiles on mobile. */
     #courtListContainer > div { min-width: 0; overflow: hidden; }
     #courtListContainer .grid > div { min-width: 0; }
     #courtListContainer input[type="time"] { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding-left: 2px; padding-right: 2px; font-size: 10px; }
-</style>
+  </style>
 </head>
 
 <body class="h-full flex flex-col bg-slate-950 text-slate-100 overflow-x-hidden select-none">
@@ -194,7 +192,6 @@
       </div>
     </div>
 
-
   </div>
 </header>
 
@@ -204,7 +201,7 @@
   <!-- ================= VIEW 1: SETUP & ROSTER ================= -->
   <section id="viewSetup" class="space-y-3">
 
-    <!-- Amusing Tournament Header Box -->
+    <!-- Tournament Header Box -->
     <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-xl p-3 shadow-lg space-y-2 relative overflow-hidden">
       <div class="flex items-center justify-between">
           <span class="text-[9px] font-extrabold uppercase tracking-widest text-brand-400 bg-brand-950/80 border border-brand-800/60 px-2 py-0.5 rounded-full">
@@ -237,7 +234,8 @@
 
       <!-- Court Cards List -->
       <div id="courtListContainer" class="space-y-2"></div>
-      <!-- Mobile Capacity Estimate Banner -->
+
+      <!-- Capacity Estimate Banner -->
       <div class="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5 text-[11px] space-y-1">
         <div class="flex justify-between text-slate-300">
           <span>Total Court Time:</span>
@@ -261,15 +259,13 @@
           <i data-lucide="users" class="w-3.5 h-3.5 text-brand-400"></i> Player Roster
           <span id="lblPlayerCount" class="bg-slate-800 text-brand-400 text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold">0</span>
         </h3>
-
       </div>
 
-      <!-- Input Player Name & Male/Female Gender Pills -->
+      <!-- Input Player Name & Gender -->
       <div class="space-y-1.5">
         <input type="text" id="inputPlayerName" placeholder="Enter player name..." onkeydown="if(event.key==='Enter') addPlayerFromInput();" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-brand-500">
 
         <div class="flex items-center gap-2">
-          <!-- Gender Selector (Male/Female Only) -->
           <div class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-0.5 flex text-xs">
             <button type="button" onclick="setGenderInput('Male')" id="genderPillMale" class="flex-1 py-1 rounded-md font-bold text-center transition-all bg-brand-500 text-slate-950 shadow-sm text-[11px]">♂ Male</button>
             <button type="button" onclick="setGenderInput('Female')" id="genderPillFemale" class="flex-1 py-1 rounded-md font-bold text-center transition-all text-slate-400 text-[11px]">♀ Female</button>
@@ -348,6 +344,17 @@
         <span id="matchesPerPlayerTotal" class="text-[9px] text-slate-500 font-semibold">0 players</span>
       </div>
       <div id="matchesPerPlayerList" class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] leading-4"></div>
+    </div>
+
+    <!-- Matches Per Court Summary -->
+    <div id="matchesPerCourtSummary" class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 shadow-md space-y-2">
+      <div class="flex items-center justify-between">
+        <h2 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-brand-400"></i> Matches Per Court
+        </h2>
+        <span id="matchesPerCourtTotal" class="text-[9px] text-slate-500 font-semibold">0 courts</span>
+      </div>
+      <div id="matchesPerCourtList" class="flex flex-wrap items-center gap-2 text-[10px] leading-4"></div>
     </div>
 
     <!-- Filter Controls Bar -->
@@ -440,7 +447,7 @@
       </div>
     </div>
 
-    <!-- Full Player Leaderboard Stacked Cards -->
+    <!-- Full Player Leaderboard -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
       <div class="flex items-center justify-between">
         <h3 class="text-[11px] font-bold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
@@ -452,16 +459,16 @@
       <div class="overflow-x-auto rounded-lg border border-slate-800">
         <table class="w-full min-w-[620px] text-[10px]">
           <thead class="bg-slate-950 text-slate-500 uppercase font-bold">
-            <tr>
-              <th class="px-2 py-2 text-left">#</th>
-              <th class="px-2 py-2 text-left">Player</th>
-              <th class="px-2 py-2 text-center">Played</th>
-              <th class="px-2 py-2 text-center">W</th>
-              <th class="px-2 py-2 text-center">L</th>
-              <th class="px-2 py-2 text-center">Pts Won</th>
-              <th class="px-2 py-2 text-center">Diff</th>
-              <th class="px-2 py-2 text-center">Tournament Pts</th>
-            </tr>
+          <tr>
+            <th class="px-2 py-2 text-left">#</th>
+            <th class="px-2 py-2 text-left">Player</th>
+            <th class="px-2 py-2 text-center">Played</th>
+            <th class="px-2 py-2 text-center">W</th>
+            <th class="px-2 py-2 text-center">L</th>
+            <th class="px-2 py-2 text-center">Pts Won</th>
+            <th class="px-2 py-2 text-center">Diff</th>
+            <th class="px-2 py-2 text-center">Tournament Pts</th>
+          </tr>
           </thead>
           <tbody id="mobileLeaderboardCards" class="divide-y divide-slate-800"></tbody>
         </table>
@@ -473,52 +480,15 @@
   <!-- ================= VIEW 5: EXPORT & HISTORY ================= -->
   <section id="viewExport" class="space-y-3 hidden">
 
-    <!-- Excel Download Featured Card -->
-    <div class="bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
-      <div class="flex items-center gap-2.5">
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-          <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h2 class="text-sm font-extrabold font-heading text-white">Multi-Tab Excel Workbook</h2>
-          <p class="text-[10px] text-slate-300">3 Sheets: Summary & Winners, Leaderboard, Match Logs.</p>
-        </div>
-      </div>
-
-      <button onclick="exportComprehensiveExcel()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
-        <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Excel Report (.xlsx)
-      </button>
-    </div>
-
-    <!-- App appearance settings -->
+    <!-- App Appearance Settings -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-3">
       <div>
-        <h3 class="text-xs font-bold font-heading text-white">App color scheme</h3>
+        <h3 class="text-xs font-bold font-heading text-white">App Color Scheme</h3>
         <p class="text-[10px] text-slate-400 mt-1">Choose the main accent color used across buttons, text highlights and navigation.</p>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <label class="flex items-center gap-2 text-[10px] text-slate-300">App color scheme <input id="appThemeColorPicker" aria-label="App color scheme" title="App color scheme" class="color-picker" type="color" value="#10b981" onchange="updateThemeColor(this.value)"></label>
         <label class="flex items-center gap-2 text-[10px] text-slate-300">Completed matches <input id="completedColorPicker" aria-label="Completed matches color" title="Completed matches color" class="color-picker" type="color" value="#7dd3fc" onchange="updateCompletedColor(this.value)"></label>
-      </div>
-    </div>
-
-    <!-- JSON Backup Export & Import Card -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
-      <div class="flex items-center gap-1.5">
-        <i data-lucide="database" class="w-4 h-4 text-blue-400"></i>
-        <h3 class="text-xs font-bold font-heading text-white">Backup & Restore File (JSON)</h3>
-      </div>
-      <p class="text-[10px] text-slate-400">Save complete tournament state into a `.json` file or restore from a saved file on another device.</p>
-
-      <div class="grid grid-cols-2 gap-2">
-        <button onclick="exportJSONBackup()" class="h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
-          <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> Export File
-        </button>
-
-        <label class="h-9 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 cursor-pointer active:scale-95">
-          <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i> Import File
-          <input type="file" id="importJsonInput" accept=".json" onchange="importJSONBackup(event)" class="hidden">
-        </label>
       </div>
     </div>
 
@@ -537,7 +507,7 @@
       <div id="historyListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
     </div>
 
-    <!-- Reset Tournament - intentionally kept at the end to prevent accidental taps -->
+    <!-- Reset Tournament -->
     <div class="bg-slate-900 border border-red-900/50 rounded-xl p-3 shadow-md space-y-2.5">
       <div class="flex items-center gap-1.5">
         <i data-lucide="rotate-ccw" class="w-4 h-4 text-red-400"></i>
@@ -583,6 +553,23 @@
           <i data-lucide="send" class="w-3.5 h-3.5"></i> Direct WhatsApp
         </button>
       </div>
+    </div>
+
+    <!-- Excel Download Featured Card (Placed below WhatsApp text format tile) -->
+    <div class="bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+          <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h2 class="text-sm font-extrabold font-heading text-white">Multi-Tab Excel Workbook</h2>
+          <p class="text-[10px] text-slate-300">3 Sheets: Summary & Winners, Leaderboard, Match Logs.</p>
+        </div>
+      </div>
+
+      <button onclick="exportComprehensiveExcel()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Excel Report (.xlsx)
+      </button>
     </div>
 
     <!-- About -->
@@ -695,7 +682,6 @@
     "The Fault in Our Serves"
   ];
 
-  // Get Today's Date String (YYYY-MM-DD)
   function formatTournamentDate(dateStr) {
     if (!dateStr) return '';
     const parts = dateStr.split('-');
@@ -705,6 +691,18 @@
     if (Number.isNaN(date.getTime())) return dateStr;
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `${String(dd).padStart(2, '0')}-${months[date.getMonth()]}-${String(yyyy).slice(-2)}`;
+  }
+
+  // 12-Hour AM/PM Time Format Conversion Helper
+  function format12HourTime(timeStr) {
+    if (!timeStr) return '';
+    const [hStr, mStr] = String(timeStr).split(':');
+    let h = parseInt(hStr, 10);
+    if (isNaN(h)) return timeStr;
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    if (h === 0) h = 12;
+    return `${h}:${mStr} ${ampm}`;
   }
 
   function getTodayISO() {
@@ -732,7 +730,6 @@
 
   let selectedSearchPlayerIds = [];
 
-  // On Load Window Initialization
   window.onload = function() {
     lucide.createIcons();
 
@@ -856,7 +853,6 @@
     });
   }
 
-  const COURT_NAME_COLORS = ['#f87171', '#facc15', '#f87171', '#facc15', '#f87171', '#facc15'];
   function hexToRgba(hex, alpha) {
     const clean = String(hex || '#059669').replace('#', '');
     const n = parseInt(clean.length === 3 ? clean.split('').map(x => x+x).join('') : clean, 16);
@@ -867,7 +863,7 @@
     const index = Math.max(0, tournamentState.courts.findIndex(c => c.id === courtId));
     const court = tournamentState.courts[index] || {};
     const color = court.color || '#059669';
-    return { border: color, bg: hexToRgba(color, .12), text: COURT_NAME_COLORS[index % COURT_NAME_COLORS.length], badge: COURT_NAME_COLORS[index % COURT_NAME_COLORS.length], tile: hexToRgba(color, .07), color };
+    return { border: color, bg: hexToRgba(color, .12), tile: hexToRgba(color, .07), color };
   }
   function updateThemeColor(color) {
     tournamentState.themeColor = color;
@@ -1009,7 +1005,6 @@
     player.retired = !player.retired;
 
     if (player.retired) {
-      // Drop unplayed pending matches involving this player
       const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED');
       const activePlayers = tournamentState.players.filter(p => !p.retired);
 
@@ -1059,19 +1054,6 @@
     document.getElementById('cntFemale').innerText = femaleCnt;
 
     lucide.createIcons();
-  }
-
-  function loadDemoPlayers() {
-    tournamentState.players = [
-      { id: 'p1', name: 'Alex Rivera', gender: 'Male', retired: false },
-      { id: 'p2', name: 'Brian Chen', gender: 'Male', retired: false },
-      { id: 'p3', name: 'Chloe Adams', gender: 'Female', retired: false },
-      { id: 'p4', name: 'David Miller', gender: 'Male', retired: false },
-      { id: 'p5', name: 'Elena Rostova', gender: 'Female', retired: false },
-      { id: 'p6', name: 'Fiona Gallagher', gender: 'Female', retired: false }
-    ];
-    updatePlayerListUI();
-    saveToLocalStorage();
   }
 
   async function logTournamentStart() {
@@ -1165,9 +1147,6 @@
     return candidates;
   }
 
-  // Builds a balanced pool first, then the scheduler places those matches on courts.
-  // Match counts are kept as even as mathematically possible and new partners/opponents
-  // are preferred before relationships have to repeat.
   function buildFixturesForPlayers(playersList, existingCompleted = []) {
     const pCount = playersList.length;
     if (pCount < 4) return [];
@@ -1212,8 +1191,6 @@
     const usedMatchKeys = new Set(existingCompleted.map(makeMatchKey));
     const selected = [];
 
-    // Build one non-overlapping round at a time. This prevents a player from being
-    // assigned to two matches in the same round before the scheduler even runs.
     while (selected.length < pendingNeeded) {
       let roundUsed = new Set();
       let roundAdded = 0;
@@ -1243,7 +1220,6 @@
             if (!opponents[a].has(b)) newOpponentCount++;
           }));
 
-          // Strongly prefer the least-played players, then new relationships.
           const score =
                   totalDeficit * 1000 +
                   (targetPerPlayer - maxCount) * 200 +
@@ -1288,13 +1264,6 @@
     return schedulePendingMatches(selected, existingCompleted);
   }
 
-  // Schedules matches in chronological court slots. A match occupies 8 minutes for
-  // planning, and it is never placed if its 8-minute slot would pass the court end time.
-  // Schedules matches in chronological court slots while actively protecting player rest.
-  // Planning slot = 8 minutes. Rest is preferred whenever the available player pool
-  // allows it, but a court is never left idle merely to enforce an artificial rest rule.
-  // Consecutive matches are therefore used only when no rested four-player combination
-  // can fill the current slot.
   function schedulePendingMatches(pending, existingMatches = []) {
     const scheduled = [...existingMatches];
     let globalMatchNum = existingMatches.reduce((max, m) => Math.max(max, Number(m.matchNum) || 0), 0) + 1;
@@ -1315,8 +1284,8 @@
       const courtMatches = existingMatches.filter(m => m.courtId === court.id);
       courtMatches.forEach(match => {
         courtClock[court.id] = Math.max(
-          courtClock[court.id],
-          toMinutes(match.startTime || court.startTime) + REST_SLOT_MINUTES
+                courtClock[court.id],
+                toMinutes(match.startTime || court.startTime) + REST_SLOT_MINUTES
         );
       });
     });
@@ -1327,9 +1296,9 @@
 
     function playerHistory(playerId, source) {
       return source
-        .filter(m => [...m.team1, ...m.team2].includes(playerId) && m.startTime)
-        .map(m => toMinutes(m.startTime))
-        .sort((a, b) => a - b);
+              .filter(m => [...m.team1, ...m.team2].includes(playerId) && m.startTime)
+              .map(m => toMinutes(m.startTime))
+              .sort((a, b) => a - b);
     }
 
     function consecutiveBefore(playerId, start, source) {
@@ -1376,8 +1345,8 @@
         restGaps.push(restGap);
         const previousConsecutive = consecutiveBefore(playerId, start, source);
         const newConsecutive = lastStart === start - REST_SLOT_MINUTES
-          ? previousConsecutive + 1
-          : 1;
+                ? previousConsecutive + 1
+                : 1;
 
         maxConsecutive = Math.max(maxConsecutive, newConsecutive);
         if (restGap === 0) backToBackPlayers++;
@@ -1395,19 +1364,22 @@
     }
 
     while (pending.length > 0) {
+      let validCourts = tournamentState.courts.filter(c => courtClock[c.id] + REST_SLOT_MINUTES <= courtEndMinutes(c));
+      if (validCourts.length === 0) break;
+
+      let currentTime = Math.min(...validCourts.map(c => courtClock[c.id]));
+      let candidateCourts = validCourts.filter(c => courtClock[c.id] === currentTime);
+
       let bestSlot = null;
 
-      // Find the earliest legal court slot. When several courts have the same time,
-      // all candidates are considered against the same current schedule so a player
-      // cannot accidentally be assigned twice at that time.
-      tournamentState.courts.forEach(court => {
-        const start = courtClock[court.id];
+      candidateCourts.forEach(court => {
+        const start = currentTime;
         const end = start + REST_SLOT_MINUTES;
-        if (end > courtEndMinutes(court)) return;
 
         for (let i = 0; i < pending.length; i++) {
           const match = pending[i];
           const players = [...match.team1, ...match.team2];
+
           const hasConflict = scheduled.some(existing => {
             if (!existing.courtId || !existing.startTime) return false;
             const existingStart = toMinutes(existing.startTime);
@@ -1420,13 +1392,8 @@
           if (hasConflict) continue;
 
           const evaluation = evaluateCandidate(match, start, scheduled);
-
-          // Prefer a match that does not create a third consecutive match.
-          // The fallback below is used only when no such match can fill any current slot.
           if (evaluation.maxConsecutive > MAX_CONSECUTIVE_MATCHES) continue;
 
-          // Score rest quality first, then fairness. Infinity means the player has
-          // not played yet and is therefore strongly preferred over a player who has.
           const finiteRest = evaluation.restGaps.filter(Number.isFinite);
           const minRest = finiteRest.length ? Math.min(...finiteRest) : 999;
           const totalRest = evaluation.totalFiniteRest;
@@ -1441,46 +1408,42 @@
           const minPlayerCount = Math.min(...players.map(id => currentCounts[id] || 0));
 
           const score =
-            minRest * 10000 +
-            totalRest * 100 +
-            (evaluation.backToBackPlayers === 0 ? 5000 : 0) -
-            evaluation.backToBackPlayers * 3000 -
-            evaluation.shortRestPlayers * 1500 -
-            Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
-            maxPlayerCount * 5;
+                  minRest * 10000 +
+                  totalRest * 100 +
+                  (evaluation.backToBackPlayers === 0 ? 5000 : 0) -
+                  evaluation.backToBackPlayers * 3000 -
+                  evaluation.shortRestPlayers * 1500 -
+                  Math.max(0, maxPlayerCount - minPlayerCount) * 100 -
+                  maxPlayerCount * 5;
 
           const courtScheduledCount = scheduled.filter(m => m.courtId === court.id).length;
-          const courtCapacity = Math.max(1, Math.floor(getCourtDurationMinutes(court) / REST_SLOT_MINUTES));
-          const utilization = courtScheduledCount / courtCapacity;
-          const bestCourt = bestSlot && bestSlot.court;
-          const bestCourtCount = bestCourt ? scheduled.filter(m => m.courtId === bestCourt.id).length : 0;
-          const bestCourtCapacity = bestCourt ? Math.max(1, Math.floor(getCourtDurationMinutes(bestCourt) / REST_SLOT_MINUTES)) : 1;
-          const bestUtilization = bestCourt ? bestCourtCount / bestCourtCapacity : Infinity;
-          const betterSameTime = score > (bestSlot?.score ?? -Infinity) ||
-            (score === bestSlot?.score && utilization < bestUtilization) ||
-            (score === bestSlot?.score && utilization === bestUtilization && courtScheduledCount < bestCourtCount);
-          if (!bestSlot || start < bestSlot.start || (start === bestSlot.start && betterSameTime)) {
-            bestSlot = { court, pendingIndex: i, start, score, utilization };
+
+          let isBetter = false;
+          if (!bestSlot) {
+            isBetter = true;
+          } else if (courtScheduledCount < bestSlot.courtScheduledCount) {
+            isBetter = true;
+          } else if (courtScheduledCount === bestSlot.courtScheduledCount) {
+            if (score > bestSlot.score) {
+              isBetter = true;
+            }
+          }
+
+          if (isBetter) {
+            bestSlot = { court, pendingIndex: i, start, score, courtScheduledCount };
           }
         }
       });
 
       if (!bestSlot) {
-        // Every current court slot must be used whenever a pending match can fit.
-        // If no rested/non-third-consecutive match exists, this means there are
-        // not enough rested players (or the remaining fixture combinations cannot
-        // supply four rested players). In that case, use the least harmful
-        // consecutive match instead of leaving the court vacant.
-        let fallbackSlot = null;
-
-        tournamentState.courts.forEach(court => {
-          const start = courtClock[court.id];
+        candidateCourts.forEach(court => {
+          const start = currentTime;
           const end = start + REST_SLOT_MINUTES;
-          if (end > courtEndMinutes(court)) return;
 
           for (let i = 0; i < pending.length; i++) {
             const match = pending[i];
             const players = [...match.team1, ...match.team2];
+
             const hasConflict = scheduled.some(existing => {
               if (!existing.courtId || !existing.startTime) return false;
               const existingStart = toMinutes(existing.startTime);
@@ -1489,52 +1452,59 @@
               const existingPlayers = new Set([...existing.team1, ...existing.team2]);
               return players.some(id => existingPlayers.has(id));
             });
+
             if (hasConflict) continue;
 
             const evaluation = evaluateCandidate(match, start, scheduled);
             const finiteRest = evaluation.restGaps.filter(Number.isFinite);
             const minRest = finiteRest.length ? Math.min(...finiteRest) : 999;
+            const courtScheduledCount = scheduled.filter(m => m.courtId === court.id).length;
             const score =
-              -evaluation.maxConsecutive * 100000 +
-              minRest * 1000 +
-              evaluation.totalFiniteRest * 10 -
-              evaluation.backToBackPlayers * 100;
+                    -evaluation.maxConsecutive * 100000 +
+                    minRest * 1000 +
+                    evaluation.totalFiniteRest * 10 -
+                    evaluation.backToBackPlayers * 100;
 
-            if (!fallbackSlot ||
-                start < fallbackSlot.start ||
-                (start === fallbackSlot.start && score > fallbackSlot.score)) {
-              fallbackSlot = { court, pendingIndex: i, start, score };
+            let isBetterFallback = false;
+            if (!bestSlot) {
+              isBetterFallback = true;
+            } else if (courtScheduledCount < bestSlot.courtScheduledCount) {
+              isBetterFallback = true;
+            } else if (courtScheduledCount === bestSlot.courtScheduledCount) {
+              if (score > bestSlot.score) {
+                isBetterFallback = true;
+              }
+            }
+
+            if (isBetterFallback) {
+              bestSlot = { court, pendingIndex: i, start, score, courtScheduledCount };
             }
           }
         });
-
-        if (fallbackSlot) {
-          bestSlot = fallbackSlot;
-        } else {
-          // Nothing fits any remaining court window. Stop only when the schedule
-          // is genuinely full, not merely because players need rest.
-          break;
-        }
       }
 
-      const match = pending.splice(bestSlot.pendingIndex, 1)[0];
-      const t = bestSlot.start;
-      const hrs = String(Math.floor(t / 60)).padStart(2, '0');
-      const mins = String(t % 60).padStart(2, '0');
-      const scheduledMatch = {
-        ...match,
-        matchNum: globalMatchNum++,
-        roundNum: 1,
-        courtId: bestSlot.court.id,
-        startTime: `${hrs}:${mins}`
-      };
+      if (bestSlot) {
+        const match = pending.splice(bestSlot.pendingIndex, 1)[0];
+        const t = bestSlot.start;
+        const hrs = String(Math.floor(t / 60)).padStart(2, '0');
+        const mins = String(t % 60).padStart(2, '0');
+        const scheduledMatch = {
+          ...match,
+          matchNum: globalMatchNum++,
+          roundNum: 1,
+          courtId: bestSlot.court.id,
+          startTime: `${hrs}:${mins}`
+        };
 
-      scheduled.push(scheduledMatch);
-      courtClock[bestSlot.court.id] = bestSlot.start + REST_SLOT_MINUTES;
+        scheduled.push(scheduledMatch);
+        courtClock[bestSlot.court.id] = bestSlot.start + REST_SLOT_MINUTES;
+      } else {
+        candidateCourts.forEach(c => {
+          courtClock[c.id] += REST_SLOT_MINUTES;
+        });
+      }
     }
 
-    // Assign round numbers from the actual scheduled time: matches beginning at the
-    // same time are in the same round, while later time slots advance the round.
     const sorted = [...scheduled].sort((a, b) => {
       return toMinutes(a.startTime) - toMinutes(b.startTime) || Number(a.matchNum) - Number(b.matchNum);
     });
@@ -1583,45 +1553,45 @@
     });
   }
 
-  function getMatchRelationshipSets() {
-    const partners = {}, opponents = {};
-    tournamentState.players.forEach(p => {
-      partners[p.id] = new Set();
-      opponents[p.id] = new Set();
-    });
+  function renderMatchesPerCourtSummary() {
+    const list = document.getElementById('matchesPerCourtList');
+    const totalLabel = document.getElementById('matchesPerCourtTotal');
+    if (!list || !totalLabel) return;
 
+    const courts = tournamentState.courts || [];
+    totalLabel.innerText = `${courts.length} court${courts.length === 1 ? '' : 's'}`;
+    list.innerHTML = '';
+
+    if (courts.length === 0) {
+      list.innerHTML = '<div class="text-[10px] text-slate-500 py-1">No courts configured.</div>';
+      return;
+    }
+
+    const courtCounts = {};
+    courts.forEach(c => courtCounts[c.id] = 0);
     tournamentState.matches.forEach(m => {
-      const [a, b] = m.team1;
-      const [c, d] = m.team2;
-      if (!partners[a]) partners[a] = new Set();
-      if (!partners[b]) partners[b] = new Set();
-      if (!partners[c]) partners[c] = new Set();
-      if (!partners[d]) partners[d] = new Set();
-      partners[a].add(b); partners[b].add(a);
-      partners[c].add(d); partners[d].add(c);
-
-      if (!opponents[a]) opponents[a] = new Set();
-      if (!opponents[b]) opponents[b] = new Set();
-      if (!opponents[c]) opponents[c] = new Set();
-      if (!opponents[d]) opponents[d] = new Set();
-      [c, d].forEach(x => { opponents[a].add(x); opponents[b].add(x); });
-      [a, b].forEach(x => { opponents[c].add(x); opponents[d].add(x); });
+      if (m.courtId && courtCounts[m.courtId] !== undefined) {
+        courtCounts[m.courtId]++;
+      }
     });
-    return { partners, opponents };
+
+    courts.forEach((c) => {
+      const courtColor = getCourtColor(c.id);
+      const cnt = courtCounts[c.id] || 0;
+      const completedCnt = tournamentState.matches.filter(m => m.courtId === c.id && m.status === 'COMPLETED').length;
+
+      const item = document.createElement('div');
+      item.className = 'flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800 text-[10px]';
+      item.innerHTML = `
+        <span class="w-2 h-2 rounded-full shrink-0" style="background:${courtColor.color}"></span>
+        <span class="font-semibold text-slate-200">${c.name}:</span>
+        <span class="font-black font-mono text-brand-400">${cnt}</span>
+        <span class="text-slate-500 text-[9px]">(${completedCnt} done)</span>
+      `;
+      list.appendChild(item);
+    });
   }
 
-  function isNewPairingMatch(match, partners, opponents) {
-    const [a, b] = match.team1;
-    const [c, d] = match.team2;
-    return !partners[a].has(b) && !partners[c].has(d) &&
-            !opponents[a].has(c) && !opponents[a].has(d) &&
-            !opponents[b].has(c) && !opponents[b].has(d);
-  }
-
-  // Finds one extra match for every player. Every player is used exactly once,
-  // and each new match has a partner and opponents that player has never had before.
-  // Finds the maximum possible set of extra matches where every player receives
-  // at most ONE additional match, while the final player totals differ by no more than 1.
   function findBalancedExtraMatches(playersList) {
     const playerIds = playersList.map(p => p.id);
     if (playerIds.length < 4) return null;
@@ -1639,9 +1609,6 @@
     const unusedCandidates = allCandidates.filter(c => !existingKeys.has(makeMatchKey(c.match)));
     const candidates = unusedCandidates.length ? unusedCandidates : allCandidates;
 
-    // We want the largest possible number of extra matches. Since each match adds
-    // exactly four player-slots and each player can receive at most one extra match,
-    // search from the largest possible round downwards.
     const maxMatchesToAdd = Math.min(maxExtraMatches, remainingCapacity);
 
     function tryFind(matchCount) {
@@ -1649,7 +1616,6 @@
       const usedPlayers = new Set();
       const usedKeys = new Set();
 
-      // Prefer players with fewer existing matches so the final totals are balanced.
       const candidateScore = c => {
         const counts = c.ids.map(id => currentCounts[id] || 0);
         return counts.reduce((sum, n) => sum + n, 0);
@@ -1674,8 +1640,6 @@
           if (usedKeys.has(key)) continue;
           if (candidate.ids.some(id => usedPlayers.has(id))) continue;
 
-          // Prune if the current partial selection already makes a final difference
-          // impossible to keep within one after the remaining matches are added.
           candidate.ids.forEach(id => usedPlayers.add(id));
           usedKeys.add(key);
           chosen.push(candidate);
@@ -1713,13 +1677,10 @@
       return;
     }
 
-    // Extra matches become available once every court has at most ONE
-    // previously scheduled match still remaining. This lets the app use
-    // late free court time without waiting for every court to become empty.
     const courtRemaining = {};
     tournamentState.matches.forEach(m => {
       if (m.status !== 'COMPLETED') {
-        const court = m.court || 'UNASSIGNED';
+        const court = m.courtId || 'UNASSIGNED';
         courtRemaining[court] = (courtRemaining[court] || 0) + 1;
       }
     });
@@ -1758,6 +1719,7 @@
     tournamentState.matches = scheduledMatches;
     saveToLocalStorage();
     renderMatchesPerPlayerSummary();
+    renderMatchesPerCourtSummary();
     renderFixturesList();
     checkTournamentCompletion();
 
@@ -1770,6 +1732,8 @@
 
   function renderFixturesList() {
     renderMatchesPerPlayerSummary();
+    renderMatchesPerCourtSummary();
+
     const totalMatches = tournamentState.matches.length;
     const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED').length;
     const remainingMatches = Math.max(0, totalMatches - completedMatches);
@@ -1807,7 +1771,6 @@
       if (statusFilter !== 'ALL' && m.status !== statusFilter) return false;
       return true;
     }).sort((a, b) => {
-      // Keep pending matches at the top; completed matches slide to the bottom after saving.
       const aDone = a.status === 'COMPLETED' ? 1 : 0;
       const bDone = b.status === 'COMPLETED' ? 1 : 0;
       return aDone - bDone || (Number(a.matchNum) - Number(b.matchNum));
@@ -1819,6 +1782,11 @@
       const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
       const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
       const isCompleted = m.status === 'COMPLETED';
+
+      // Determine Court Name font color based on completion status
+      const courtNameColor = isCompleted
+              ? (tournamentState.completedMatchColor || '#7dd3fc')
+              : courtColor.color;
 
       const s1 = m.score1 !== null ? m.score1 : 0;
       const s2 = m.score2 !== null ? m.score2 : 0;
@@ -1837,7 +1805,7 @@
             <div class="flex items-center gap-1">
               <span class="px-2 py-0.5 rounded-md font-extrabold font-mono text-[10px]" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">#${m.matchNum}</span>
               <span class="px-2 py-0.5 rounded-md font-mono text-[10px] font-black" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">R${m.roundNum || 1}</span>
-              <span class="px-1.5 py-0.2 rounded-full font-bold text-[9px]" style="color:${courtColor.text}">${court.name}</span>
+              <span class="px-1.5 py-0.2 rounded-full font-extrabold text-[9px]" style="color:${courtNameColor}">${court.name}</span>
             </div>
             <span class="flex items-center gap-1 text-slate-300 font-mono">
               <i data-lucide="clock" class="w-3 h-3 text-brand-400"></i> ${m.startTime}
@@ -1862,14 +1830,12 @@
           <!-- Score Direct Text Inputs + Stepper Controls -->
           <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1.5">
             <div class="grid grid-cols-2 gap-2 items-center">
-              <!-- Team 1 Controls -->
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
                 <button onclick="stepMatchScore('${m.id}', 1, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
                 <input type="number" id="txtS1_${m.id}" value="${s1}" min="0" max="11" style="color:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="w-10 text-center font-mono font-black text-xs bg-transparent focus:outline-none">
                 <button onclick="stepMatchScore('${m.id}', 1, 1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
               </div>
 
-              <!-- Team 2 Controls -->
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
                 <button onclick="stepMatchScore('${m.id}', 2, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
                 <input type="number" id="txtS2_${m.id}" value="${s2}" min="0" max="11" style="color:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="w-10 text-center font-mono font-black text-xs bg-transparent focus:outline-none">
@@ -1877,7 +1843,6 @@
               </div>
             </div>
 
-            <!-- Save Score -->
             <div class="flex items-center justify-end gap-1 pt-0.5">
               <button onclick="saveMatchScore('${m.id}')" style="background:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="h-7 text-slate-950 font-black px-3 rounded-md text-[11px] flex items-center gap-1 shadow active:scale-95">
                 <i data-lucide="check" class="w-3 h-3"></i> ${isCompleted ? 'Update' : 'Save'}
@@ -1901,7 +1866,6 @@
     inputEl.value = curr;
   }
 
-
   let matchJustCompletedId = null;
 
   function saveMatchScore(matchId) {
@@ -1924,7 +1888,6 @@
       return;
     }
 
-    const previousCompleted = m.status === 'COMPLETED';
     m.score1 = s1;
     m.score2 = s2;
     m.status = 'COMPLETED';
@@ -2019,7 +1982,6 @@
       container.appendChild(row);
     });
 
-    // Render Top 2 Men & Women
     const topMen = sorted.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
     const topWomen = sorted.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
 
@@ -2140,7 +2102,7 @@
       return selectedSearchPlayerIds.every(id => mPlayers.includes(id));
     });
 
-    document.getElementById('searchMatchCount').innerText = `${matches.length} pending match(es) found`;
+    document.getElementById('searchMatchCount').innerText = `${matches.length} match(es) found`;
 
     matches.forEach(m => {
       const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
@@ -2151,7 +2113,7 @@
       card.innerHTML = `
           <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800 pb-1">
             <span class="font-bold text-white">Match #${m.matchNum}</span>
-            <span class="bg-brand-950 text-brand-400 border border-brand-800/50 px-1.5 py-0.2 rounded-full font-bold text-[9px]">Play Ahead</span>
+            <span class="bg-brand-950 text-brand-400 border border-brand-800/50 px-1.5 py-0.2 rounded-full font-bold text-[9px]">${m.status}</span>
           </div>
           <div class="grid grid-cols-12 items-center gap-1 text-xs">
             <div class="col-span-5 font-bold text-slate-100 truncate">${p1.name} & ${p2.name}</div>
@@ -2163,21 +2125,22 @@
     });
   }
 
+  // Updated WhatsApp Export Function (12-Hour AM/PM Format)
   function updateWhatsAppExportText() {
     let text = `🏸 *${tournamentState.name.toUpperCase()}* 🏸\n`;
     text += `📅 Date: ${formatTournamentDate(tournamentState.date)}\n\n`;
-    text += `🏆 *MATCH SCHEDULE* 🏆\n`;
+    text += `🏆 *MATCH SCHEDULE* 🏆\n\n`;
 
     tournamentState.matches.forEach(m => {
       const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
       const p1 = getPlayer(m.team1[0]).name, p2 = getPlayer(m.team1[1]).name;
       const p3 = getPlayer(m.team2[0]).name, p4 = getPlayer(m.team2[1]).name;
-      const scoreStr = m.status === 'COMPLETED' ? `[ Score: ${m.score1} - ${m.score2} ]` : `[ Pending ]`;
+      const time12h = format12HourTime(m.startTime);
 
-      text += `⏰ *M#${m.matchNum}* (${court.name} - ${m.startTime})\n   ${p1} & ${p2} 🆚 ${p3} & ${p4}\n   ${scoreStr}\n\n`;
+      text += `⏰ *M#${m.matchNum}* (${court.name} - ${time12h})\n   ${p1} & ${p2} 🆚 ${p3} & ${p4}\n\n`;
     });
 
-    document.getElementById('txtWhatsAppExport').value = text;
+    document.getElementById('txtWhatsAppExport').value = text.trim();
   }
 
   function copyWhatsAppText() {
@@ -2190,39 +2153,6 @@
   function shareDirectWhatsApp() {
     const text = encodeURIComponent(document.getElementById('txtWhatsAppExport').value);
     window.location.href = `whatsapp://send?text=${text}`;
-  }
-
-  // JSON Export & Import
-  function exportJSONBackup() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tournamentState, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `${tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_')}_Backup.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-  }
-
-  function importJSONBackup(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const imported = JSON.parse(e.target.result);
-        if (imported && imported.players && imported.matches) {
-          tournamentState = imported;
-          saveToLocalStorage();
-          location.reload();
-        } else {
-          alert("Invalid tournament JSON file format.");
-        }
-      } catch (err) {
-        alert("Error parsing JSON file.");
-      }
-    };
-    reader.readAsText(file);
   }
 
   function getHistoryArray() {
@@ -2409,12 +2339,10 @@
     XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
 
     const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-    XLSX.writeFile(wb, `${cleanName}_v2.1_Report.xlsx`);
+    XLSX.writeFile(wb, `${cleanName}_v2.3_Report.xlsx`);
   }
 
-  // ================= SHARED TOURNAMENT SESSION SYNC =================
-  // The app continues to work offline with localStorage. When served by the included
-  // Node server, this layer synchronizes the same tournament session across devices.
+  // SHARED SESSION SYNC
   let sharedSessionId = '';
   let sharedRevision = 0;
   let sharedEventSource = null;
