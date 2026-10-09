@@ -131,7 +131,9 @@
     #firstLoadSplash.splash-hide { opacity: 0; pointer-events: none; }
     .badminton-racket { width: 52px; height: 72px; transform: rotate(-28deg); animation: racket-left 1.5s ease-in-out infinite alternate; }
     .racket-right { transform: rotate(28deg) scaleX(-1); animation-name: racket-right; }
-    .racket-head { position:absolute; width:42px; height:48px; border:3px solid #34d399; border-radius:50%; top:0; left:5px; }
+
+    /* Loading Animation dynamic head color */
+    .racket-head { position:absolute; width:42px; height:48px; border:3px solid var(--app-accent, #10b981); border-radius:50%; top:0; left:5px; }
     .racket-head:after { content:""; position:absolute; inset:5px; border:1px solid rgba(255,255,255,.35); border-radius:50%; background:repeating-linear-gradient(90deg,transparent 0 5px,rgba(255,255,255,.12) 6px 7px); }
     .racket-handle { position:absolute; width:7px; height:30px; background:#94a3b8; border-radius:4px; top:43px; left:22px; transform:rotate(-4deg); }
     .shuttle-animate { width:18px; height:30px; transform:translate(-50%,-50%); animation: shuttle-flight 1.35s cubic-bezier(.45,.05,.55,.95) infinite; }
@@ -148,13 +150,13 @@
 
 <body class="h-full flex flex-col bg-slate-950 text-slate-100 overflow-x-hidden select-none">
 
-<!-- First-load 3-second badminton animation -->
+<!-- First-load 3-second badminton animation with dynamic app color scheme -->
 <div id="firstLoadSplash" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center overflow-hidden">
   <div class="relative w-72 h-40">
-    <div class="absolute left-4 right-4 bottom-5 h-0.5 bg-emerald-400/50"></div>
+    <div class="absolute left-4 right-4 bottom-5 h-0.5" style="background: color-mix(in srgb, var(--app-accent, #10b981) 50%, transparent);"></div>
     <div class="absolute left-1/2 top-2 bottom-5 w-px bg-white/20"></div>
-    <div class="absolute left-6 bottom-5 w-28 h-1 bg-emerald-500/60 rounded-full"></div>
-    <div class="absolute right-6 bottom-5 w-28 h-1 bg-teal-400/60 rounded-full"></div>
+    <div class="absolute left-6 bottom-5 w-28 h-1 rounded-full" style="background: color-mix(in srgb, var(--app-accent, #10b981) 60%, transparent);"></div>
+    <div class="absolute right-6 bottom-5 w-28 h-1 rounded-full" style="background: color-mix(in srgb, var(--app-accent, #10b981) 60%, transparent);"></div>
     <div class="badminton-racket absolute left-8 bottom-8">
       <div class="racket-head"></div><div class="racket-handle"></div>
     </div>
