@@ -943,6 +943,10 @@
     calculateCourtEstimates();
   }
 
+  function hasCompletedMatches() {
+    return Array.isArray(tournamentState.matches) && tournamentState.matches.some(match => match.status === 'COMPLETED');
+  }
+
   function addCourtRow() {
     const newCourtId = 'c_' + Date.now();
     tournamentState.courts.push({
@@ -958,6 +962,11 @@
 
   function removeCourtRow(courtId) {
     if (tournamentState.courts.length <= 1) return;
+    if (hasCompletedMatches()) {
+      alert('Courts cannot be deleted after the tournament has started. Reset the tournament to change the court setup.');
+      renderCourtInputs();
+      return;
+    }
     tournamentState.courts = tournamentState.courts.filter(c => c.id !== courtId);
     renderCourtInputs();
     saveToLocalStorage();
@@ -966,6 +975,14 @@
   function updateCourtInfo(courtId, key, value) {
     const court = tournamentState.courts.find(c => c.id === courtId);
     if (court) {
+      if (hasCompletedMatches() && (key === 'startTime' || key === 'endTime')) {
+        const proposedCourt = { ...court, [key]: value };
+        if (getCourtDurationMinutes(proposedCourt) < getCourtDurationMinutes(court)) {
+          alert('Court time cannot be reduced after the tournament has started. Reset the tournament to change court timings.');
+          renderCourtInputs();
+          return;
+        }
+      }
       court[key] = value;
       calculateCourtEstimates();
       saveToLocalStorage();
@@ -1095,6 +1112,15 @@
   }
 
   function generateTournamentFixtures() {
+    if (hasCompletedMatches()) {
+      alert('The tournament is in progress because at least one match is completed. The schedule cannot be regenerated. Reset the tournament to start a new schedule.');
+      return;
+    }
+    if (tournamentState.isGenerated) {
+      alert('The tournament schedule has already been generated. Schedule generation is allowed only once per tournament. Reset the tournament to start a new one.');
+      return;
+    }
+
     const activePlayers = tournamentState.players.filter(p => !p.retired);
     if (activePlayers.length < 4) {
       alert("Please add at least 4 active players to generate doubles fixtures!");
