@@ -1111,7 +1111,7 @@
     }
   }
 
-  function generateTournamentFixtures() {
+  async function generateTournamentFixtures() {
     if (hasCompletedMatches()) {
       alert('The tournament is in progress because at least one match is completed. The schedule cannot be regenerated. Reset the tournament to start a new schedule.');
       return;
@@ -1131,6 +1131,8 @@
       alert("Please give at least one court a valid 8-minute-or-longer time window before generating fixtures.");
       return;
     }
+
+    if (!await authorizeTournamentStart()) return;
 
     tournamentState.matches = buildFixturesForPlayers(activePlayers, []);
     const wasAlreadyGenerated = tournamentState.isGenerated;
@@ -2431,6 +2433,88 @@
     XLSX.writeFile(wb, `${cleanName}_v2.5_Report.xlsx`);
   }
 
+
+  // Server-backed activation. The device ID is stored locally; the server stores the free-use count.
+  function getActivationDeviceId() {
+    let id = localStorage.getItem('smashmaster_activation_device');
+    if (!id) {
+      const bytes = new Uint8Array(18);
+      crypto.getRandomValues(bytes);
+      id = 'device_' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+      localStorage.setItem('smashmaster_activation_device', id);
+    }
+    return id;
+  }
+
+  function showActivationOverlay(message) {
+    const overlay = document.getElementById('activationOverlay');
+    const msg = document.getElementById('activationMessage');
+    if (msg && message) msg.textContent = message;
+    if (overlay) overlay.style.display = 'flex';
+  }
+
+  function hideActivationOverlay() {
+    const overlay = document.getElementById('activationOverlay');
+    if (overlay) overlay.style.display = 'none';
+  }
+
+  async function refreshActivationStatus() {
+    const deviceId = getActivationDeviceId();
+    const response = await fetch(`/api/access/${encodeURIComponent(deviceId)}`, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Could not check activation status.');
+    const status = await response.json();
+    if (status.needsActivation) {
+      showActivationOverlay('Your 3 free tournaments have been used. Contact the app owner to get an activation code. Each code unlocks the app for 12 hours.');
+    } else {
+      hideActivationOverlay();
+    }
+    return status;
+  }
+
+  async function authorizeTournamentStart() {
+    try {
+      const response = await fetch('/api/access/start-tournament', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deviceId: getActivationDeviceId() })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.tournamentAllowed) {
+        showActivationOverlay(result.error || 'Please enter an activation code to continue.');
+        return false;
+      }
+      return true;
+    } catch (err) {
+      alert('Unable to verify app access with the server. Please check your internet connection and try again.');
+      return false;
+    }
+  }
+
+  async function redeemActivationCode() {
+    const input = document.getElementById('activationCodeInput');
+    const error = document.getElementById('activationError');
+    const button = document.getElementById('activateCodeButton');
+    const code = String(input?.value || '').trim().toUpperCase();
+    if (!code) { if (error) error.textContent = 'Enter an activation code.'; return; }
+    button.disabled = true;
+    if (error) error.textContent = '';
+    try {
+      const response = await fetch('/api/access/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deviceId: getActivationDeviceId(), code })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Activation failed.');
+      hideActivationOverlay();
+      alert('Activation successful. The app is unlocked for 12 hours.');
+    } catch (err) {
+      if (error) error.textContent = err.message || 'Activation failed. Check the code and try again.';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
   // SHARED SESSION SYNC
   let sharedSessionId = '';
   let sharedRevision = 0;
@@ -2461,6 +2545,8 @@
   }
 
   async function initializeSharedSync() {
+    try { await refreshActivationStatus(); } catch (err) { console.warn('Activation status unavailable:', err.message); }
+    setInterval(() => refreshActivationStatus().catch(err => console.warn('Activation status check failed:', err.message)), 60000);
     sharedSessionId = getSharedSessionId();
     const input = document.getElementById('sharedSessionId');
     if (input) input.value = sharedSessionId;
@@ -2634,5 +2720,18 @@
     }
   }
 </script>
+
+<div id="activationOverlay" style="display:none" class="fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-sm flex items-center justify-center p-5">
+  <div class="w-full max-w-md rounded-2xl border border-emerald-700 bg-slate-900 p-6 shadow-2xl">
+    <h2 class="text-xl font-extrabold text-white mb-2">Activation Required</h2>
+    <p id="activationMessage" class="text-sm text-slate-300 mb-4">Your 3 free tournaments have been used. Contact the app owner to get an activation code. Each code unlocks the app for 12 hours.</p>
+    <label for="activationCodeInput" class="block text-xs font-bold text-slate-300 mb-1">Activation code</label>
+    <input id="activationCodeInput" autocomplete="off" placeholder="XXXX-XXXX-XXXX" class="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-3 text-white tracking-widest uppercase mb-3">
+    <p id="activationError" class="text-sm text-red-400 mb-3"></p>
+    <button id="activateCodeButton" onclick="redeemActivationCode()" class="w-full rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3">Activate for 12 Hours</button>
+    <p class="text-[11px] text-slate-500 mt-4">Need a code? Contact the app owner.</p>
+  </div>
+</div>
+
 </body>
 </html>

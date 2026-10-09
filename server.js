@@ -8,6 +8,59 @@ const HOST = process.env.HOST || '0.0.0.0';
 const APP_FILE = path.join(__dirname, 'badminton_doubles_tournament_manager.html');
 const DATA_FILE = path.join(__dirname, 'tournament_sessions.json');
 const ACCESS_LOG_FILE = path.join(__dirname, 'access.log');
+const ACTIVATION_FILE = path.join(__dirname, 'activation_data.json');
+const FREE_TOURNAMENTS = 3;
+const ACTIVATION_HOURS = 12;
+let activationData = { devices: {}, codes: {} };
+try {
+  if (fs.existsSync(ACTIVATION_FILE)) {
+    activationData = { ...activationData, ...JSON.parse(fs.readFileSync(ACTIVATION_FILE, 'utf8')) };
+    activationData.devices ||= {};
+    activationData.codes ||= {};
+  }
+} catch (err) {
+  console.error('Could not load activation_data.json:', err.message);
+}
+function saveActivationData() {
+  const tmp = ACTIVATION_FILE + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(activationData, null, 2));
+  fs.renameSync(tmp, ACTIVATION_FILE);
+}
+function validDeviceId(id) { return typeof id === 'string' && /^[A-Za-z0-9_-]{16,100}$/.test(id); }
+function deviceRecord(id) {
+  if (!activationData.devices[id]) activationData.devices[id] = { tournamentsUsed: 0, activatedUntil: 0 };
+  return activationData.devices[id];
+}
+function hasActiveAccess(id) {
+  const d = deviceRecord(id);
+  return d.activatedUntil > Date.now() || d.tournamentsUsed < FREE_TOURNAMENTS;
+}
+function accessStatus(id) {
+  const d = deviceRecord(id);
+  const active = d.activatedUntil > Date.now();
+  return {
+    ok: true,
+    allowed: active || d.tournamentsUsed < FREE_TOURNAMENTS,
+    tournamentsUsed: d.tournamentsUsed,
+    freeTournaments: FREE_TOURNAMENTS,
+    activationActive: active,
+    activatedUntil: active ? new Date(d.activatedUntil).toISOString() : null,
+    needsActivation: !active && d.tournamentsUsed >= FREE_TOURNAMENTS
+  };
+}
+function readRequestBody(req, maxBytes = 64 * 1024) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk;
+      if (body.length > maxBytes) { reject(new Error('Request body too large')); req.destroy(); }
+    });
+    req.on('end', () => {
+      try { resolve(JSON.parse(body || '{}')); } catch (_) { reject(new Error('Invalid JSON')); }
+    });
+    req.on('error', reject);
+  });
+}
 const sessions = new Map();
 const subscribers = new Map();
 
@@ -84,6 +137,70 @@ const server = http.createServer((req, res) => {
       'Access-Control-Allow-Headers': 'Content-Type'
     });
     return res.end();
+  }
+
+  // Admin-only: POST /api/admin/activation-codes with x-admin-key header.
+  // Set ACTIVATION_ADMIN_KEY in Render environment variables.
+  if (pathname === '/api/admin/activation-codes' && req.method === 'POST') {
+    const configuredKey = process.env.ACTIVATION_ADMIN_KEY;
+    if (!configuredKey) return sendJson(res, 503, { error: 'Activation admin key is not configured on the server.' });
+    const suppliedKey = String(req.headers['x-admin-key'] || '');
+    if (suppliedKey.length !== configuredKey.length ||
+        !require('crypto').timingSafeEqual(Buffer.from(suppliedKey), Buffer.from(configuredKey))) {
+      return sendJson(res, 401, { error: 'Unauthorized' });
+    }
+    const crypto = require('crypto');
+    let code;
+    do { code = crypto.randomBytes(6).toString('hex').toUpperCase().match(/.{1,4}/g).join('-'); }
+    while (activationData.codes[code]);
+    activationData.codes[code] = { createdAt: Date.now(), redeemed: false };
+    saveActivationData();
+    return sendJson(res, 201, { ok: true, activationCode: code, validForHours: ACTIVATION_HOURS, note: 'Code activates 12 hours from first successful redemption and can be redeemed once.' });
+  }
+
+  const accessMatch = pathname.match(/^\/api\/access\/([A-Za-z0-9_-]+)$/);
+  if (accessMatch && req.method === 'GET') {
+    const deviceId = decodeURIComponent(accessMatch[1]);
+    if (!validDeviceId(deviceId)) return sendJson(res, 400, { error: 'Invalid device ID' });
+    const result = accessStatus(deviceId);
+    saveActivationData();
+    return sendJson(res, 200, result);
+  }
+
+  if (pathname === '/api/access/redeem' && req.method === 'POST') {
+    readRequestBody(req).then(input => {
+      const deviceId = String(input.deviceId || '');
+      const code = String(input.code || '').trim().toUpperCase();
+      if (!validDeviceId(deviceId)) return sendJson(res, 400, { error: 'Invalid device ID' });
+      const record = activationData.codes[code];
+      if (!record || record.redeemed) return sendJson(res, 400, { error: 'Invalid or already used activation code.' });
+      const until = Date.now() + ACTIVATION_HOURS * 60 * 60 * 1000;
+      record.redeemed = true;
+      record.redeemedAt = Date.now();
+      record.deviceId = deviceId;
+      deviceRecord(deviceId).activatedUntil = until;
+      saveActivationData();
+      return sendJson(res, 200, { ...accessStatus(deviceId), message: 'Activation successful.' });
+    }).catch(err => sendJson(res, 400, { error: err.message === 'Request body too large' ? err.message : 'Invalid JSON' }));
+    return;
+  }
+
+  if (pathname === '/api/access/start-tournament' && req.method === 'POST') {
+    readRequestBody(req).then(input => {
+      const deviceId = String(input.deviceId || '');
+      if (!validDeviceId(deviceId)) return sendJson(res, 400, { error: 'Invalid device ID' });
+      const d = deviceRecord(deviceId);
+      if (d.activatedUntil > Date.now()) {
+        return sendJson(res, 200, { ...accessStatus(deviceId), tournamentAllowed: true });
+      }
+      if (d.tournamentsUsed >= FREE_TOURNAMENTS) {
+        return sendJson(res, 403, { ...accessStatus(deviceId), error: 'Please enter an activation code to continue.' });
+      }
+      d.tournamentsUsed += 1;
+      saveActivationData();
+      return sendJson(res, 200, { ...accessStatus(deviceId), tournamentAllowed: true });
+    }).catch(err => sendJson(res, 400, { error: 'Invalid JSON' }));
+    return;
   }
 
   if (pathname === '/' || pathname === '/badminton_doubles_tournament_manager.html') {
