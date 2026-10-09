@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v2.3 - Doubles Badminton Manager</title>
+  <title>SmashMaster v2.5 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -61,11 +61,11 @@
     h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; }
 
     @keyframes matchSlideToBottom { 0% { opacity: .35; transform: translateY(-110px) scale(.97); box-shadow: 0 0 0 rgba(16,185,129,0); } 55% { opacity: 1; transform: translateY(12px) scale(1.01); box-shadow: 0 0 24px rgba(16,185,129,.42); } 78% { transform: translateY(-4px) scale(1); } 100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(16,185,129,0); } }
-    .match-tile-motion { animation: matchSlideToBottom 3s cubic-bezier(.22,.7,.25,1) both; position:relative; z-index:5; will-change:transform; }
+    .match-tile-motion { animation: matchSlideToBottom 4.5s cubic-bezier(.22,.7,.25,1) both; position:relative; z-index:5; will-change:transform; }
     .match-tile-flash { outline: 2px solid var(--completed-match-color, #7dd3fc); outline-offset: 2px; box-shadow: 0 0 22px color-mix(in srgb, var(--completed-match-color, #7dd3fc) 55%, transparent) !important; }
 
-    /* Reduced Color Picker Circle Size */
-    .color-picker { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; padding: 0; border: 1.5px solid #cbd5e1; border-radius: 50% !important; overflow: hidden; background: transparent; cursor: pointer; }
+    /* Reduced Color Picker Circle Size to half (12px) */
+    .color-picker { appearance: none; -webkit-appearance: none; width: 12px; height: 12px; min-width: 12px; padding: 0; border: 1px solid #cbd5e1; border-radius: 50% !important; overflow: hidden; background: transparent; cursor: pointer; }
     .color-picker::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
     .color-picker::-webkit-color-swatch { border: 0; border-radius: 50%; }
     .color-picker::-moz-color-swatch { border: 0; border-radius: 50%; }
@@ -76,8 +76,8 @@
     .text-brand-400, .text-brand-300, .text-emerald-400, .text-emerald-300, .text-emerald-500 { color: var(--app-accent, #10b981) !important; }
     .border-brand-500, .border-brand-800, .border-emerald-500, .border-emerald-600 { border-color: var(--app-accent, #10b981) !important; }
 
-    /* Dynamic Mobile Active Tab Styling */
-    .mobile-tab-active, .mobile-tab-active i, .mobile-tab-active svg, .mobile-tab-active span { color: var(--app-accent, #10b981) !important; }
+    /* Dynamic Mobile Active Tab Styling with App Color Scheme Accent */
+    .mobile-tab-active, .mobile-tab-active i, .mobile-tab-active svg, .mobile-tab-active span { color: var(--app-accent, #10b981) !important; stroke: var(--app-accent, #10b981) !important; }
     .mobile-tab-active { position: relative; }
     .mobile-tab-active::after {
       content: '';
@@ -113,7 +113,7 @@
     .completed-match-compact > div:nth-child(3) > div:last-child { padding-top: 0 !important; }
     .completed-match-compact > div:nth-child(3) > div:last-child button { width: auto !important; height: 1.4rem !important; padding-left: .5rem !important; padding-right: .5rem !important; font-size: 10px !important; }
     .completed-score { color: var(--completed-match-color, #7dd3fc) !important; }
-    @media (prefers-reduced-motion: reduce) { .match-tile-motion { animation-duration: 3s; } }
+    @media (prefers-reduced-motion: reduce) { .match-tile-motion { animation-duration: 4.5s; } }
 
     /* Custom Hide Scrollbar */
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -183,7 +183,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.3</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.5</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -227,9 +227,16 @@
         </button>
       </div>
 
+      <!-- Cross-Platform Uniform Date Input -->
       <div>
         <label class="block text-[10px] font-semibold text-slate-400 mb-1">Tournament Date</label>
-        <input type="date" id="inputTourneyDate" onchange="tournamentState.date=this.value; saveToLocalStorage();" class="block box-border w-full max-w-full min-w-0 appearance-none bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-brand-500">
+        <div class="relative cursor-pointer">
+          <div id="displayTourneyDate" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-100 flex items-center justify-between">
+            <span id="lblFormattedDate" class="font-mono text-brand-300">09-Oct-2026</span>
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-brand-400"></i>
+          </div>
+          <input type="date" id="inputTourneyDate" onchange="updateTourneyDate(this.value)" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer">
+        </div>
       </div>
 
       <!-- Court Cards List -->
@@ -272,7 +279,8 @@
           </div>
           <input type="hidden" id="selectPlayerGender" value="Male">
 
-          <button onclick="addPlayerFromInput()" class="h-8 bg-brand-600 hover:bg-brand-500 text-slate-950 font-extrabold px-3 rounded-lg text-xs flex items-center justify-center gap-1 shadow-md shadow-brand-600/20 active:scale-95 shrink-0">
+          <!-- Equalized Brightness Add Button -->
+          <button onclick="addPlayerFromInput()" class="h-8 bg-brand-500 hover:bg-brand-400 text-slate-950 font-extrabold px-3 rounded-lg text-xs flex items-center justify-center gap-1 shadow-md shadow-brand-500/20 active:scale-95 shrink-0">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Add
           </button>
         </div>
@@ -555,7 +563,7 @@
       </div>
     </div>
 
-    <!-- Excel Download Featured Card (Placed below WhatsApp text format tile) -->
+    <!-- Excel Download Featured Card (Placed below WhatsApp tile) -->
     <div class="bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
       <div class="flex items-center gap-2.5">
         <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
@@ -682,6 +690,7 @@
     "The Fault in Our Serves"
   ];
 
+  // Cross-Platform Uniform Date Formatter (dd-Mon-yyyy)
   function formatTournamentDate(dateStr) {
     if (!dateStr) return '';
     const parts = dateStr.split('-');
@@ -690,7 +699,15 @@
     const date = new Date(Number(yyyy), Number(mm) - 1, Number(dd));
     if (Number.isNaN(date.getTime())) return dateStr;
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return `${String(dd).padStart(2, '0')}-${months[date.getMonth()]}-${String(yyyy).slice(-2)}`;
+    return `${String(dd).padStart(2, '0')}-${months[date.getMonth()]}-${String(yyyy)}`;
+  }
+
+  function updateTourneyDate(val) {
+    if (!val) return;
+    tournamentState.date = val;
+    const lbl = document.getElementById('lblFormattedDate');
+    if (lbl) lbl.innerText = formatTournamentDate(val);
+    saveToLocalStorage();
   }
 
   // 12-Hour AM/PM Time Format Conversion Helper
@@ -714,14 +731,14 @@
   }
 
   let tournamentState = {
-    version: '2.3',
+    version: '2.5',
     themeColor: '#10b981',
     completedMatchColor: '#7dd3fc',
     name: AMUSING_NAMES[0],
     date: getTodayISO(),
     courts: [
-      { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00', color: '#059669' },
-      { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00', color: '#059669' }
+      { id: 'c1', name: 'Court 1', startTime: '17:00', endTime: '19:00', color: '#059669' },
+      { id: 'c2', name: 'Court 2', startTime: '17:00', endTime: '19:00', color: '#059669' }
     ],
     players: [],
     matches: [],
@@ -748,7 +765,9 @@
     if (!tournamentState.date) {
       tournamentState.date = getTodayISO();
     }
-    document.getElementById('inputTourneyDate').value = tournamentState.date;
+    const inputDate = document.getElementById('inputTourneyDate');
+    if (inputDate) inputDate.value = tournamentState.date;
+    updateTourneyDate(tournamentState.date);
 
     renderCourtInputs();
     updatePlayerListUI();
@@ -1147,6 +1166,7 @@
     return candidates;
   }
 
+  // DYNAMICALLY SCALED TARGET MATCHES PER PLAYER BASED ON TOTAL COURT TIME
   function buildFixturesForPlayers(playersList, existingCompleted = []) {
     const pCount = playersList.length;
     if (pCount < 4) return [];
@@ -1159,8 +1179,9 @@
       });
     });
 
-    const targetPerPlayer = Math.max(3, Math.min(6, Math.floor(pCount * 0.75)));
     const courtCapacity = getTotalCourtCapacity();
+    const maxPossiblePerPlayer = Math.floor((courtCapacity * 4) / pCount);
+    const targetPerPlayer = Math.max(3, maxPossiblePerPlayer);
     const desiredTotalMatches = Math.min(
             courtCapacity,
             Math.ceil((pCount * targetPerPlayer) / 4)
@@ -1742,16 +1763,21 @@
     document.getElementById('matchesRemainingCount').innerText = remainingMatches;
     const container = document.getElementById('fixturesListContainer');
     const previousPositions = new Map([...container.querySelectorAll('[data-match-id]')].map(el => [el.dataset.matchId, el.getBoundingClientRect().top]));
-    const courtFilter = document.getElementById('filterCourtSelect').value;
-    const statusFilter = document.getElementById('filterStatusSelect').value;
 
+    // ALWAYS DYNAMICALLY REFRESH COURT SELECT OPTIONS
     const courtSelect = document.getElementById('filterCourtSelect');
-    if (courtSelect.options.length <= 1) {
-      courtSelect.innerHTML = '<option value="ALL">All Courts</option>';
-      tournamentState.courts.forEach(c => {
-        courtSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-      });
-    }
+    const currentSelected = courtSelect.value || 'ALL';
+    courtSelect.innerHTML = '<option value="ALL">All Courts</option>';
+    tournamentState.courts.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.name;
+      if (c.id === currentSelected) opt.selected = true;
+      courtSelect.appendChild(opt);
+    });
+
+    const courtFilter = courtSelect.value;
+    const statusFilter = document.getElementById('filterStatusSelect').value;
 
     container.innerHTML = '';
 
@@ -1783,7 +1809,7 @@
       const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
       const isCompleted = m.status === 'COMPLETED';
 
-      // Determine Court Name font color based on completion status
+      // Court Name font color matches completed match scheme if done, else court tile scheme
       const courtNameColor = isCompleted
               ? (tournamentState.completedMatchColor || '#7dd3fc')
               : courtColor.color;
@@ -1853,8 +1879,28 @@
       container.appendChild(card);
     });
 
+    // SMOOTH & SLOWED DOWN MOVEMENT ANIMATION (4.5 SECONDS)
     const moving = container.querySelectorAll('[data-match-id]');
-    moving.forEach(el => { const oldTop = previousPositions.get(el.dataset.matchId); if (oldTop !== undefined) { const delta = oldTop - el.getBoundingClientRect().top; if (Math.abs(delta) > 1) { el.style.transition = 'none'; el.style.transform = `translateY(${delta}px)`; void el.offsetHeight; requestAnimationFrame(() => { el.style.transition = 'transform 3s cubic-bezier(.2,.75,.25,1)'; el.style.transform = 'translateY(0)'; }); setTimeout(() => { el.style.transition = ''; el.style.transform = ''; el.classList.remove('match-tile-flash','match-tile-motion'); }, 3050); } } });
+    moving.forEach(el => {
+      const oldTop = previousPositions.get(el.dataset.matchId);
+      if (oldTop !== undefined) {
+        const delta = oldTop - el.getBoundingClientRect().top;
+        if (Math.abs(delta) > 1) {
+          el.style.transition = 'none';
+          el.style.transform = `translateY(${delta}px)`;
+          void el.offsetHeight;
+          requestAnimationFrame(() => {
+            el.style.transition = 'transform 4.5s cubic-bezier(.22,.7,.25,1)';
+            el.style.transform = 'translateY(0)';
+          });
+          setTimeout(() => {
+            el.style.transition = '';
+            el.style.transform = '';
+            el.classList.remove('match-tile-flash','match-tile-motion');
+          }, 4550);
+        }
+      }
+    });
     lucide.createIcons();
   }
 
@@ -1896,7 +1942,7 @@
     saveToLocalStorage();
     renderFixturesList();
     renderStandingsData();
-    setTimeout(() => { if (matchJustCompletedId === matchId) { matchJustCompletedId = null; renderFixturesList(); } }, 3100);
+    setTimeout(() => { if (matchJustCompletedId === matchId) { matchJustCompletedId = null; renderFixturesList(); } }, 4600);
     checkTournamentCompletion();
   }
 
@@ -2088,6 +2134,7 @@
     renderSearchChips();
   }
 
+  // SEARCH MATCHES: COMPLETED MATCHES REFLECT COMPLETED COLOR SCHEME
   function executeMatchSearch() {
     const container = document.getElementById('searchResultsContainer');
     container.innerHTML = '';
@@ -2107,13 +2154,27 @@
     matches.forEach(m => {
       const p1 = getPlayer(m.team1[0]), p2 = getPlayer(m.team1[1]);
       const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
+      const isCompleted = m.status === 'COMPLETED';
 
       const card = document.createElement('div');
-      card.className = "bg-slate-900 border border-brand-500/40 rounded-xl p-3 shadow-md space-y-1.5";
+      card.className = "bg-slate-900 border rounded-xl p-3 shadow-md space-y-1.5";
+      if (isCompleted) {
+        card.style.backgroundColor = 'rgba(125,211,252,.07)';
+        card.style.borderColor = tournamentState.completedMatchColor || '#7dd3fc';
+        card.style.borderLeftWidth = '4px';
+        card.style.borderLeftColor = tournamentState.completedMatchColor || '#7dd3fc';
+      } else {
+        card.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      }
+
+      const statusBadgeColor = isCompleted
+              ? (tournamentState.completedMatchColor || '#7dd3fc')
+              : (tournamentState.themeColor || '#10b981');
+
       card.innerHTML = `
           <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800 pb-1">
             <span class="font-bold text-white">Match #${m.matchNum}</span>
-            <span class="bg-brand-950 text-brand-400 border border-brand-800/50 px-1.5 py-0.2 rounded-full font-bold text-[9px]">${m.status}</span>
+            <span class="px-1.5 py-0.2 rounded-full font-bold text-[9px]" style="color:${statusBadgeColor}; border: 1px solid ${statusBadgeColor}">${m.status}</span>
           </div>
           <div class="grid grid-cols-12 items-center gap-1 text-xs">
             <div class="col-span-5 font-bold text-slate-100 truncate">${p1.name} & ${p2.name}</div>
@@ -2125,7 +2186,7 @@
     });
   }
 
-  // Updated WhatsApp Export Function (12-Hour AM/PM Format)
+  // UPDATED WHATSAPP FORMAT (Exact sequence numbers e.g., #1, #2 and 12h timings)
   function updateWhatsAppExportText() {
     let text = `🏸 *${tournamentState.name.toUpperCase()}* 🏸\n`;
     text += `📅 Date: ${formatTournamentDate(tournamentState.date)}\n\n`;
@@ -2137,7 +2198,7 @@
       const p3 = getPlayer(m.team2[0]).name, p4 = getPlayer(m.team2[1]).name;
       const time12h = format12HourTime(m.startTime);
 
-      text += `⏰ *M#${m.matchNum}* (${court.name} - ${time12h})\n   ${p1} & ${p2} 🆚 ${p3} & ${p4}\n\n`;
+      text += `⏰ *#${m.matchNum}* (${court.name} - ${time12h})\n   ${p1} & ${p2} 🆚 ${p3} & ${p4}\n\n`;
     });
 
     document.getElementById('txtWhatsAppExport').value = text.trim();
@@ -2339,7 +2400,7 @@
     XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
 
     const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-    XLSX.writeFile(wb, `${cleanName}_v2.3_Report.xlsx`);
+    XLSX.writeFile(wb, `${cleanName}_v2.5_Report.xlsx`);
   }
 
   // SHARED SESSION SYNC
@@ -2508,7 +2569,7 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
-        tournamentState.version = '2.3';
+        tournamentState.version = '2.5';
         tournamentState.courts = (tournamentState.courts || []).map(c => ({...c, color: c.color || '#059669'}));
         tournamentState.themeColor = tournamentState.themeColor || '#10b981';
         tournamentState.completedMatchColor = tournamentState.completedMatchColor || '#7dd3fc';
@@ -2526,13 +2587,13 @@
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '2.3',
+        version: '2.5',
         themeColor: '#10b981', completedMatchColor: '#7dd3fc',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
         courts: [
-          { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00', color: '#059669' },
-          { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00', color: '#059669' }
+          { id: 'c1', name: 'Court 1', startTime: '17:00', endTime: '19:00', color: '#059669' },
+          { id: 'c2', name: 'Court 2', startTime: '17:00', endTime: '19:00', color: '#059669' }
         ],
         players: [],
         matches: [],
