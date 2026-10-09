@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v2.0 - Doubles Badminton Manager</title>
+  <title>SmashMaster v2.1 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -108,6 +108,10 @@
     @keyframes shuttle-flight { 0% { left:22%; top:68%; transform:translate(-50%,-50%) rotate(-25deg); } 50% { left:50%; top:28%; transform:translate(-50%,-50%) rotate(8deg); } 100% { left:78%; top:68%; transform:translate(-50%,-50%) rotate(25deg); } }
     @keyframes racket-left { from { transform:rotate(-28deg); } to { transform:rotate(-12deg); } }
     @keyframes racket-right { from { transform:rotate(28deg) scaleX(-1); } to { transform:rotate(12deg) scaleX(-1); } }
+    /* Keep native time controls inside narrow court tiles on mobile. */
+    #courtListContainer > div { min-width: 0; overflow: hidden; }
+    #courtListContainer .grid > div { min-width: 0; }
+    #courtListContainer input[type="time"] { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding-left: 2px; padding-right: 2px; font-size: 10px; }
 </style>
 </head>
 
@@ -148,7 +152,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.0</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.1</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -553,8 +557,7 @@
       </div>
       <div class="text-[11px] text-slate-300 space-y-1.5">
         <p><span class="text-slate-500">Author:</span> <span class="font-semibold text-white">Bhushan T.</span></p>
-        <p><span class="text-slate-500">Feedback:</span> <a href="mailto:bhushan2005@gmail.com" class="text-brand-400 hover:underline">bhushan2005@gmail.com</a></p>
-        <p>🏸✨ Enjoying the app or have ideas for more features? I’d love to hear from you! Connect with me at <a href="mailto:bhushan2005@gmail.com" class="text-brand-400 hover:underline">bhushan2005@gmail.com</a>. 💡🙌<br>💖 If you’d like to support development, donate via UPI:</p>
+        <p>🏸✨ Enjoying the app or have ideas for more features? I’d love to hear from you! 💡🙌<br>💖 If you’d like to support development, donate via UPI:</p>
         <p><span class="font-mono font-semibold text-brand-300 select-all">bhushan2005@okicici</span></p>
       </div>
     </div>
@@ -676,7 +679,7 @@
   }
 
   let tournamentState = {
-    version: '2.0',
+    version: '2.1',
     name: AMUSING_NAMES[0],
     date: getTodayISO(),
     courts: [
@@ -814,12 +817,12 @@
   }
 
   const COURT_COLOR_PALETTE = [
-    { border: 'border-cyan-400', bg: 'bg-cyan-950/50', text: 'text-cyan-300', badge: 'bg-cyan-950 text-cyan-300 border-cyan-700/70' },
-    { border: 'border-violet-400', bg: 'bg-violet-950/50', text: 'text-violet-300', badge: 'bg-violet-950 text-violet-300 border-violet-700/70' },
-    { border: 'border-amber-400', bg: 'bg-amber-950/50', text: 'text-amber-300', badge: 'bg-amber-950 text-amber-300 border-amber-700/70' },
-    { border: 'border-emerald-400', bg: 'bg-emerald-950/50', text: 'text-emerald-300', badge: 'bg-emerald-950 text-emerald-300 border-emerald-700/70' },
-    { border: 'border-rose-400', bg: 'bg-rose-950/50', text: 'text-rose-300', badge: 'bg-rose-950 text-rose-300 border-rose-700/70' },
-    { border: 'border-sky-400', bg: 'bg-sky-950/50', text: 'text-sky-300', badge: 'bg-sky-950 text-sky-300 border-sky-700/70' }
+    { border: 'border-red-500', bg: 'bg-red-500/20', text: 'text-red-300', badge: 'bg-red-500 text-white border-red-300', tile: 'bg-red-950/60' },
+    { border: 'border-yellow-400', bg: 'bg-yellow-400/20', text: 'text-yellow-200', badge: 'bg-yellow-300 text-slate-950 border-yellow-100', tile: 'bg-yellow-950/50' },
+    { border: 'border-red-500', bg: 'bg-red-500/20', text: 'text-red-300', badge: 'bg-red-500 text-white border-red-300', tile: 'bg-red-950/60' },
+    { border: 'border-yellow-400', bg: 'bg-yellow-400/20', text: 'text-yellow-200', badge: 'bg-yellow-300 text-slate-950 border-yellow-100', tile: 'bg-yellow-950/50' },
+    { border: 'border-red-500', bg: 'bg-red-500/20', text: 'text-red-300', badge: 'bg-red-500 text-white border-red-300', tile: 'bg-red-950/60' },
+    { border: 'border-yellow-400', bg: 'bg-yellow-400/20', text: 'text-yellow-200', badge: 'bg-yellow-300 text-slate-950 border-yellow-100', tile: 'bg-yellow-950/50' }
   ];
   function getCourtColor(courtId) {
     const index = Math.max(0, tournamentState.courts.findIndex(c => c.id === courtId));
@@ -833,7 +836,7 @@
     tournamentState.courts.forEach((court) => {
       const div = document.createElement('div');
       const courtColor = getCourtColor(court.id);
-      div.className = `bg-slate-950 p-2 rounded-lg border border-slate-800 border-l-4 ${courtColor.border} space-y-1.5`;
+      div.className = `${courtColor.tile} p-2 rounded-lg border ${courtColor.border} border-l-4 space-y-1.5 shadow-sm`;
       div.innerHTML = `
           <div class="flex items-center justify-between gap-2">
             <span class="${courtColor.text} text-[10px] font-black rounded px-1.5 py-1 ${courtColor.bg}">${tournamentState.courts.findIndex(c => c.id === court.id) + 1}</span>
@@ -847,11 +850,11 @@
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div>
               <label class="text-[9px] text-slate-500 block">Start Time</label>
-              <input type="time" value="${court.startTime}" onchange="updateCourtInfo('${court.id}', 'startTime', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-1.5 py-0.5 text-slate-200">
+              <input type="time" value="${court.startTime}" onchange="updateCourtInfo('${court.id}', 'startTime', this.value)" class="w-full min-w-0 max-w-full bg-slate-900 border border-slate-800 rounded px-0.5 py-0.5 text-[10px] text-slate-200 court-time-input">
             </div>
             <div>
               <label class="text-[9px] text-slate-500 block">End Time</label>
-              <input type="time" value="${court.endTime}" onchange="updateCourtInfo('${court.id}', 'endTime', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-1.5 py-0.5 text-slate-200">
+              <input type="time" value="${court.endTime}" onchange="updateCourtInfo('${court.id}', 'endTime', this.value)" class="w-full min-w-0 max-w-full bg-slate-900 border border-slate-800 rounded px-0.5 py-0.5 text-[10px] text-slate-200 court-time-input">
             </div>
           </div>
         `;
@@ -1748,14 +1751,14 @@
       const s2 = m.score2 !== null ? m.score2 : 0;
 
       const card = document.createElement('div');
-      card.className = `match-tile-motion bg-slate-900 border ${isCompleted ? 'border-slate-800/80' : `${courtColor.border}/70`} border-l-4 ${courtColor.border} rounded-xl p-3 shadow-md space-y-2 relative`;
+      card.className = `match-tile-motion ${courtColor.tile} border ${isCompleted ? 'border-slate-700/80' : courtColor.border} border-l-4 ${courtColor.border} rounded-xl p-3 shadow-md space-y-2 relative`;
 
       card.innerHTML = `
           <!-- Header Info Badge -->
           <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/80 pb-1.5">
             <div class="flex items-center gap-1">
-              <span class="font-extrabold text-white">#${m.matchNum}</span>
-              <span class="bg-fuchsia-500 text-slate-950 px-2 py-0.5 rounded-md font-mono text-[10px] font-black shadow-md shadow-fuchsia-950/40 ring-1 ring-fuchsia-300/60">R${m.roundNum || 1}</span>
+              <span class="bg-lime-400 text-slate-950 px-2 py-0.5 rounded-md font-extrabold font-mono text-[10px] shadow-md shadow-lime-400/40 ring-1 ring-lime-200">#${m.matchNum}</span>
+              <span class="bg-lime-400 text-slate-950 px-2 py-0.5 rounded-md font-mono text-[10px] font-black shadow-md shadow-lime-400/40 ring-1 ring-lime-200">R${m.roundNum || 1}</span>
               <span class="${courtColor.badge} border px-1.5 py-0.2 rounded-full font-bold text-[9px]">${court.name}</span>
             </div>
             <span class="flex items-center gap-1 text-slate-300 font-mono">
@@ -2321,7 +2324,7 @@
     XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
 
     const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-    XLSX.writeFile(wb, `${cleanName}_v2.0_Report.xlsx`);
+    XLSX.writeFile(wb, `${cleanName}_v2.1_Report.xlsx`);
   }
 
   // ================= SHARED TOURNAMENT SESSION SYNC =================
@@ -2507,7 +2510,7 @@
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '2.0',
+        version: '2.1',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
         courts: [
