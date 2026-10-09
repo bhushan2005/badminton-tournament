@@ -1,4 +1,4 @@
-SMASHMASTER v2.1 — SHARED DOUBLES BADMINTON TOURNAMENT MANAGER
+SMASHMASTER v2.3 — SHARED DOUBLES BADMINTON TOURNAMENT MANAGER
 
 FILES
 - badminton_doubles_tournament_manager.html — browser interface
@@ -18,6 +18,13 @@ DATA AND LOGS
 The Node server writes access.log and tournament_sessions.json beside server.js. Access logging includes request date/time, IP, method, path, and user agent. Tournament-start records include tournament/session details and the roster snapshot.
 
 FULL UPDATE LOG
+
+v2.3 — Custom colours and visible match movement
+- Added a separate colour picker to each court; its selected colour is used for pending match tiles on that court.
+- Added an app accent/green-layout colour picker.
+- Added a completed-match colour picker, defaulting to light blue for completed tile borders, score values, and Update buttons.
+- Completed matches use the selected completed colour; pending matches retain their court colour.
+- Fixed the score-save movement using a position-based transition so the tile visibly travels from its old position to the completed-match area over three seconds.
 
 v2.1 — Court colour and visibility update
 - Court tiles use alternating bright red and bright yellow colours consistently on Setup and Match Schedule.
@@ -83,4 +90,4 @@ v1.0 — Initial release
 
 
 REACT + SPRING BOOT VERSION
-A separate React + Spring Boot version is provided in smashmaster-react-springboot.zip. It is being migrated to PostgreSQL-backed persistence and server-side scheduling/statistics. See that project's README.md for setup and Render deployment steps.
+A separate React + Spring Boot + PostgreSQL version is provided in smashmaster-react-springboot.zip. Its styling has been brought closer to the dark emerald HTML app and includes app/court/completed-match colour controls. It is not yet feature-for-feature equivalent to the HTML app; see README.md for implemented API features and current limitations.

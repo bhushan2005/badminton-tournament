@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v2.2 - Doubles Badminton Manager</title>
+  <title>SmashMaster v2.3 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -61,8 +61,25 @@
     h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; }
 
     @keyframes matchSlideToBottom { 0% { opacity: .35; transform: translateY(-110px) scale(.97); box-shadow: 0 0 0 rgba(16,185,129,0); } 55% { opacity: 1; transform: translateY(12px) scale(1.01); box-shadow: 0 0 24px rgba(16,185,129,.42); } 78% { transform: translateY(-4px) scale(1); } 100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(16,185,129,0); } }
-    .match-tile-motion { animation: matchSlideToBottom 1.6s cubic-bezier(.22,.7,.25,1) both; }
-    @media (prefers-reduced-motion: reduce) { .match-tile-motion { animation: none; } }
+    .match-tile-motion { animation: matchSlideToBottom 3s cubic-bezier(.22,.7,.25,1) both; position:relative; z-index:5; will-change:transform; }
+    .match-tile-flash { outline: 2px solid var(--completed-match-color, #7dd3fc); outline-offset: 2px; box-shadow: 0 0 22px color-mix(in srgb, var(--completed-match-color, #7dd3fc) 55%, transparent) !important; }
+    .color-picker { width: 28px; height: 24px; padding: 1px; border: 1px solid #475569; border-radius: 6px; background: #0f172a; cursor: pointer; }
+    .theme-accent { accent-color: var(--app-accent, #10b981); }
+    .bg-brand-500, .bg-emerald-500 { background-color: var(--app-accent, #10b981) !important; }
+    .bg-brand-600 { background-color: color-mix(in srgb, var(--app-accent, #10b981) 82%, #000) !important; }
+    .text-brand-400, .text-brand-300, .text-emerald-400, .text-emerald-300 { color: var(--app-accent, #10b981) !important; }
+    .border-brand-500, .border-emerald-500, .border-emerald-600 { border-color: var(--app-accent, #10b981) !important; }
+    .completed-match-compact { padding: .35rem .55rem !important; border-radius: .55rem !important; }
+    .completed-match-compact > div:first-child { padding-bottom: .2rem !important; }
+    .completed-match-compact > div:nth-child(2) { gap: .15rem !important; font-size: 10px !important; }
+    .completed-match-compact > div:nth-child(3) { padding: .25rem !important; border-radius: .4rem !important; }
+    .completed-match-compact > div:nth-child(3) > div { gap: .25rem !important; }
+    .completed-match-compact > div:nth-child(3) button { width: 1.35rem !important; height: 1.35rem !important; font-size: 10px !important; }
+    .completed-match-compact > div:nth-child(3) input { width: 1.6rem !important; font-size: 11px !important; }
+    .completed-match-compact > div:nth-child(3) > div:last-child { padding-top: 0 !important; }
+    .completed-match-compact > div:nth-child(3) > div:last-child button { width: auto !important; height: 1.4rem !important; padding-left: .5rem !important; padding-right: .5rem !important; font-size: 10px !important; }
+    .completed-score { color: var(--completed-match-color, #7dd3fc) !important; }
+    @media (prefers-reduced-motion: reduce) { .match-tile-motion { animation-duration: 3s; } }
 
     /* Custom Hide Scrollbar */
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -152,7 +169,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.2</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.3</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -212,6 +229,10 @@
 
       <!-- Court Cards List -->
       <div id="courtListContainer" class="space-y-2"></div>
+      <div class="grid grid-cols-2 gap-2 rounded-lg border border-slate-800 bg-slate-950/70 p-2">
+        <label class="flex items-center justify-between gap-2 text-[10px] text-slate-300">App green layout <input id="appThemeColorPicker" class="color-picker" type="color" value="#10b981" onchange="updateThemeColor(this.value)"></label>
+        <label class="flex items-center justify-between gap-2 text-[10px] text-slate-300">Completed matches <input id="completedColorPicker" class="color-picker" type="color" value="#7dd3fc" onchange="updateCompletedColor(this.value)"></label>
+      </div>
 
       <!-- Mobile Capacity Estimate Banner -->
       <div class="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5 text-[11px] space-y-1">
@@ -557,6 +578,7 @@
       </div>
       <div class="text-[11px] text-slate-300 space-y-1.5">
         <p><span class="text-slate-500">Author:</span> <span class="font-semibold text-white">Bhushan T.</span></p>
+        <p><span class="text-slate-500">Email:</span> <a href="mailto:bhushan2005@gmail.com" class="font-mono font-semibold text-brand-300 underline underline-offset-2 select-all">bhushan2005@gmail.com</a></p>
         <p>🏸✨ Enjoying the app or have ideas for more features? I’d love to hear from you! 💡🙌<br>💖 If you’d like to support development, donate via UPI:</p>
         <p><span class="font-mono font-semibold text-brand-300 select-all">bhushan2005@okicici</span></p>
       </div>
@@ -679,12 +701,14 @@
   }
 
   let tournamentState = {
-    version: '2.1',
+    version: '2.3',
+    themeColor: '#10b981',
+    completedMatchColor: '#7dd3fc',
     name: AMUSING_NAMES[0],
     date: getTodayISO(),
     courts: [
-      { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00' },
-      { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00' }
+      { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00', color: '#059669' },
+      { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00', color: '#059669' }
     ],
     players: [],
     matches: [],
@@ -707,6 +731,7 @@
     }
 
     loadFromLocalStorage();
+    applySavedColors();
 
     if (!tournamentState.date) {
       tournamentState.date = getTodayISO();
@@ -816,17 +841,36 @@
     });
   }
 
-  const COURT_COLOR_PALETTE = [
-    { border: 'border-emerald-600', bg: 'bg-emerald-500/10', text: 'text-red-400', badge: 'text-red-400', tile: 'bg-emerald-950/20' },
-    { border: 'border-emerald-600', bg: 'bg-emerald-500/10', text: 'text-yellow-300', badge: 'text-yellow-300', tile: 'bg-emerald-950/20' },
-    { border: 'border-emerald-600', bg: 'bg-emerald-500/10', text: 'text-red-400', badge: 'text-red-400', tile: 'bg-emerald-950/20' },
-    { border: 'border-emerald-600', bg: 'bg-emerald-500/10', text: 'text-yellow-300', badge: 'text-yellow-300', tile: 'bg-emerald-950/20' },
-    { border: 'border-emerald-600', bg: 'bg-emerald-500/10', text: 'text-red-400', badge: 'text-red-400', tile: 'bg-emerald-950/20' },
-    { border: 'border-emerald-600', bg: 'bg-emerald-500/10', text: 'text-yellow-300', badge: 'text-yellow-300', tile: 'bg-emerald-950/20' }
-  ];
+  const COURT_NAME_COLORS = ['#f87171', '#facc15', '#f87171', '#facc15', '#f87171', '#facc15'];
+  function hexToRgba(hex, alpha) {
+    const clean = String(hex || '#059669').replace('#', '');
+    const n = parseInt(clean.length === 3 ? clean.split('').map(x => x+x).join('') : clean, 16);
+    if (!Number.isFinite(n)) return `rgba(5,150,105,${alpha})`;
+    return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${alpha})`;
+  }
   function getCourtColor(courtId) {
     const index = Math.max(0, tournamentState.courts.findIndex(c => c.id === courtId));
-    return COURT_COLOR_PALETTE[index % COURT_COLOR_PALETTE.length];
+    const court = tournamentState.courts[index] || {};
+    const color = court.color || '#059669';
+    return { border: color, bg: hexToRgba(color, .12), text: COURT_NAME_COLORS[index % COURT_NAME_COLORS.length], badge: COURT_NAME_COLORS[index % COURT_NAME_COLORS.length], tile: hexToRgba(color, .07), color };
+  }
+  function updateThemeColor(color) {
+    tournamentState.themeColor = color;
+    document.documentElement.style.setProperty('--app-accent', color);
+    const picker = document.getElementById('appThemeColorPicker'); if (picker) picker.value = color;
+    saveToLocalStorage(); renderCourtInputs(); renderFixturesList();
+  }
+  function updateCompletedColor(color) {
+    tournamentState.completedMatchColor = color;
+    document.documentElement.style.setProperty('--completed-match-color', color);
+    const picker = document.getElementById('completedColorPicker'); if (picker) picker.value = color;
+    saveToLocalStorage(); renderFixturesList();
+  }
+  function applySavedColors() {
+    document.documentElement.style.setProperty('--app-accent', tournamentState.themeColor || '#10b981');
+    document.documentElement.style.setProperty('--completed-match-color', tournamentState.completedMatchColor || '#7dd3fc');
+    const theme = document.getElementById('appThemeColorPicker'); if (theme) theme.value = tournamentState.themeColor || '#10b981';
+    const completed = document.getElementById('completedColorPicker'); if (completed) completed.value = tournamentState.completedMatchColor || '#7dd3fc';
   }
 
   function renderCourtInputs() {
@@ -836,11 +880,12 @@
     tournamentState.courts.forEach((court) => {
       const div = document.createElement('div');
       const courtColor = getCourtColor(court.id);
-      div.className = `${courtColor.tile} p-2 rounded-lg border ${courtColor.border} border-l-4 space-y-1.5 shadow-sm`;
+      div.className = 'p-2 rounded-lg border border-l-4 space-y-1.5 shadow-sm';
+      div.style.borderColor = courtColor.color; div.style.backgroundColor = courtColor.tile;
       div.innerHTML = `
           <div class="flex items-center justify-between gap-2">
-            <span class="text-emerald-300 text-[10px] font-black rounded px-1.5 py-1 ${courtColor.bg}">${tournamentState.courts.findIndex(c => c.id === court.id) + 1}</span>
-            <input type="text" value="${court.name}" onchange="updateCourtInfo('${court.id}', 'name', this.value)" class="min-w-0 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-xs font-bold text-slate-100 flex-1 focus:outline-none focus:border-brand-500">
+            <span class="text-[10px] font-black rounded px-1.5 py-1" style="color:${courtColor.color};background:${courtColor.bg}">${tournamentState.courts.findIndex(c => c.id === court.id) + 1}</span>
+            <input type="text" value="${court.name}" onchange="updateCourtInfo('${court.id}', 'name', this.value)" class="min-w-0 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-xs font-bold text-slate-100 flex-1 focus:outline-none focus:border-brand-500"><input aria-label="${court.name} pending match color" title="Pending matches color" class="color-picker shrink-0" type="color" value="${court.color || '#059669'}" onchange="updateCourtInfo('${court.id}', 'color', this.value)">
             ${tournamentState.courts.length > 1 ? `
               <button onclick="removeCourtRow('${court.id}')" class="text-slate-500 hover:text-red-400 p-1">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -871,7 +916,8 @@
       id: newCourtId,
       name: `Court ${tournamentState.courts.length + 1}`,
       startTime: '17:00',
-      endTime: '19:00'
+      endTime: '19:00',
+      color: '#059669'
     });
     renderCourtInputs();
     saveToLocalStorage();
@@ -890,6 +936,8 @@
       court[key] = value;
       calculateCourtEstimates();
       saveToLocalStorage();
+      renderCourtInputs();
+      renderFixturesList();
     }
   }
 
@@ -1705,6 +1753,7 @@
     document.getElementById('matchesCompletedCount').innerText = completedMatches;
     document.getElementById('matchesRemainingCount').innerText = remainingMatches;
     const container = document.getElementById('fixturesListContainer');
+    const previousPositions = new Map([...container.querySelectorAll('[data-match-id]')].map(el => [el.dataset.matchId, el.getBoundingClientRect().top]));
     const courtFilter = document.getElementById('filterCourtSelect').value;
     const statusFilter = document.getElementById('filterStatusSelect').value;
 
@@ -1752,15 +1801,19 @@
 
       const card = document.createElement('div');
       const animateThisMatch = matchJustCompletedId === m.id;
-      card.className = `${animateThisMatch ? 'match-tile-motion' : ''} ${courtColor.tile} border ${isCompleted ? 'border-slate-500' : courtColor.border} border-l-4 ${isCompleted ? 'border-l-slate-500' : courtColor.border} rounded-xl p-3 shadow-md space-y-2 relative`;
+      card.dataset.matchId = m.id;
+      card.className = `${animateThisMatch ? 'match-tile-flash' : ''} ${isCompleted ? 'completed-match-compact' : ''} border rounded-xl p-3 shadow-md space-y-2 relative`;
+      card.style.backgroundColor = isCompleted ? 'rgba(125,211,252,.07)' : courtColor.tile;
+      card.style.borderColor = isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : courtColor.color;
+      card.style.borderLeftWidth = '4px'; card.style.borderLeftColor = isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : courtColor.color;
 
       card.innerHTML = `
           <!-- Header Info Badge -->
           <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/80 pb-1.5">
             <div class="flex items-center gap-1">
-              <span class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-md font-extrabold font-mono text-[10px]">#${m.matchNum}</span>
-              <span class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-md font-mono text-[10px] font-black">R${m.roundNum || 1}</span>
-              <span class="${courtColor.badge} px-1.5 py-0.2 rounded-full font-bold text-[9px]">${court.name}</span>
+              <span class="px-2 py-0.5 rounded-md font-extrabold font-mono text-[10px]" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">#${m.matchNum}</span>
+              <span class="px-2 py-0.5 rounded-md font-mono text-[10px] font-black" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">R${m.roundNum || 1}</span>
+              <span class="px-1.5 py-0.2 rounded-full font-bold text-[9px]" style="color:${courtColor.text}">${court.name}</span>
             </div>
             <span class="flex items-center gap-1 text-slate-300 font-mono">
               <i data-lucide="clock" class="w-3 h-3 text-brand-400"></i> ${m.startTime}
@@ -1788,21 +1841,21 @@
               <!-- Team 1 Controls -->
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
                 <button onclick="stepMatchScore('${m.id}', 1, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
-                <input type="number" id="txtS1_${m.id}" value="${s1}" min="0" max="11" class="w-10 text-center font-mono font-black text-xs text-brand-400 bg-transparent focus:outline-none">
+                <input type="number" id="txtS1_${m.id}" value="${s1}" min="0" max="11" style="color:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="w-10 text-center font-mono font-black text-xs bg-transparent focus:outline-none">
                 <button onclick="stepMatchScore('${m.id}', 1, 1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
               </div>
 
               <!-- Team 2 Controls -->
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
                 <button onclick="stepMatchScore('${m.id}', 2, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
-                <input type="number" id="txtS2_${m.id}" value="${s2}" min="0" max="11" class="w-10 text-center font-mono font-black text-xs text-brand-400 bg-transparent focus:outline-none">
+                <input type="number" id="txtS2_${m.id}" value="${s2}" min="0" max="11" style="color:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="w-10 text-center font-mono font-black text-xs bg-transparent focus:outline-none">
                 <button onclick="stepMatchScore('${m.id}', 2, 1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
               </div>
             </div>
 
             <!-- Save Score -->
             <div class="flex items-center justify-end gap-1 pt-0.5">
-              <button onclick="saveMatchScore('${m.id}')" class="h-7 bg-brand-600 hover:bg-brand-500 text-slate-950 font-black px-3 rounded-md text-[11px] flex items-center gap-1 shadow active:scale-95">
+              <button onclick="saveMatchScore('${m.id}')" style="background:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="h-7 text-slate-950 font-black px-3 rounded-md text-[11px] flex items-center gap-1 shadow active:scale-95">
                 <i data-lucide="check" class="w-3 h-3"></i> ${isCompleted ? 'Update' : 'Save'}
               </button>
             </div>
@@ -1811,6 +1864,8 @@
       container.appendChild(card);
     });
 
+    const moving = container.querySelectorAll('[data-match-id]');
+    moving.forEach(el => { const oldTop = previousPositions.get(el.dataset.matchId); if (oldTop !== undefined) { const delta = oldTop - el.getBoundingClientRect().top; if (Math.abs(delta) > 1) { el.style.transition = 'none'; el.style.transform = `translateY(${delta}px)`; void el.offsetHeight; requestAnimationFrame(() => { el.style.transition = 'transform 3s cubic-bezier(.2,.75,.25,1)'; el.style.transform = 'translateY(0)'; }); setTimeout(() => { el.style.transition = ''; el.style.transform = ''; el.classList.remove('match-tile-flash','match-tile-motion'); }, 3050); } } });
     lucide.createIcons();
   }
 
@@ -1845,6 +1900,7 @@
       return;
     }
 
+    const previousCompleted = m.status === 'COMPLETED';
     m.score1 = s1;
     m.score2 = s2;
     m.status = 'COMPLETED';
@@ -1852,8 +1908,8 @@
 
     saveToLocalStorage();
     renderFixturesList();
-    matchJustCompletedId = null;
     renderStandingsData();
+    setTimeout(() => { if (matchJustCompletedId === matchId) { matchJustCompletedId = null; renderFixturesList(); } }, 3100);
     checkTournamentCompletion();
   }
 
@@ -2500,7 +2556,10 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
-        tournamentState.version = '2.0';
+        tournamentState.version = '2.3';
+        tournamentState.courts = (tournamentState.courts || []).map(c => ({...c, color: c.color || '#059669'}));
+        tournamentState.themeColor = tournamentState.themeColor || '#10b981';
+        tournamentState.completedMatchColor = tournamentState.completedMatchColor || '#7dd3fc';
         document.getElementById('displayTournamentName').innerText = tournamentState.name;
         document.getElementById('topHeaderTitle').innerText = tournamentState.name;
         const splashName = document.getElementById('splashTournamentName');
@@ -2515,12 +2574,13 @@
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '2.1',
+        version: '2.3',
+        themeColor: '#10b981', completedMatchColor: '#7dd3fc',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
         courts: [
-          { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00' },
-          { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00' }
+          { id: 'c1', name: 'Court 1 - Main', startTime: '17:00', endTime: '19:00', color: '#059669' },
+          { id: 'c2', name: 'Court 2 - Side', startTime: '17:00', endTime: '19:00', color: '#059669' }
         ],
         players: [],
         matches: [],
