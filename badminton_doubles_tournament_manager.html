@@ -1198,7 +1198,7 @@
     return candidates;
   }
 
-  // ENSURING UNIFORM MATCH COUNTS ACROSS ALL PLAYERS
+  // ENSURING UNIFORM MATCH COUNTS ACROSS ALL PLAYERS WITH MAX LIMIT <= pCount - 1
   function buildFixturesForPlayers(playersList, existingCompleted = []) {
     const pCount = playersList.length;
     if (pCount < 4) return [];
@@ -1212,15 +1212,18 @@
     });
 
     const courtCapacity = getTotalCourtCapacity();
+    const maxAllowedMatchesPerPlayer = pCount - 1;
+    const maxPossibleTotalMatches = Math.floor((pCount * maxAllowedMatchesPerPlayer) / 4);
+
+    let desiredTotalMatches = Math.min(maxPossibleTotalMatches, Math.max(1, courtCapacity));
     const g = gcd(4, pCount);
     const baseGroup = pCount / g;
 
-    // Determine target total matches as a multiple of baseGroup so that all N players get the exact same number of matches
-    let desiredTotalMatches = Math.max(baseGroup, courtCapacity);
-    const remainder = desiredTotalMatches % baseGroup;
-    if (remainder !== 0) {
-      desiredTotalMatches += (baseGroup - remainder);
+    let targetMatches = baseGroup;
+    while (targetMatches + baseGroup <= maxPossibleTotalMatches && targetMatches < courtCapacity) {
+      targetMatches += baseGroup;
     }
+    desiredTotalMatches = Math.min(maxPossibleTotalMatches, Math.max(baseGroup, targetMatches));
 
     const pendingNeeded = Math.max(0, desiredTotalMatches - existingCompleted.length);
     if (pendingNeeded === 0) return schedulePendingMatches([], existingCompleted);
@@ -1262,6 +1265,7 @@
 
           const ids = [...candidate.team1, ...candidate.team2];
           if (ids.some(id => roundUsed.has(id))) continue;
+          if (ids.some(id => (counts[id] || 0) >= maxAllowedMatchesPerPlayer)) continue;
 
           const countsForMatch = ids.map(id => counts[id] || 0);
           const maxCount = Math.max(...countsForMatch);
@@ -1292,15 +1296,20 @@
         }
 
         if (!best) {
-          // Fallback: allow repeating match keys if unique combinations are exhausted before reaching desiredTotalMatches
           for (const candidate of candidates) {
             const ids = [...candidate.team1, ...candidate.team2];
             if (ids.some(id => roundUsed.has(id))) continue;
+            if (ids.some(id => (counts[id] || 0) >= maxAllowedMatchesPerPlayer)) continue;
             best = candidate;
             break;
           }
           if (!best && candidates.length > 0) {
-            best = candidates[0];
+            for (const candidate of candidates) {
+              const ids = [...candidate.team1, ...candidate.team2];
+              if (ids.some(id => (counts[id] || 0) >= maxAllowedMatchesPerPlayer)) continue;
+              best = candidate;
+              break;
+            }
           }
           if (!best) break;
         }
@@ -1642,6 +1651,7 @@
           const key = makeMatchKey(candidate.match);
           if (usedKeys.has(key)) continue;
           if (candidate.ids.some(id => usedPlayers.has(id))) continue;
+          if (candidate.ids.some(id => (currentCounts[id] || 0) >= playerIds.length - 1)) continue;
 
           candidate.ids.forEach(id => usedPlayers.add(id));
           usedKeys.add(key);
@@ -1699,7 +1709,7 @@
 
     const extraMatches = findBalancedExtraMatches(activePlayers);
     if (!extraMatches || extraMatches.length === 0) {
-      alert("No extra matches can be added while keeping each player to at most one additional match and keeping final totals within 1 of each other.");
+      alert("No extra matches can be added while keeping each player within their max match limit.");
       return;
     }
 
@@ -1730,7 +1740,7 @@
     const values = activePlayers.map(p => counts[p.id] || 0);
     const min = Math.min(...values);
     const max = Math.max(...values);
-    alert(`Added ${newMatches.length} extra match${newMatches.length === 1 ? '' : 'es'}. Each player received at most 1 extra match, and final match totals are ${min}–${max} per player.`);
+    alert(`Added ${newMatches.length} extra match${newMatches.length === 1 ? '' : 'es'}. Final match totals are ${min}–${max} per player.`);
   }
 
   function renderFixturesList() {
