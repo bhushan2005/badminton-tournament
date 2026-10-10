@@ -1796,8 +1796,8 @@
               ? (tournamentState.completedMatchColor || '#7dd3fc')
               : courtColor.color;
 
-      const s1 = m.score1 !== null ? m.score1 : 0;
-      const s2 = m.score2 !== null ? m.score2 : 0;
+      const s1 = (m.score1 !== null && m.score1 !== undefined) ? m.score1 : '';
+      const s2 = (m.score2 !== null && m.score2 !== undefined) ? m.score2 : '';
 
       const card = document.createElement('div');
       const animateThisMatch = matchJustCompletedId === m.id;
@@ -1890,7 +1890,7 @@
   function stepMatchScore(mId, teamNum, delta) {
     const inputEl = document.getElementById(`txtS${teamNum}_${mId}`);
     if (!inputEl) return;
-    let curr = parseInt(inputEl.value) || 0;
+    let curr = inputEl.value.trim() === '' ? 0 : parseInt(inputEl.value);
     curr = Math.max(0, Math.min(11, curr + delta));
     inputEl.value = curr;
   }
@@ -1904,8 +1904,8 @@
     const txt1 = document.getElementById(`txtS1_${matchId}`);
     const txt2 = document.getElementById(`txtS2_${matchId}`);
 
-    const s1 = parseInt(txt1.value);
-    const s2 = parseInt(txt2.value);
+    const s1 = txt1.value.trim() === '' ? 0 : parseInt(txt1.value);
+    const s2 = txt2.value.trim() === '' ? 0 : parseInt(txt2.value);
 
     if (isNaN(s1) || isNaN(s2) || s1 < 0 || s2 < 0 || s1 > 11 || s2 > 11) {
       alert("Scores must be between 0 and 11.");
