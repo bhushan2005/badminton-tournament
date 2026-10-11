@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v2.5 - Doubles Badminton Manager</title>
+  <title>SmashMaster v2.7 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Mobile Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- SheetJS CDN for Excel (.xlsx) Export -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- jsPDF for mobile-friendly PDF tournament reports -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- Canvas Confetti for Celebration -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -185,7 +185,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.5</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.7</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -276,16 +276,17 @@
 
         <div class="flex items-center gap-2">
           <div class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-0.5 flex text-xs">
-            <button type="button" onclick="setGenderInput('Male')" id="genderPillMale" class="flex-1 py-1 rounded-md font-bold text-center transition-all bg-brand-500 text-slate-950 shadow-sm text-[11px]">♂ Male</button>
-            <button type="button" onclick="setGenderInput('Female')" id="genderPillFemale" class="flex-1 py-1 rounded-md font-bold text-center transition-all text-slate-400 text-[11px]">♀ Female</button>
+            <button type="button" onclick="setGenderInput('Male')" id="genderPillMale" class="flex-1 py-1 rounded-md font-bold text-center transition-all bg-brand-500 text-slate-950 shadow-sm text-[11px] disabled:opacity-40 disabled:cursor-not-allowed">♂ Male</button>
+            <button type="button" onclick="setGenderInput('Female')" id="genderPillFemale" class="flex-1 py-1 rounded-md font-bold text-center transition-all text-slate-400 text-[11px] disabled:opacity-40 disabled:cursor-not-allowed">♀ Female</button>
           </div>
           <input type="hidden" id="selectPlayerGender" value="Male">
 
           <!-- Equalized Brightness Add Button -->
-          <button onclick="addPlayerFromInput()" class="h-8 bg-brand-500 hover:bg-brand-400 text-slate-950 font-extrabold px-3 rounded-lg text-xs flex items-center justify-center gap-1 shadow-md shadow-brand-500/20 active:scale-95 shrink-0">
-            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Add
+          <button id="btnAddPlayer" onclick="addPlayerFromInput()" class="h-8 bg-brand-500 hover:bg-brand-400 text-slate-950 font-extrabold px-3 rounded-lg text-xs flex items-center justify-center gap-1 shadow-md shadow-brand-500/20 active:scale-95 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-brand-500">
+            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> <span id="btnAddPlayerLabel">Add</span>
           </button>
         </div>
+        <p id="rosterLockedNote" class="hidden text-[10px] text-amber-300 leading-relaxed">The schedule has been generated. Use <strong>Late Player</strong> on the Matches tab to add new players.</p>
       </div>
 
       <!-- Player Cards List -->
@@ -332,15 +333,15 @@
         </div>
         <div>
           <h3 class="text-xs font-extrabold font-heading text-amber-300">Tournament Finished! 🎉</h3>
-          <p class="text-[10px] text-slate-300">All matches completed. Export report or add extra matches!</p>
+          <p class="text-[10px] text-slate-300">All matches completed. Tournament archived automatically. Download the PDF report or add extra matches!</p>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-1.5">
         <button onclick="addExtraRoundMatches()" class="bg-slate-800 hover:bg-slate-700 text-brand-400 font-bold py-2 rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
           <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Extra Round
         </button>
-        <button onclick="exportComprehensiveExcel()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2 rounded-lg text-[11px] flex items-center justify-center gap-1 shadow-md active:scale-95">
-          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Export Excel
+        <button onclick="exportTournamentPDF()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2 rounded-lg text-[11px] flex items-center justify-center gap-1 shadow-md active:scale-95">
+          <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Download PDF Report
         </button>
       </div>
     </div>
@@ -466,23 +467,8 @@
         <span class="text-[9px] text-slate-400 font-mono">2 Pts / Win</span>
       </div>
 
-      <div class="overflow-x-auto rounded-lg border border-slate-800">
-        <table class="w-full min-w-[620px] text-[10px]">
-          <thead class="bg-slate-950 text-slate-500 uppercase font-bold">
-          <tr>
-            <th class="px-2 py-2 text-left">#</th>
-            <th class="px-2 py-2 text-left">Player</th>
-            <th class="px-2 py-2 text-center">Played</th>
-            <th class="px-2 py-2 text-center">W</th>
-            <th class="px-2 py-2 text-center">L</th>
-            <th class="px-2 py-2 text-center">Pts Won</th>
-            <th class="px-2 py-2 text-center">Diff</th>
-            <th class="px-2 py-2 text-center">Tournament Pts</th>
-          </tr>
-          </thead>
-          <tbody id="mobileLeaderboardCards" class="divide-y divide-slate-800"></tbody>
-        </table>
-      </div>
+      <!-- Stacked cards keep every statistic visible in a mobile screenshot. -->
+      <div id="mobileLeaderboardCards" class="space-y-1.5"></div>
     </div>
   </section>
 
@@ -565,20 +551,20 @@
       </div>
     </div>
 
-    <!-- Excel Download Featured Card (Placed below WhatsApp tile) -->
+    <!-- Mobile-friendly PDF tournament report -->
     <div class="bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
       <div class="flex items-center gap-2.5">
         <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-          <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+          <i data-lucide="file-text" class="w-5 h-5"></i>
         </div>
         <div>
-          <h2 class="text-sm font-extrabold font-heading text-white">Multi-Tab Excel Workbook</h2>
-          <p class="text-[10px] text-slate-300">3 Sheets: Summary & Winners, Leaderboard, Match Logs.</p>
+          <h2 class="text-sm font-extrabold font-heading text-white">Tournament Report PDF</h2>
+          <p class="text-[10px] text-slate-300">A polished portrait report with tournament overview, player standings and match results.</p>
         </div>
       </div>
 
-      <button onclick="exportComprehensiveExcel()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
-        <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Excel Report (.xlsx)
+      <button onclick="exportTournamentPDF()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Tournament PDF (.pdf)
       </button>
     </div>
 
@@ -737,7 +723,7 @@
   }
 
   let tournamentState = {
-    version: '2.5',
+    version: '2.7',
     themeColor: '#10b981',
     completedMatchColor: '#7dd3fc',
     name: AMUSING_NAMES[0],
@@ -855,6 +841,7 @@
   }
 
   function setGenderInput(gender) {
+    if (tournamentState.isGenerated) return;
     document.getElementById('selectPlayerGender').value = gender;
     ['Male', 'Female'].forEach(g => {
       const btn = document.getElementById(`genderPill${g}`);
@@ -997,7 +984,7 @@
 
   function calculateCourtEstimates() {
     let totalMinutes = 0;
-    tournamentState.courts.forEach(c => {
+    getSchedulingCourts().forEach(c => {
       const [h1, m1] = c.startTime.split(':').map(Number);
       const [h2, m2] = c.endTime.split(':').map(Number);
       const diff = (h2 * 60 + m2) - (h1 * 60 + m1);
@@ -1009,7 +996,35 @@
     document.getElementById('txtMaxMatchesEstimate').innerText = `${maxMatches} matches`;
   }
 
+  function updateRosterAddControls() {
+    const locked = !!tournamentState.isGenerated;
+    const nameInput = document.getElementById('inputPlayerName');
+    const addButton = document.getElementById('btnAddPlayer');
+    const addLabel = document.getElementById('btnAddPlayerLabel');
+    const maleButton = document.getElementById('genderPillMale');
+    const femaleButton = document.getElementById('genderPillFemale');
+    const note = document.getElementById('rosterLockedNote');
+
+    if (nameInput) {
+      nameInput.disabled = locked;
+      nameInput.placeholder = locked ? 'Schedule generated — use Late Player' : 'Enter player name...';
+    }
+    if (addButton) {
+      addButton.disabled = locked;
+      addButton.title = locked ? 'Use Add Late Player after schedule generation' : 'Add player';
+    }
+    if (addLabel) addLabel.textContent = locked ? 'Locked' : 'Add';
+    if (maleButton) maleButton.disabled = locked;
+    if (femaleButton) femaleButton.disabled = locked;
+    if (note) note.classList.toggle('hidden', !locked);
+  }
+
   function addPlayerFromInput() {
+    if (tournamentState.isGenerated) {
+      alert('The schedule has already been generated. Use the Late Player option on the Matches tab to add a player.');
+      updateRosterAddControls();
+      return;
+    }
     const nameInput = document.getElementById('inputPlayerName');
     const name = nameInput.value.trim();
     const gender = document.getElementById('selectPlayerGender').value;
@@ -1094,6 +1109,8 @@
     document.getElementById('lblPlayerCount').innerText = activePlayersCount;
     document.getElementById('cntMale').innerText = maleCnt;
     document.getElementById('cntFemale').innerText = femaleCnt;
+    updateRosterAddControls();
+    calculateCourtEstimates();
 
     lucide.createIcons();
   }
@@ -1139,6 +1156,7 @@
     tournamentState.matches = buildFixturesForPlayers(activePlayers, []);
     const wasAlreadyGenerated = tournamentState.isGenerated;
     tournamentState.isGenerated = true;
+    updateRosterAddControls();
     saveToLocalStorage();
     if (!wasAlreadyGenerated) logTournamentStart();
 
@@ -1151,16 +1169,25 @@
     return (h2 * 60 + m2) - (h1 * 60 + m1);
   }
 
-  function getTotalCourtCapacity() {
-    return tournamentState.courts.reduce((total, court) => {
+  // Only activate multiple courts when at least 8 players are available for doubles.
+  function getSchedulingCourts(playerCount = tournamentState.players.filter(p => !p.retired).length) {
+    const configuredCourts = tournamentState.courts || [];
+    return playerCount >= 8 ? configuredCourts : configuredCourts.slice(0, 1);
+  }
+
+  function getTotalCourtCapacity(playerCount = tournamentState.players.filter(p => !p.retired).length) {
+    return getSchedulingCourts(playerCount).reduce((total, court) => {
       const duration = getCourtDurationMinutes(court);
       return total + (duration >= 8 ? Math.floor(duration / 8) : 0);
     }, 0);
   }
 
+  function makePartnerKey(playerA, playerB) {
+    return [playerA, playerB].sort().join('|');
+  }
+
   function makeMatchKey(match) {
-    const players = [...match.team1, ...match.team2].sort();
-    return players.join('|') + '::' + [
+    return [...match.team1, ...match.team2].sort().join('|') + '::' + [
       [...match.team1].sort().join(','),
       [...match.team2].sort().join(',')
     ].sort().join('|');
@@ -1170,14 +1197,12 @@
     const candidates = [];
     const seen = new Set();
 
+    // Enumerate each group of four exactly once, then its three possible doubles pairings.
     for (let i = 0; i < playersList.length; i++) {
       for (let j = i + 1; j < playersList.length; j++) {
-        for (let k = i + 1; k < playersList.length; k++) {
-          if (k === j) continue;
+        for (let k = j + 1; k < playersList.length; k++) {
           for (let l = k + 1; l < playersList.length; l++) {
             const ids = [playersList[i].id, playersList[j].id, playersList[k].id, playersList[l].id];
-            if (new Set(ids).size !== 4) continue;
-
             const orientations = [
               { team1: [ids[0], ids[1]], team2: [ids[2], ids[3]] },
               { team1: [ids[0], ids[2]], team2: [ids[1], ids[3]] },
@@ -1198,64 +1223,68 @@
     return candidates;
   }
 
-  // ENSURING UNIFORM MATCH COUNTS ACROSS ALL PLAYERS WITH MAX LIMIT <= pCount - 1
+  // Generate a balanced fixture list without ever repeating a player partnership.
   function buildFixturesForPlayers(playersList, existingCompleted = []) {
     const pCount = playersList.length;
     if (pCount < 4) return [];
 
     const counts = {};
     playersList.forEach(p => counts[p.id] = 0);
-    existingCompleted.forEach(m => {
-      [...m.team1, ...m.team2].forEach(id => {
+    existingCompleted.forEach(match => {
+      [...match.team1, ...match.team2].forEach(id => {
         if (counts[id] !== undefined) counts[id]++;
       });
     });
 
-    const courtCapacity = getTotalCourtCapacity();
+    const courtCapacity = getTotalCourtCapacity(pCount);
     const maxAllowedMatchesPerPlayer = pCount - 1;
     const maxPossibleTotalMatches = Math.floor((pCount * maxAllowedMatchesPerPlayer) / 4);
+    const groupSize = pCount / gcd(4, pCount);
 
-    let desiredTotalMatches = Math.min(maxPossibleTotalMatches, Math.max(1, courtCapacity));
-    const g = gcd(4, pCount);
-    const baseGroup = pCount / g;
-
-    let targetMatches = baseGroup;
-    while (targetMatches + baseGroup <= maxPossibleTotalMatches && targetMatches < courtCapacity) {
-      targetMatches += baseGroup;
+    let targetMatches = groupSize;
+    while (targetMatches + groupSize <= maxPossibleTotalMatches && targetMatches < courtCapacity) {
+      targetMatches += groupSize;
     }
-    desiredTotalMatches = Math.min(maxPossibleTotalMatches, Math.max(baseGroup, targetMatches));
-
+    const desiredTotalMatches = Math.min(
+      maxPossibleTotalMatches,
+      Math.max(groupSize, targetMatches)
+    );
     const pendingNeeded = Math.max(0, desiredTotalMatches - existingCompleted.length);
-    if (pendingNeeded === 0) return schedulePendingMatches([], existingCompleted);
+    if (pendingNeeded === 0) return schedulePendingMatches([], existingCompleted, pCount);
 
-    const partners = {}, opponents = {};
-    playersList.forEach(p => {
-      partners[p.id] = new Set();
-      opponents[p.id] = new Set();
+    const partners = {};
+    const opponents = {};
+    playersList.forEach(player => {
+      partners[player.id] = new Set();
+      opponents[player.id] = new Set();
     });
 
-    existingCompleted.forEach(m => {
-      const [a, b] = m.team1;
-      const [c, d] = m.team2;
+    existingCompleted.forEach(match => {
+      const [a, b] = match.team1;
+      const [c, d] = match.team2;
       if (partners[a]) partners[a].add(b);
       if (partners[b]) partners[b].add(a);
       if (partners[c]) partners[c].add(d);
       if (partners[d]) partners[d].add(c);
-      if (opponents[a]) [c, d].forEach(x => opponents[a].add(x));
-      if (opponents[b]) [c, d].forEach(x => opponents[b].add(x));
-      if (opponents[c]) [a, b].forEach(x => opponents[c].add(x));
-      if (opponents[d]) [a, b].forEach(x => opponents[d].add(x));
+      if (opponents[a]) [c, d].forEach(id => opponents[a].add(id));
+      if (opponents[b]) [c, d].forEach(id => opponents[b].add(id));
+      if (opponents[c]) [a, b].forEach(id => opponents[c].add(id));
+      if (opponents[d]) [a, b].forEach(id => opponents[d].add(id));
     });
 
     const candidates = buildAllMatchCandidates(playersList);
     const usedMatchKeys = new Set(existingCompleted.map(makeMatchKey));
     const selected = [];
+    const baseCounts = { ...counts };
+    const basePartners = Object.fromEntries(playersList.map(player => [player.id, new Set(partners[player.id])]));
+    const baseOpponents = Object.fromEntries(playersList.map(player => [player.id, new Set(opponents[player.id])]));
 
+    // A round may contain multiple matches, but no player may appear twice in that round.
     while (selected.length < pendingNeeded) {
-      let roundUsed = new Set();
+      const roundUsed = new Set();
       let roundAdded = 0;
 
-      while (selected.length + roundAdded < pendingNeeded) {
+      while (selected.length < pendingNeeded) {
         let best = null;
         let bestScore = -Infinity;
 
@@ -1263,31 +1292,31 @@
           const key = makeMatchKey(candidate);
           if (usedMatchKeys.has(key)) continue;
 
-          const ids = [...candidate.team1, ...candidate.team2];
+          const [a, b] = candidate.team1;
+          const [c, d] = candidate.team2;
+          // Hard rule: do not reuse either doubles partnership.
+          if (partners[a].has(b) || partners[c].has(d)) continue;
+
+          const ids = [a, b, c, d];
           if (ids.some(id => roundUsed.has(id))) continue;
           if (ids.some(id => (counts[id] || 0) >= maxAllowedMatchesPerPlayer)) continue;
 
           const countsForMatch = ids.map(id => counts[id] || 0);
           const maxCount = Math.max(...countsForMatch);
           const minCount = Math.min(...countsForMatch);
+          const targetAppearances = Math.floor(desiredTotalMatches * 4 / pCount);
           const totalDeficit = countsForMatch.reduce(
-                  (sum, count) => sum + Math.max(0, Math.floor(desiredTotalMatches * 4 / pCount) - count), 0
+            (sum, count) => sum + Math.max(0, targetAppearances - count), 0
           );
-          const newPartnerCount =
-                  (!partners[candidate.team1[0]].has(candidate.team1[1]) ? 1 : 0) +
-                  (!partners[candidate.team2[0]].has(candidate.team2[1]) ? 1 : 0);
+
           let newOpponentCount = 0;
-          candidate.team1.forEach(a => candidate.team2.forEach(b => {
-            if (!opponents[a].has(b)) newOpponentCount++;
+          [a, b].forEach(teamOnePlayer => [c, d].forEach(teamTwoPlayer => {
+            if (!opponents[teamOnePlayer].has(teamTwoPlayer)) newOpponentCount++;
           }));
 
-          const score =
-                  totalDeficit * 1000 +
-                  (10 - maxCount) * 200 +
-                  (10 - minCount) * 100 +
-                  newPartnerCount * 30 +
-                  newOpponentCount * 5 -
-                  maxCount * 2;
+          // Prefer fresh opponents first, then balanced playing time.
+          const score = newOpponentCount * 10000 + totalDeficit * 100 +
+            (10 - maxCount) * 20 + (10 - minCount) * 10 - maxCount;
 
           if (score > bestScore) {
             bestScore = score;
@@ -1295,32 +1324,18 @@
           }
         }
 
-        if (!best) {
-          for (const candidate of candidates) {
-            const ids = [...candidate.team1, ...candidate.team2];
-            if (ids.some(id => roundUsed.has(id))) continue;
-            if (ids.some(id => (counts[id] || 0) >= maxAllowedMatchesPerPlayer)) continue;
-            best = candidate;
-            break;
-          }
-          if (!best && candidates.length > 0) {
-            for (const candidate of candidates) {
-              const ids = [...candidate.team1, ...candidate.team2];
-              if (ids.some(id => (counts[id] || 0) >= maxAllowedMatchesPerPlayer)) continue;
-              best = candidate;
-              break;
-            }
-          }
-          if (!best) break;
-        }
+        // Start another round instead of forcing a duplicate or reusing a player concurrently.
+        if (!best) break;
 
-        const ids = [...best.team1, ...best.team2];
-        roundUsed = new Set(ids);
+        const [a, b] = best.team1;
+        const [c, d] = best.team2;
+        const ids = [a, b, c, d];
+        ids.forEach(id => roundUsed.add(id));
         usedMatchKeys.add(makeMatchKey(best));
         selected.push({
           id: 'm_' + Date.now() + '_' + Math.floor(Math.random() * 100000),
-          team1: best.team1,
-          team2: best.team2,
+          team1: [...best.team1],
+          team2: [...best.team2],
           score1: null,
           score2: null,
           status: 'PENDING'
@@ -1328,23 +1343,106 @@
         roundAdded++;
 
         ids.forEach(id => counts[id]++);
-        const [a, b] = best.team1;
-        const [c, d] = best.team2;
         partners[a].add(b); partners[b].add(a);
         partners[c].add(d); partners[d].add(c);
-        [c, d].forEach(x => { opponents[a].add(x); opponents[b].add(x); });
-        [a, b].forEach(x => { opponents[c].add(x); opponents[d].add(x); });
+        [c, d].forEach(id => { opponents[a].add(id); opponents[b].add(id); });
+        [a, b].forEach(id => { opponents[c].add(id); opponents[d].add(id); });
       }
 
       if (roundAdded === 0) break;
     }
 
-    return schedulePendingMatches(selected, existingCompleted);
+    // For small rosters, backtrack if the greedy pass cannot fill the target schedule.
+    // This avoids ending with unused partnership options that cannot form a final match.
+    if (selected.length < pendingNeeded && pCount <= 7) {
+      const searchCounts = { ...baseCounts };
+      const searchPartners = Object.fromEntries(playersList.map(player => [player.id, new Set(basePartners[player.id])]));
+      const searchOpponents = Object.fromEntries(playersList.map(player => [player.id, new Set(baseOpponents[player.id])]));
+      const searchKeys = new Set(existingCompleted.map(makeMatchKey));
+      const chosen = [];
+      let visitedNodes = 0;
+      const maxSearchNodes = 250000;
+
+      function searchCompleteSchedule() {
+        if (chosen.length === pendingNeeded) return true;
+        visitedNodes++;
+        if (visitedNodes > maxSearchNodes) return false;
+
+        const eligible = [];
+        for (const candidate of candidates) {
+          const key = makeMatchKey(candidate);
+          if (searchKeys.has(key)) continue;
+          const [a, b] = candidate.team1;
+          const [c, d] = candidate.team2;
+          if (searchPartners[a].has(b) || searchPartners[c].has(d)) continue;
+          const ids = [a, b, c, d];
+          if (ids.some(id => (searchCounts[id] || 0) >= maxAllowedMatchesPerPlayer)) continue;
+
+          const appearances = ids.map(id => searchCounts[id] || 0);
+          const maxCount = Math.max(...appearances);
+          const minCount = Math.min(...appearances);
+          const targetAppearances = Math.floor(desiredTotalMatches * 4 / pCount);
+          const deficit = appearances.reduce((sum, count) => sum + Math.max(0, targetAppearances - count), 0);
+          let freshOpponents = 0;
+          [a, b].forEach(one => [c, d].forEach(two => {
+            if (!searchOpponents[one].has(two)) freshOpponents++;
+          }));
+          const score = freshOpponents * 10000 + deficit * 100 +
+            (10 - maxCount) * 20 + (10 - minCount) * 10 - maxCount;
+          eligible.push({ candidate, key, ids, score, newOpponents: [[a,c],[a,d],[b,c],[b,d]] });
+        }
+        eligible.sort((a, b) => b.score - a.score);
+
+        for (const option of eligible) {
+          const { candidate, key, ids, newOpponents } = option;
+          const [a, b] = candidate.team1;
+          const [c, d] = candidate.team2;
+          searchKeys.add(key);
+          searchPartners[a].add(b); searchPartners[b].add(a);
+          searchPartners[c].add(d); searchPartners[d].add(c);
+          ids.forEach(id => searchCounts[id]++);
+          const newlyAddedOpponents = [];
+          newOpponents.forEach(([one, two]) => {
+            if (!searchOpponents[one].has(two)) {
+              searchOpponents[one].add(two);
+              searchOpponents[two].add(one);
+              newlyAddedOpponents.push([one, two]);
+            }
+          });
+          chosen.push({
+            id: 'm_' + Date.now() + '_' + Math.floor(Math.random() * 100000),
+            team1: [...candidate.team1], team2: [...candidate.team2],
+            score1: null, score2: null, status: 'PENDING'
+          });
+
+          if (searchCompleteSchedule()) return true;
+
+          chosen.pop();
+          newlyAddedOpponents.forEach(([one, two]) => {
+            searchOpponents[one].delete(two);
+            searchOpponents[two].delete(one);
+          });
+          ids.forEach(id => searchCounts[id]--);
+          searchPartners[a].delete(b); searchPartners[b].delete(a);
+          searchPartners[c].delete(d); searchPartners[d].delete(c);
+          searchKeys.delete(key);
+          if (visitedNodes > maxSearchNodes) return false;
+        }
+        return false;
+      }
+
+      if (searchCompleteSchedule()) {
+        selected.splice(0, selected.length, ...chosen);
+      }
+    }
+
+    return schedulePendingMatches(selected, existingCompleted, pCount);
   }
 
   // SCHEDULING PENDING MATCHES WITH EXTRA TIME SUPPORT
-  function schedulePendingMatches(pending, existingMatches = []) {
+  function schedulePendingMatches(pending, existingMatches = [], playerCount = tournamentState.players.filter(p => !p.retired).length) {
     const scheduled = [...existingMatches];
+    const schedulingCourts = getSchedulingCourts(playerCount);
     let globalMatchNum = existingMatches.reduce((max, m) => Math.max(max, Number(m.matchNum) || 0), 0) + 1;
     const courtClock = {};
     const REST_SLOT_MINUTES = 8;
@@ -1357,7 +1455,7 @@
 
     const courtEndMinutes = court => toMinutes(court.endTime || '00:00');
 
-    tournamentState.courts.forEach(court => {
+    schedulingCourts.forEach(court => {
       courtClock[court.id] = toMinutes(court.startTime || '00:00');
 
       const courtMatches = existingMatches.filter(m => m.courtId === court.id);
@@ -1407,7 +1505,7 @@
     }
 
     while (pending.length > 0) {
-      const courts = tournamentState.courts;
+      const courts = schedulingCourts;
       if (courts.length === 0) break;
 
       let currentTime = Math.min(...courts.map(c => courtClock[c.id]));
@@ -1496,24 +1594,11 @@
         scheduled.push(scheduledMatch);
         courtClock[bestSlot.court.id] = bestSlot.start + REST_SLOT_MINUTES;
       } else if (candidateCourts.length > 0) {
-        const court = candidateCourts[0];
-        const match = pending.splice(0, 1)[0];
-        const t = currentTime;
-        const hrs = String(Math.floor(t / 60)).padStart(2, '0');
-        const mins = String(t % 60).padStart(2, '0');
-        const isExtraTime = t >= courtEndMinutes(court);
-
-        const scheduledMatch = {
-          ...match,
-          matchNum: globalMatchNum++,
-          roundNum: 1,
-          courtId: court.id,
-          startTime: `${hrs}:${mins}`,
-          isExtraTime: isExtraTime
-        };
-
-        scheduled.push(scheduledMatch);
-        courtClock[court.id] = currentTime + REST_SLOT_MINUTES;
+        // No safe match fits this time slot. Advance the available courts and retry later;
+        // never force a player into overlapping matches or bypass rest constraints.
+        candidateCourts.forEach(court => {
+          courtClock[court.id] = currentTime + REST_SLOT_MINUTES;
+        });
       }
     }
 
@@ -1609,7 +1694,7 @@
     if (playerIds.length < 4) return null;
 
     const currentCounts = getPlayerMatchCounts();
-    const remainingCapacity = Math.max(0, getTotalCourtCapacity() - tournamentState.matches.length);
+    const remainingCapacity = Math.max(0, getTotalCourtCapacity(playersList.length) - tournamentState.matches.length);
     const maxExtraMatches = Math.floor(playerIds.length / 4);
     if (remainingCapacity < 1 || maxExtraMatches < 1) return null;
 
@@ -1618,8 +1703,17 @@
       ids: [...match.team1, ...match.team2]
     }));
     const existingKeys = new Set(tournamentState.matches.map(makeMatchKey));
-    const unusedCandidates = allCandidates.filter(c => !existingKeys.has(makeMatchKey(c.match)));
-    const candidates = unusedCandidates.length ? unusedCandidates : allCandidates;
+    const existingPartnerKeys = new Set();
+    tournamentState.matches.forEach(match => {
+      existingPartnerKeys.add(makePartnerKey(match.team1[0], match.team1[1]));
+      existingPartnerKeys.add(makePartnerKey(match.team2[0], match.team2[1]));
+    });
+    const candidates = allCandidates.filter(c => {
+      if (existingKeys.has(makeMatchKey(c.match))) return false;
+      return !existingPartnerKeys.has(makePartnerKey(c.match.team1[0], c.match.team1[1])) &&
+        !existingPartnerKeys.has(makePartnerKey(c.match.team2[0], c.match.team2[1]));
+    });
+    if (candidates.length === 0) return null;
 
     const maxMatchesToAdd = Math.min(maxExtraMatches, remainingCapacity);
 
@@ -1679,7 +1773,7 @@
   function addExtraRoundMatches() {
     const activePlayers = tournamentState.players.filter(p => !p.retired);
     const totalMatches = tournamentState.matches.length;
-    const remainingCapacity = Math.max(0, getTotalCourtCapacity() - totalMatches);
+    const remainingCapacity = Math.max(0, getTotalCourtCapacity(activePlayers.length) - totalMatches);
 
     if (activePlayers.length < 4) {
       alert("At least 4 active players are required to add extra matches.");
@@ -1709,7 +1803,7 @@
 
     const extraMatches = findBalancedExtraMatches(activePlayers);
     if (!extraMatches || extraMatches.length === 0) {
-      alert("No extra matches can be added while keeping each player within their max match limit.");
+      alert("No extra matches are available without repeating a doubles partnership or exceeding a player's match limit.");
       return;
     }
 
@@ -1823,7 +1917,7 @@
             <div class="flex items-center gap-1">
               <span class="px-2 py-0.5 rounded-md font-extrabold font-mono text-[10px]" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">#${m.matchNum}</span>
               <span class="px-2 py-0.5 rounded-md font-mono text-[10px] font-black" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">R${m.roundNum || 1}</span>
-              <span class="px-1.5 py-0.2 rounded-full font-extrabold text-[9px]" style="color:${courtNameColor}">${court.name}</span>
+              <span class="px-2 py-1 rounded-full font-black text-xs whitespace-nowrap" style="color:${courtNameColor};background:${hexToRgba(courtNameColor, .12)}">${court.name}</span>
               ${m.isExtraTime ? '<span class="px-1.5 py-0.2 rounded font-extrabold text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i> Extra Time</span>' : ''}
             </div>
             <span class="flex items-center gap-1 text-slate-300 font-mono">
@@ -1950,12 +2044,34 @@
     const banner = document.getElementById('bannerTournamentCompleted');
 
     if (allCompleted) {
-      banner.classList.remove('hidden');
-      if (typeof confetti === 'function') {
+      if (banner) banner.classList.remove('hidden');
+      const signature = tournamentState.matches
+        .map(m => `${m.id}:${m.status}:${m.score1}:${m.score2}`)
+        .join('|');
+      const historyId = `${tournamentState.name}_${tournamentState.date}`;
+      const archivedRecord = getHistoryArray().find(h => h.id === historyId);
+      const newCompletion = tournamentState.autoArchivedSignature !== signature;
+      const archiveIsCurrent = archivedRecord && archivedRecord.data && archivedRecord.data.autoArchivedSignature === signature;
+
+      if (newCompletion) {
+        tournamentState.autoArchivedSignature = signature;
+        tournamentState.completionCelebratedSignature = signature;
+      }
+      // Also repair a missing/stale history entry, but never show the manual-archive alert.
+      if (newCompletion || !archiveIsCurrent) archiveCurrentTournament(true);
+
+      if (newCompletion && typeof confetti === 'function') {
         confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
       }
     } else {
-      banner.classList.add('hidden');
+      if (banner) banner.classList.add('hidden');
+      // If extra/late matches were added after a completed tournament, its next
+      // completion is a new archive update and must not reuse the previous signature.
+      if (tournamentState.autoArchivedSignature) {
+        tournamentState.autoArchivedSignature = '';
+        tournamentState.isArchived = false;
+        saveToLocalStorage();
+      }
     }
   }
 
@@ -2003,22 +2119,40 @@
   function renderStandingsData() {
     const sorted = calculateStandingsData();
     const container = document.getElementById('mobileLeaderboardCards');
+    if (!container) return;
     container.innerHTML = '';
 
+    if (!sorted.length) {
+      container.innerHTML = '<div class="rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-center text-xs text-slate-500">Add players and generate a schedule to see standings.</div>';
+    }
+
     sorted.forEach((p, idx) => {
-      const row = document.createElement('tr');
-      row.className = 'bg-slate-950/60 hover:bg-slate-900';
-      row.innerHTML = `
-        <td class="px-2 py-2 text-left font-mono font-bold text-slate-400">${idx + 1}</td>
-        <td class="px-2 py-2 text-left font-bold text-white whitespace-nowrap ${p.retired ? 'line-through text-red-400' : ''}">${p.name}</td>
-        <td class="px-2 py-2 text-center font-mono text-slate-300">${p.played}</td>
-        <td class="px-2 py-2 text-center font-mono text-emerald-400 font-bold">${p.wins}</td>
-        <td class="px-2 py-2 text-center font-mono text-red-400 font-bold">${p.losses}</td>
-        <td class="px-2 py-2 text-center font-mono text-slate-300">${p.pointsWon}</td>
-        <td class="px-2 py-2 text-center font-mono font-bold ${p.diff >= 0 ? 'text-emerald-400' : 'text-red-400'}">${p.diff > 0 ? '+' : ''}${p.diff}</td>
-        <td class="px-2 py-2 text-center font-mono font-black text-brand-400">${p.tourneyPoints}</td>
-      `;
-      container.appendChild(row);
+      const card = document.createElement('div');
+      card.className = 'rounded-lg border border-slate-800 bg-slate-950/70 p-2.5';
+      const diffClass = p.diff >= 0 ? 'text-emerald-400' : 'text-red-400';
+      const stat = (label, value, valueClass = 'text-slate-100') => `
+        <div class="min-w-0 rounded-md bg-slate-900/80 px-1 py-1.5 text-center">
+          <div class="text-[9px] leading-tight font-bold uppercase tracking-wide text-slate-500">${label}</div>
+          <div class="mt-0.5 text-[11px] leading-tight font-extrabold font-mono ${valueClass}">${value}</div>
+        </div>`;
+      card.innerHTML = `
+        <div class="mb-2 flex min-w-0 items-center justify-between gap-2">
+          <div class="flex min-w-0 items-center gap-2">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[10px] font-black text-slate-300">${idx + 1}</span>
+            <span class="min-w-0 break-words text-xs font-extrabold leading-tight ${p.retired ? 'line-through text-red-400' : 'text-white'}">${p.name}</span>
+          </div>
+          <span class="shrink-0 rounded-md border border-brand-500/30 bg-brand-500/10 px-1.5 py-1 text-[10px] font-black text-brand-400">${p.tourneyPoints} TP</span>
+        </div>
+        <div class="grid grid-cols-4 gap-1.5">
+          ${stat('Played', p.played)}
+          ${stat('Wins', p.wins, 'text-emerald-400')}
+          ${stat('Losses', p.losses, 'text-red-400')}
+          ${stat('Pts Won', p.pointsWon)}
+          ${stat('Pts Against', p.pointsConceded)}
+          ${stat('Diff', `${p.diff > 0 ? '+' : ''}${p.diff}`, diffClass)}
+          ${stat('Tourney Pts', p.tourneyPoints, 'text-brand-400')}
+        </div>`;
+      container.appendChild(card);
     });
 
     const topMen = sorted.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
@@ -2028,11 +2162,11 @@
     mContainer.innerHTML = topMen.length ? '' : '<span class="text-xs text-slate-500">No active male players</span>';
     topMen.forEach((p, idx) => {
       mContainer.innerHTML += `
-          <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800 text-xs">
-            <span class="font-bold text-white flex items-center gap-1">
+          <div class="flex items-center justify-between gap-2 bg-slate-900 p-1.5 rounded border border-slate-800 text-xs">
+            <span class="min-w-0 break-words font-bold text-white flex items-center gap-1">
               <span class="text-amber-400 font-black">#${idx + 1}</span> ${p.name}
             </span>
-            <span class="font-bold text-brand-400 font-mono text-[11px]">${p.tourneyPoints} pts (${p.diff > 0 ? '+' : ''}${p.diff})</span>
+            <span class="shrink-0 font-bold text-brand-400 font-mono text-[11px]">${p.tourneyPoints} pts (${p.diff > 0 ? '+' : ''}${p.diff})</span>
           </div>
         `;
     });
@@ -2041,20 +2175,31 @@
     wContainer.innerHTML = topWomen.length ? '' : '<span class="text-xs text-slate-500">No active female players</span>';
     topWomen.forEach((p, idx) => {
       wContainer.innerHTML += `
-          <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800 text-xs">
-            <span class="font-bold text-white flex items-center gap-1">
+          <div class="flex items-center justify-between gap-2 bg-slate-900 p-1.5 rounded border border-slate-800 text-xs">
+            <span class="min-w-0 break-words font-bold text-white flex items-center gap-1">
               <span class="text-amber-400 font-black">#${idx + 1}</span> ${p.name}
             </span>
-            <span class="font-bold text-brand-400 font-mono text-[11px]">${p.tourneyPoints} pts (${p.diff > 0 ? '+' : ''}${p.diff})</span>
+            <span class="shrink-0 font-bold text-brand-400 font-mono text-[11px]">${p.tourneyPoints} pts (${p.diff > 0 ? '+' : ''}${p.diff})</span>
           </div>
         `;
     });
   }
 
-  function openAddMidPlayerModal() { document.getElementById('modalMidPlayer').classList.remove('hidden'); }
+  function openAddMidPlayerModal() {
+    if (!tournamentState.isGenerated) {
+      alert('Generate the tournament schedule first. Before that, add players from the Player Roster section.');
+      return;
+    }
+    document.getElementById('modalMidPlayer').classList.remove('hidden');
+  }
   function closeAddMidPlayerModal() { document.getElementById('modalMidPlayer').classList.add('hidden'); }
 
   function confirmAddMidPlayer() {
+    if (!tournamentState.isGenerated) {
+      alert('Generate the tournament schedule before adding a late player.');
+      closeAddMidPlayerModal();
+      return;
+    }
     const nameInput = document.getElementById('inputMidPlayerName');
     const name = nameInput.value.trim();
     const gender = document.getElementById('selectMidPlayerGender').value;
@@ -2087,6 +2232,7 @@
 
     renderFixturesList();
     renderStandingsData();
+    checkTournamentCompletion();
     alert(`Added ${newPlayer.name}! Schedule updated.`);
   }
 
@@ -2218,29 +2364,36 @@
     }
   }
 
-  function saveCurrentToHistory() {
+  function archiveCurrentTournament(silent = false) {
     const history = getHistoryArray();
-    const existingIdx = history.findIndex(h => h.id === tournamentState.name + '_' + tournamentState.date);
-
+    const recordId = `${tournamentState.name}_${tournamentState.date}`;
+    tournamentState.isArchived = true;
+    // Preserve an independent snapshot so later live changes do not mutate history.
+    const snapshot = JSON.parse(JSON.stringify(tournamentState));
     const record = {
-      id: tournamentState.name + '_' + tournamentState.date,
+      id: recordId,
       name: tournamentState.name,
       date: tournamentState.date,
       playerCount: tournamentState.players.length,
       matchCount: tournamentState.matches.length,
       completedCount: tournamentState.matches.filter(m => m.status === 'COMPLETED').length,
-      data: tournamentState
+      archivedAt: new Date().toISOString(),
+      data: snapshot
     };
 
-    if (existingIdx !== -1) {
-      history[existingIdx] = record;
-    } else {
-      history.unshift(record);
-    }
+    const existingIdx = history.findIndex(h => h.id === recordId);
+    if (existingIdx !== -1) history[existingIdx] = record;
+    else history.unshift(record);
 
     localStorage.setItem('smashmaster_tourney_history', JSON.stringify(history));
+    saveToLocalStorage();
     renderHistoryList();
-    alert("Tournament saved to local history!");
+    if (!silent) alert('Tournament saved to local history!');
+    return true;
+  }
+
+  function saveCurrentToHistory() {
+    archiveCurrentTournament(false);
   }
 
   function renderHistoryList() {
@@ -2296,106 +2449,209 @@
     renderHistoryList();
   }
 
-  function exportComprehensiveExcel() {
-    if (typeof XLSX === 'undefined') {
-      alert("Excel generator loading. Please try again.");
+  function exportTournamentPDF() {
+    const jsPDF = window.jspdf && window.jspdf.jsPDF;
+    if (!jsPDF) {
+      alert('The PDF generator has not finished loading. Check your internet connection and try again.');
       return;
     }
 
-    const wb = XLSX.utils.book_new();
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5', compress: true });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 10;
+    const contentWidth = pageWidth - margin * 2;
+    const colors = {
+      navy: [15, 23, 42], navyLight: [30, 41, 59], green: [5, 150, 105],
+      greenPale: [236, 253, 245], white: [255, 255, 255], ink: [30, 41, 59],
+      muted: [100, 116, 139], border: [226, 232, 240], paper: [248, 250, 252],
+      red: [220, 38, 38], amber: [217, 119, 6]
+    };
     const standings = calculateStandingsData();
     const topMen = standings.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
     const topWomen = standings.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
-
     const totalMatches = tournamentState.matches.length;
     const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED').length;
+    const usedCourtIds = [...new Set(tournamentState.matches.map(m => m.courtId).filter(Boolean))];
+    let y = 0;
 
-    const summaryRows = [
-      ["TOURNAMENT SUMMARY & PODIUM WINNERS"],
-      [""],
-      ["Tournament Name", tournamentState.name],
-      ["Date", formatTournamentDate(tournamentState.date)],
-      ["Total Courts", tournamentState.courts.length],
-      ["Total Players", tournamentState.players.length],
-      ["Total Matches Scheduled", totalMatches],
-      ["Completed Matches", completedMatches],
-      ["Tournament Status", totalMatches > 0 && completedMatches === totalMatches ? "COMPLETED 🎉" : "IN PROGRESS"],
-      [""],
-      ["🏆 TOP MALE PERFORMERS"],
-      ["Rank", "Player Name", "Tourney Points", "Point Differential", "Matches Played"]
-    ];
+    const safe = value => String(value == null ? '' : value).replace(/[\u0000-\u001F]/g, ' ').trim();
+    const addPageHeader = () => {
+      doc.setFillColor(...colors.navy);
+      doc.rect(0, 0, pageWidth, 29, 'F');
+      doc.setFillColor(...colors.green);
+      doc.rect(0, 0, 3, 29, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(...colors.white);
+      let titleLines = doc.splitTextToSize(safe(tournamentState.name || 'Badminton Tournament'), contentWidth).slice(0, 2);
+      doc.text(titleLines, margin, 9);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(203, 213, 225);
+      doc.text(`${formatTournamentDate(tournamentState.date)}  |  TOURNAMENT REPORT`, margin, 23);
+    };
+    const newPage = () => {
+      doc.addPage();
+      addPageHeader();
+      y = 35;
+    };
+    const ensureSpace = height => {
+      if (y + height > pageHeight - 12) newPage();
+    };
+    const sectionTitle = title => {
+      ensureSpace(10);
+      doc.setFillColor(...colors.green);
+      doc.roundedRect(margin, y, 2, 6, 0.8, 0.8, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(...colors.ink);
+      doc.text(title, margin + 5, y + 4.8);
+      y += 9;
+    };
+    const textMetric = (label, value, x, top, w) => {
+      doc.setFillColor(...colors.paper);
+      doc.setDrawColor(...colors.border);
+      doc.roundedRect(x, top, w, 14, 1.5, 1.5, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(...colors.muted);
+      doc.text(label.toUpperCase(), x + 3, top + 4.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(...colors.ink);
+      doc.text(String(value), x + 3, top + 10.5);
+    };
 
-    topMen.forEach((m, idx) => {
-      summaryRows.push([`#${idx + 1}`, m.name, m.tourneyPoints, m.diff, m.played]);
-    });
+    addPageHeader();
+    y = 35;
 
-    summaryRows.push([""]);
-    summaryRows.push(["🏆 TOP FEMALE PERFORMERS"]);
-    summaryRows.push(["Rank", "Player Name", "Tourney Points", "Point Differential", "Matches Played"]);
+    sectionTitle('TOURNAMENT OVERVIEW');
+    const gap = 3;
+    const metricW = (contentWidth - gap) / 2;
+    textMetric('Players', tournamentState.players.length, margin, y, metricW);
+    textMetric('Matches', totalMatches, margin + metricW + gap, y, metricW);
+    y += 17;
+    textMetric('Completed', `${completedMatches}/${totalMatches}`, margin, y, metricW);
+    textMetric('Courts Used', usedCourtIds.length || 0, margin + metricW + gap, y, metricW);
+    y += 18;
 
-    topWomen.forEach((w, idx) => {
-      summaryRows.push([`#${idx + 1}`, w.name, w.tourneyPoints, w.diff, w.played]);
-    });
+    // Clear status line under the summary metrics.
+    ensureSpace(10);
+    const isComplete = totalMatches > 0 && completedMatches === totalMatches;
+    doc.setFillColor(...(isComplete ? colors.greenPale : [255, 247, 237]));
+    doc.setDrawColor(...(isComplete ? [167, 243, 208] : [253, 230, 138]));
+    doc.roundedRect(margin, y, contentWidth, 8, 1.5, 1.5, 'FD');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...(isComplete ? colors.green : colors.amber));
+    doc.text(isComplete ? 'TOURNAMENT COMPLETED  •  AUTO-ARCHIVED' : 'TOURNAMENT IN PROGRESS', margin + 4, y + 5.2);
+    y += 12;
 
-    const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
-    XLSX.utils.book_append_sheet(wb, wsSummary, "Summary & Winners");
+    sectionTitle('TOP PERFORMERS');
+    const drawPodiumGroup = (label, players) => {
+      ensureSpace(Math.max(9, players.length * 7 + 4));
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(...colors.green);
+      doc.text(label, margin + 1, y + 3.5);
+      y += 5;
+      if (!players.length) {
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...colors.muted);
+        doc.text('No eligible players', margin + 2, y + 3.5);
+        y += 6;
+        return;
+      }
+      players.forEach((p, idx) => {
+        ensureSpace(7);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.ink);
+        const playerText = `#${idx + 1}  ${safe(p.name)}`;
+        doc.text(doc.splitTextToSize(playerText, contentWidth - 43).slice(0, 1)[0], margin + 2, y + 3.5);
+        doc.setFont('helvetica', 'bold'); doc.setTextColor(...colors.green);
+        doc.text(`${p.tourneyPoints} TP  |  ${p.diff > 0 ? '+' : ''}${p.diff}`, pageWidth - margin - 2, y + 3.5, { align: 'right' });
+        y += 6.5;
+      });
+      y += 1;
+    };
+    drawPodiumGroup('MEN', topMen);
+    drawPodiumGroup('WOMEN', topWomen);
 
-    const leaderboardRows = [
-      ["Rank", "Player Name", "Gender", "Status", "Matches Played", "Wins", "Losses", "Points Won", "Points Conceded", "Point Differential (+/-)", "Tournament Points (2 pts/win)"]
-    ];
-
+    sectionTitle('OVERALL STANDINGS');
+    if (!standings.length) {
+      ensureSpace(12);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.muted);
+      doc.text('No player standings are available yet.', margin + 1, y + 4);
+      y += 8;
+    }
     standings.forEach((p, idx) => {
-      leaderboardRows.push([
-        idx + 1,
-        p.name,
-        p.gender,
-        p.retired ? "RETIRED" : "ACTIVE",
-        p.played,
-        p.wins,
-        p.losses,
-        p.pointsWon,
-        p.pointsConceded,
-        p.diff,
-        p.tourneyPoints
-      ]);
+      const playerName = safe(p.name) || 'Unnamed Player';
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
+      const nameLines = doc.splitTextToSize(`${idx + 1}. ${playerName}${p.retired ? ' (RETIRED)' : ''}`, contentWidth - 7).slice(0, 2);
+      const cardH = 18 + (nameLines.length - 1) * 4;
+      ensureSpace(cardH + 1);
+      doc.setFillColor(...colors.paper);
+      doc.setDrawColor(...colors.border);
+      doc.roundedRect(margin, y, contentWidth, cardH, 1.8, 1.8, 'FD');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
+      doc.setTextColor(...(p.retired ? colors.red : colors.ink));
+      doc.text(nameLines, margin + 3, y + 5);
+      const metricsY = y + 5 + nameLines.length * 4.1;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.6); doc.setTextColor(...colors.muted);
+      doc.text(`Played ${p.played}  |  Wins ${p.wins}  |  Losses ${p.losses}`, margin + 3, metricsY);
+      doc.setTextColor(...colors.ink);
+      doc.text(`Pts won ${p.pointsWon}  |  Against ${p.pointsConceded}  |  Diff ${p.diff > 0 ? '+' : ''}${p.diff}  |  Tourney pts ${p.tourneyPoints}`, margin + 3, metricsY + 4);
+      y += cardH + 2;
     });
 
-    const wsLeaderboard = XLSX.utils.aoa_to_sheet(leaderboardRows);
-    XLSX.utils.book_append_sheet(wb, wsLeaderboard, "Final Leaderboard");
-
-    const fixtureRows = [
-      ["Match #", "Round", "Court Name", "Scheduled Time", "Extra Time?", "Team 1 Player 1", "Team 1 Player 2", "Team 2 Player 1", "Team 2 Player 2", "Score Team 1", "Score Team 2", "Winner Team", "Status"]
-    ];
-
+    sectionTitle('MATCH LOG');
+    if (!tournamentState.matches.length) {
+      ensureSpace(12);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.muted);
+      doc.text('No matches have been scheduled.', margin + 1, y + 4);
+      y += 8;
+    }
     tournamentState.matches.forEach(m => {
       const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
-      let winnerText = "N/A";
-      if (m.status === 'COMPLETED') {
-        winnerText = m.score1 > m.score2 ? "Team 1" : m.score1 < m.score2 ? "Team 2" : "Draw";
-      }
-
-      fixtureRows.push([
-        m.matchNum,
-        m.roundNum || 1,
-        court.name,
-        m.startTime,
-        m.isExtraTime ? "Yes" : "No",
-        getPlayer(m.team1[0]).name,
-        getPlayer(m.team1[1]).name,
-        getPlayer(m.team2[0]).name,
-        getPlayer(m.team2[1]).name,
-        m.score1 !== null ? m.score1 : "",
-        m.score2 !== null ? m.score2 : "",
-        winnerText,
-        m.status
-      ]);
+      const team1 = `${safe(getPlayer(m.team1[0]).name)} & ${safe(getPlayer(m.team1[1]).name)}`;
+      const team2 = `${safe(getPlayer(m.team2[0]).name)} & ${safe(getPlayer(m.team2[1]).name)}`;
+      const matchupLines = doc.splitTextToSize(`${team1}  vs  ${team2}`, contentWidth - 6).slice(0, 3);
+      const meta = `${safe(court.name)}  |  ${format12HourTime(m.startTime) || 'Time not set'}${m.isExtraTime ? '  |  Extra time' : ''}`;
+      const result = m.status === 'COMPLETED'
+        ? `FINAL SCORE  ${m.score1} - ${m.score2}  |  ${m.score1 > m.score2 ? 'Team 1 won' : 'Team 2 won'}`
+        : 'PENDING  |  Not played yet';
+      const cardH = 14 + matchupLines.length * 4 + 4;
+      ensureSpace(cardH + 1);
+      doc.setFillColor(...colors.white);
+      doc.setDrawColor(...colors.border);
+      doc.roundedRect(margin, y, contentWidth, cardH, 1.8, 1.8, 'FD');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(...colors.ink);
+      doc.text(`MATCH #${m.matchNum || ''}`, margin + 3, y + 4.5);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.2);
+      doc.setTextColor(...(m.status === 'COMPLETED' ? colors.green : colors.amber));
+      doc.text(m.status === 'COMPLETED' ? 'COMPLETED' : 'PENDING', pageWidth - margin - 3, y + 4.5, { align: 'right' });
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(...colors.muted);
+      doc.text(doc.splitTextToSize(meta, contentWidth - 6).slice(0, 1)[0], margin + 3, y + 8.5);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(...colors.ink);
+      doc.text(matchupLines, margin + 3, y + 13);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
+      doc.setTextColor(...(m.status === 'COMPLETED' ? colors.green : colors.muted));
+      doc.text(result, margin + 3, y + 13 + matchupLines.length * 4);
+      y += cardH + 2;
     });
 
-    const wsFixtures = XLSX.utils.aoa_to_sheet(fixtureRows);
-    XLSX.utils.book_append_sheet(wb, wsFixtures, "Match Schedule Logs");
+    // Consistent footers on every page, added after all page breaks are known.
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let page = 1; page <= pageCount; page++) {
+      doc.setPage(page);
+      doc.setDrawColor(...colors.border);
+      doc.line(margin, pageHeight - 9, pageWidth - margin, pageHeight - 9);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(...colors.muted);
+      doc.text(`SmashMaster v2.7  •  Page ${page} of ${pageCount}`, margin, pageHeight - 4.5);
+      doc.text('Generated tournament report', pageWidth - margin, pageHeight - 4.5, { align: 'right' });
+    }
 
-    const cleanName = tournamentState.name.replace(/[^a-zA-Z0-9]/g, '_');
-    XLSX.writeFile(wb, `${cleanName}_v2.5_Report.xlsx`);
+    const cleanName = safe(tournamentState.name).replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Badminton_Tournament';
+    doc.save(`${cleanName}_v2.7_Tournament_Report.pdf`);
   }
 
   // SHARED SESSION SYNC
@@ -2507,7 +2763,7 @@
     merged.players = entityMerge(remote.players, local.players, base?.players || []);
     merged.matches = entityMerge(remote.matches, local.matches, base?.matches || []);
     merged.courts = local.courts && JSON.stringify(local.courts) !== JSON.stringify(base?.courts) ? local.courts : remote.courts;
-    ['name', 'date', 'isGenerated', 'version'].forEach(key => {
+    ['name', 'date', 'isGenerated', 'version', 'isArchived', 'autoArchivedSignature', 'completionCelebratedSignature'].forEach(key => {
       if (JSON.stringify(local[key]) !== JSON.stringify(base?.[key])) merged[key] = local[key];
     });
     return merged;
@@ -2564,7 +2820,7 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
-        tournamentState.version = '2.5';
+        tournamentState.version = '2.7';
         tournamentState.courts = (tournamentState.courts || []).map(c => ({...c, color: c.color || '#059669'}));
         tournamentState.themeColor = tournamentState.themeColor || '#10b981';
         tournamentState.completedMatchColor = tournamentState.completedMatchColor || '#7dd3fc';
@@ -2582,7 +2838,7 @@
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '2.5',
+        version: '2.7',
         themeColor: '#10b981', completedMatchColor: '#7dd3fc',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
