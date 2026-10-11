@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v2.7 - Doubles Badminton Manager</title>
+  <title>SmashMaster v2.8 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -64,7 +64,6 @@
     .match-tile-motion { animation: matchSlideToBottom 4.5s cubic-bezier(.22,.7,.25,1) both; position:relative; z-index:5; will-change:transform; }
     .match-tile-flash { outline: 2px solid var(--completed-match-color, #7dd3fc); outline-offset: 2px; box-shadow: 0 0 22px color-mix(in srgb, var(--completed-match-color, #7dd3fc) 55%, transparent) !important; }
 
-    /* Reduced Color Picker Circle Size to half (12px) */
     .color-picker { appearance: none; -webkit-appearance: none; width: 12px; height: 12px; min-width: 12px; padding: 0; border: 1px solid #cbd5e1; border-radius: 50% !important; overflow: hidden; background: transparent; cursor: pointer; }
     .color-picker::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
     .color-picker::-webkit-color-swatch { border: 0; border-radius: 50%; }
@@ -76,7 +75,6 @@
     .text-brand-400, .text-brand-300, .text-emerald-400, .text-emerald-300, .text-emerald-500 { color: var(--app-accent, #10b981) !important; }
     .border-brand-500, .border-brand-800, .border-emerald-500, .border-emerald-600 { border-color: var(--app-accent, #10b981) !important; }
 
-    /* Dynamic Mobile Active Tab Styling with App Color Scheme Accent */
     .mobile-tab-active, .mobile-tab-active i, .mobile-tab-active svg, .mobile-tab-active span { color: var(--app-accent, #10b981) !important; stroke: var(--app-accent, #10b981) !important; }
     .mobile-tab-active { position: relative; }
     .mobile-tab-active::after {
@@ -115,7 +113,6 @@
     .completed-score { color: var(--completed-match-color, #7dd3fc) !important; }
     @media (prefers-reduced-motion: reduce) { .match-tile-motion { animation-duration: 4.5s; } }
 
-    /* Custom Hide Scrollbar */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -132,7 +129,6 @@
     .badminton-racket { width: 52px; height: 72px; transform: rotate(-28deg); animation: racket-left 1.5s ease-in-out infinite alternate; }
     .racket-right { transform: rotate(28deg) scaleX(-1); animation-name: racket-right; }
 
-    /* Loading Animation dynamic head color */
     .racket-head { position:absolute; width:42px; height:48px; border:3px solid var(--app-accent, #10b981); border-radius:50%; top:0; left:5px; }
     .racket-head:after { content:""; position:absolute; inset:5px; border:1px solid rgba(255,255,255,.35); border-radius:50%; background:repeating-linear-gradient(90deg,transparent 0 5px,rgba(255,255,255,.12) 6px 7px); }
     .racket-handle { position:absolute; width:7px; height:30px; background:#94a3b8; border-radius:4px; top:43px; left:22px; transform:rotate(-4deg); }
@@ -150,7 +146,7 @@
 
 <body class="h-full flex flex-col bg-slate-950 text-slate-100 overflow-x-hidden select-none">
 
-<!-- First-load 3-second badminton animation with dynamic app color scheme -->
+<!-- First-load 3-second badminton animation -->
 <div id="firstLoadSplash" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center overflow-hidden">
   <div class="relative w-72 h-40">
     <div class="absolute left-4 right-4 bottom-5 h-0.5" style="background: color-mix(in srgb, var(--app-accent, #10b981) 50%, transparent);"></div>
@@ -174,8 +170,6 @@
 <!-- Top App Header Bar -->
 <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800/80 px-3 py-2 shadow-md">
   <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
-
-    <!-- Logo & App Title -->
     <div class="flex items-center gap-2 min-w-0">
       <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 via-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black shadow-md shadow-brand-500/20 shrink-0">
         <i data-lucide="trophy" class="w-4 h-4 stroke-[2.5]"></i>
@@ -185,7 +179,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.7</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.8</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -193,7 +187,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </header>
 
@@ -202,8 +195,6 @@
 
   <!-- ================= VIEW 1: SETUP & ROSTER ================= -->
   <section id="viewSetup" class="space-y-3">
-
-    <!-- Tournament Header Box -->
     <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-xl p-3 shadow-lg space-y-2 relative overflow-hidden">
       <div class="flex items-center justify-between">
           <span class="text-[9px] font-extrabold uppercase tracking-widest text-brand-400 bg-brand-950/80 border border-brand-800/60 px-2 py-0.5 rounded-full">
@@ -229,7 +220,6 @@
         </button>
       </div>
 
-      <!-- Cross-Platform Uniform Date Input -->
       <div>
         <label class="block text-[10px] font-semibold text-slate-400 mb-1">Tournament Date</label>
         <div class="relative cursor-pointer">
@@ -241,10 +231,8 @@
         </div>
       </div>
 
-      <!-- Court Cards List -->
       <div id="courtListContainer" class="space-y-2"></div>
 
-      <!-- Capacity Estimate Banner -->
       <div class="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5 text-[11px] space-y-1">
         <div class="flex justify-between text-slate-300">
           <span>Total Court Time:</span>
@@ -270,7 +258,6 @@
         </h3>
       </div>
 
-      <!-- Input Player Name & Gender -->
       <div class="space-y-1.5">
         <input type="text" id="inputPlayerName" placeholder="Enter player name..." onkeydown="if(event.key==='Enter') addPlayerFromInput();" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-brand-500">
 
@@ -281,7 +268,6 @@
           </div>
           <input type="hidden" id="selectPlayerGender" value="Male">
 
-          <!-- Equalized Brightness Add Button -->
           <button id="btnAddPlayer" onclick="addPlayerFromInput()" class="h-8 bg-brand-500 hover:bg-brand-400 text-slate-950 font-extrabold px-3 rounded-lg text-xs flex items-center justify-center gap-1 shadow-md shadow-brand-500/20 active:scale-95 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-brand-500">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> <span id="btnAddPlayerLabel">Add</span>
           </button>
@@ -289,7 +275,6 @@
         <p id="rosterLockedNote" class="hidden text-[10px] text-amber-300 leading-relaxed">The schedule has been generated. Use <strong>Late Player</strong> on the Matches tab to add new players.</p>
       </div>
 
-      <!-- Player Cards List -->
       <div id="playerListContainer" class="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
 
       <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-[10px] text-slate-400 flex items-center justify-between font-medium">
@@ -297,19 +282,14 @@
         <span class="text-brand-400 font-bold">Min 4 Active Players</span>
       </div>
 
-      <!-- Generate Tournament Schedule Button -->
       <button id="btnGenerateFixtures" onclick="generateTournamentFixtures()" class="w-full h-10 bg-gradient-to-r from-brand-500 to-teal-500 hover:from-brand-400 hover:to-teal-400 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-brand-500/20 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]">
         <i data-lucide="zap" class="w-4 h-4 fill-current"></i> Generate Tournament Schedule
       </button>
     </div>
-
   </section>
-
 
   <!-- ================= VIEW 2: MATCHES & SCORES ================= -->
   <section id="viewFixtures" class="space-y-3 hidden">
-
-    <!-- Match Counters -->
     <div class="grid grid-cols-3 gap-1">
       <div class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-center leading-none">
         <div class="text-[8px] text-slate-500 uppercase font-bold">Total</div>
@@ -325,7 +305,6 @@
       </div>
     </div>
 
-    <!-- Completion Banner -->
     <div id="bannerTournamentCompleted" class="bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-amber-500/20 border border-amber-500/40 rounded-xl p-3 shadow-md hidden space-y-2">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-lg bg-amber-500/30 text-amber-300 flex items-center justify-center shrink-0">
@@ -333,7 +312,7 @@
         </div>
         <div>
           <h3 class="text-xs font-extrabold font-heading text-amber-300">Tournament Finished! 🎉</h3>
-          <p class="text-[10px] text-slate-300">All matches completed. Tournament archived automatically. Download the PDF report or add extra matches!</p>
+          <p class="text-[10px] text-slate-300">All matches completed. Download the PDF report or add extra matches!</p>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-1.5">
@@ -346,7 +325,6 @@
       </div>
     </div>
 
-    <!-- Matches Per Player Summary -->
     <div id="matchesPerPlayerSummary" class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 shadow-md space-y-2">
       <div class="flex items-center justify-between">
         <h2 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
@@ -357,7 +335,6 @@
       <div id="matchesPerPlayerList" class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] leading-4"></div>
     </div>
 
-    <!-- Matches Per Court Summary -->
     <div id="matchesPerCourtSummary" class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 shadow-md space-y-2">
       <div class="flex items-center justify-between">
         <h2 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
@@ -368,7 +345,6 @@
       <div id="matchesPerCourtList" class="flex flex-wrap items-center gap-2 text-[10px] leading-4"></div>
     </div>
 
-    <!-- Filter Controls Bar -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 shadow-md space-y-2">
       <div class="flex items-center justify-between">
         <h2 class="text-[11px] font-extrabold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
@@ -396,11 +372,8 @@
       </div>
     </div>
 
-    <!-- Match Cards Container -->
     <div id="fixturesListContainer" class="space-y-2.5"></div>
-
   </section>
-
 
   <!-- ================= VIEW 3: ADVANCE MATCH SEARCH ================= -->
   <section id="viewSearch" class="space-y-3 hidden">
@@ -411,36 +384,27 @@
         </h2>
         <p class="text-[10px] text-slate-400">Tap 1 to 4 available players below to quickly find their upcoming match!</p>
       </div>
-
-      <!-- Multi-Select Player Chips -->
       <div id="searchPlayerChips" class="flex flex-wrap gap-1 p-2 bg-slate-950 border border-slate-800 rounded-lg min-h-[44px]"></div>
-
       <div class="flex items-center justify-between text-[10px] text-slate-400">
         <span id="searchMatchCount">Select players above</span>
         <button onclick="clearSearchSelection()" class="text-brand-400 font-semibold hover:underline">Clear Selection</button>
       </div>
     </div>
-
-    <!-- Search Results Matches -->
     <div id="searchResultsContainer" class="space-y-2.5"></div>
   </section>
 
-
   <!-- ================= VIEW 4: STANDINGS & PODIUM ================= -->
   <section id="viewStandings" class="space-y-3 hidden">
-
-    <!-- Top Performers Podium Banner -->
     <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-xl p-3 shadow-lg space-y-2">
       <div class="flex items-center justify-between">
         <h3 class="text-[11px] font-bold font-heading text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
           <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400"></i> Winners Podium
         </h3>
         <span class="text-[9px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.2 rounded-full border border-amber-500/30">
-            Live Rankings
-          </span>
+          Live Rankings
+        </span>
       </div>
 
-      <!-- Top Men & Women Grid -->
       <div class="grid grid-cols-1 gap-2">
         <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 space-y-1">
           <div class="text-[9px] font-extrabold uppercase text-blue-400 flex items-center gap-1">
@@ -458,7 +422,7 @@
       </div>
     </div>
 
-    <!-- Full Player Leaderboard -->
+    <!-- Overall Standings Compact Table -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
       <div class="flex items-center justify-between">
         <h3 class="text-[11px] font-bold font-heading text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
@@ -467,16 +431,42 @@
         <span class="text-[9px] text-slate-400 font-mono">2 Pts / Win</span>
       </div>
 
-      <!-- Stacked cards keep every statistic visible in a mobile screenshot. -->
-      <div id="mobileLeaderboardCards" class="space-y-1.5"></div>
+      <div class="overflow-x-hidden">
+        <table class="w-full text-left text-[10px] font-mono border-collapse">
+          <thead>
+          <tr class="border-b border-slate-800 text-slate-400 font-bold">
+            <th class="py-1 px-1">Rk</th>
+            <th class="py-1 px-1">Player</th>
+            <th class="py-1 px-1 text-center">P</th>
+            <th class="py-1 px-1 text-center">W</th>
+            <th class="py-1 px-1 text-center">L</th>
+            <th class="py-1 px-1 text-center">PW</th>
+            <th class="py-1 px-1 text-center">PA</th>
+            <th class="py-1 px-1 text-center">PD</th>
+            <th class="py-1 px-1 text-center">TP</th>
+          </tr>
+          </thead>
+          <tbody id="standingsTableBody"></tbody>
+        </table>
+        <div class="mt-2 text-[9px] text-slate-400 bg-slate-950 p-2 rounded border border-slate-800 space-y-0.5">
+          <div class="font-bold text-slate-300">Legend:</div>
+          <div class="grid grid-cols-2 gap-x-2 gap-y-0.5">
+            <div><strong>Rk</strong>: Rank</div>
+            <div><strong>P</strong>: Played</div>
+            <div><strong>W</strong>: Wins</div>
+            <div><strong>L</strong>: Losses</div>
+            <div><strong>PW</strong>: Points Won</div>
+            <div><strong>PA</strong>: Points Against</div>
+            <div><strong>PD</strong>: Point Difference</div>
+            <div><strong>TP</strong>: Tourney Points (2 pts/win)</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-
   <!-- ================= VIEW 5: EXPORT & HISTORY ================= -->
   <section id="viewExport" class="space-y-3 hidden">
-
-    <!-- App Appearance Settings -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-3">
       <div>
         <h3 class="text-xs font-bold font-heading text-white">App Color Scheme</h3>
@@ -488,7 +478,6 @@
       </div>
     </div>
 
-    <!-- Tournament History Card -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1.5">
@@ -499,11 +488,9 @@
           <i data-lucide="bookmark" class="w-3 h-3"></i> Archive Current
         </button>
       </div>
-
       <div id="historyListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5"></div>
     </div>
 
-    <!-- Reset Tournament -->
     <div class="bg-slate-900 border border-red-900/50 rounded-xl p-3 shadow-md space-y-2.5">
       <div class="flex items-center gap-1.5">
         <i data-lucide="rotate-ccw" class="w-4 h-4 text-red-400"></i>
@@ -515,7 +502,6 @@
       </button>
     </div>
 
-    <!-- Shared Tournament Session -->
     <div class="bg-slate-900 border border-brand-500/30 rounded-xl p-3 shadow-md space-y-2.5">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1.5">
@@ -532,15 +518,12 @@
       <div class="text-[9px] text-slate-500">Session ID is used to keep this tournament separate from other tournaments.</div>
     </div>
 
-    <!-- WhatsApp Text Export Card -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2">
       <div class="flex items-center gap-1.5">
         <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
         <h3 class="text-xs font-bold font-heading text-white">WhatsApp Text Format</h3>
       </div>
-
       <textarea id="txtWhatsAppExport" readonly class="w-full h-32 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-[11px] font-mono text-slate-300 focus:outline-none resize-none"></textarea>
-
       <div class="grid grid-cols-2 gap-2">
         <button onclick="copyWhatsAppText()" class="h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 active:scale-95">
           <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Text
@@ -551,7 +534,6 @@
       </div>
     </div>
 
-    <!-- Mobile-friendly PDF tournament report -->
     <div class="bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
       <div class="flex items-center gap-2.5">
         <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
@@ -559,16 +541,14 @@
         </div>
         <div>
           <h2 class="text-sm font-extrabold font-heading text-white">Tournament Report PDF</h2>
-          <p class="text-[10px] text-slate-300">A polished portrait report with tournament overview, player standings and match results.</p>
+          <p class="text-[10px] text-slate-300">A polished portrait report with tournament overview, player standings and single-line match logs.</p>
         </div>
       </div>
-
       <button onclick="exportTournamentPDF()" class="w-full h-10 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95">
         <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Tournament PDF (.pdf)
       </button>
     </div>
 
-    <!-- About -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md space-y-2.5">
       <div class="flex items-center gap-1.5">
         <i data-lucide="info" class="w-4 h-4 text-brand-400"></i>
@@ -581,50 +561,39 @@
         <p><span class="font-mono font-semibold text-brand-300 select-all">bhushan2005@okicici</span></p>
       </div>
     </div>
-
   </section>
-
 </main>
-
 
 <!-- Fixed Mobile Bottom Navigation Bar -->
 <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/80 px-2 py-1.5 shadow-2xl">
   <div class="max-w-lg mx-auto flex items-center justify-around">
-
     <button onclick="switchMobileView('viewSetup')" id="navBtnSetup" class="mobile-nav-btn mobile-tab-active flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
       <i data-lucide="settings" class="w-4 h-4"></i>
       <span class="text-[9px] font-bold">Setup</span>
     </button>
-
     <button onclick="switchMobileView('viewFixtures')" id="navBtnFixtures" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
       <i data-lucide="calendar" class="w-4 h-4"></i>
       <span class="text-[9px] font-bold">Matches</span>
     </button>
-
     <button onclick="switchMobileView('viewSearch')" id="navBtnSearch" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
       <i data-lucide="search" class="w-4 h-4"></i>
       <span class="text-[9px] font-bold">Search</span>
     </button>
-
     <button onclick="switchMobileView('viewStandings')" id="navBtnStandings" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
       <i data-lucide="award" class="w-4 h-4"></i>
       <span class="text-[9px] font-bold">Podium</span>
     </button>
-
     <button onclick="switchMobileView('viewExport')" id="navBtnExport" class="mobile-nav-btn flex flex-col items-center gap-0.5 px-3 py-0.5 text-slate-400 transition-all">
       <i data-lucide="share-2" class="w-4 h-4"></i>
       <span class="text-[9px] font-bold">Export</span>
     </button>
-
   </div>
 </nav>
-
 
 <!-- MODAL: MID-TOURNAMENT ADD PLAYER BOTTOM SHEET -->
 <div id="modalMidPlayer" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center">
   <div class="bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 shadow-2xl animate-sheet-up">
     <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto sm:hidden mb-1"></div>
-
     <div class="flex justify-between items-center">
       <h3 class="text-sm font-bold font-heading text-white flex items-center gap-1.5">
         <i data-lucide="user-plus" class="w-4 h-4 text-brand-400"></i> Add Mid-Tournament Player
@@ -633,17 +602,14 @@
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
-
     <p class="text-[11px] text-slate-400">
       Adding a late player will preserve finished game scores and re-balance remaining matches.
     </p>
-
     <div class="space-y-2">
       <div>
         <label class="block text-[10px] font-semibold text-slate-300 mb-1">Player Name</label>
         <input type="text" id="inputMidPlayerName" placeholder="Full name..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-brand-500">
       </div>
-
       <div>
         <label class="block text-[10px] font-semibold text-slate-300 mb-1">Gender</label>
         <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5 text-xs">
@@ -653,18 +619,12 @@
         <input type="hidden" id="selectMidPlayerGender" value="Male">
       </div>
     </div>
-
     <div class="flex gap-2 pt-1">
-      <button onclick="closeAddMidPlayerModal()" class="flex-1 bg-slate-800 text-slate-300 font-bold py-2.5 rounded-xl text-xs">
-        Cancel
-      </button>
-      <button onclick="confirmAddMidPlayer()" class="flex-1 bg-brand-600 text-slate-950 font-black py-2.5 rounded-xl text-xs">
-        Add & Regenerate
-      </button>
+      <button onclick="closeAddMidPlayerModal()" class="flex-1 bg-slate-800 text-slate-300 font-bold py-2.5 rounded-xl text-xs">Cancel</button>
+      <button onclick="confirmAddMidPlayer()" class="flex-1 bg-brand-600 text-slate-950 font-black py-2.5 rounded-xl text-xs">Add & Regenerate</button>
     </div>
   </div>
 </div>
-
 
 <script>
   const AMUSING_NAMES = [
@@ -682,7 +642,6 @@
     return b === 0 ? a : gcd(b, a % b);
   }
 
-  // Cross-Platform Uniform Date Formatter (dd-Mon-yyyy)
   function formatTournamentDate(dateStr) {
     if (!dateStr) return '';
     const parts = dateStr.split('-');
@@ -702,7 +661,6 @@
     saveToLocalStorage();
   }
 
-  // 12-Hour AM/PM Time Format Conversion Helper
   function format12HourTime(timeStr) {
     if (!timeStr) return '';
     const [hStr, mStr] = String(timeStr).split(':');
@@ -723,7 +681,7 @@
   }
 
   let tournamentState = {
-    version: '2.7',
+    version: '2.8',
     themeColor: '#10b981',
     completedMatchColor: '#7dd3fc',
     name: AMUSING_NAMES[0],
@@ -743,7 +701,7 @@
     lucide.createIcons();
 
     const splash = document.getElementById('firstLoadSplash');
-    const splashKey = 'smashmaster_first_load_animation_seen';
+    const splashKey = 'smashmaster_first_load_animation_seen_v2.8';
     if (localStorage.getItem(splashKey) === '1') {
       splash.classList.add('splash-hide');
     } else {
@@ -880,7 +838,6 @@
   function updateThemeColor(color) {
     tournamentState.themeColor = color;
     document.documentElement.style.setProperty('--app-accent', color);
-    document.documentElement.style.setProperty('--app-accent-contrast', color);
     const picker = document.getElementById('appThemeColorPicker'); if (picker) picker.value = color;
     saveToLocalStorage(); renderCourtInputs(); renderFixturesList();
   }
@@ -1144,7 +1101,7 @@
 
     const activePlayers = tournamentState.players.filter(p => !p.retired);
     if (activePlayers.length < 4) {
-      alert("Please add at least 4 active players to generate doubles fixtures!");
+      alert("Please add at least 4 active players to generate doubles fixtures (N < 4 cannot be scheduled).");
       return;
     }
 
@@ -1169,10 +1126,10 @@
     return (h2 * 60 + m2) - (h1 * 60 + m1);
   }
 
-  // Only activate multiple courts when at least 8 players are available for doubles.
   function getSchedulingCourts(playerCount = tournamentState.players.filter(p => !p.retired).length) {
     const configuredCourts = tournamentState.courts || [];
-    return playerCount >= 8 ? configuredCourts : configuredCourts.slice(0, 1);
+    const maxConcurrency = Math.max(1, Math.min(configuredCourts.length, Math.floor(playerCount / 4)));
+    return configuredCourts.slice(0, maxConcurrency);
   }
 
   function getTotalCourtCapacity(playerCount = tournamentState.players.filter(p => !p.retired).length) {
@@ -1197,7 +1154,6 @@
     const candidates = [];
     const seen = new Set();
 
-    // Enumerate each group of four exactly once, then its three possible doubles pairings.
     for (let i = 0; i < playersList.length; i++) {
       for (let j = i + 1; j < playersList.length; j++) {
         for (let k = j + 1; k < playersList.length; k++) {
@@ -1223,7 +1179,6 @@
     return candidates;
   }
 
-  // Generate a balanced fixture list without ever repeating a player partnership.
   function buildFixturesForPlayers(playersList, existingCompleted = []) {
     const pCount = playersList.length;
     if (pCount < 4) return [];
@@ -1246,8 +1201,8 @@
       targetMatches += groupSize;
     }
     const desiredTotalMatches = Math.min(
-      maxPossibleTotalMatches,
-      Math.max(groupSize, targetMatches)
+            maxPossibleTotalMatches,
+            Math.max(groupSize, targetMatches)
     );
     const pendingNeeded = Math.max(0, desiredTotalMatches - existingCompleted.length);
     if (pendingNeeded === 0) return schedulePendingMatches([], existingCompleted, pCount);
@@ -1279,7 +1234,6 @@
     const basePartners = Object.fromEntries(playersList.map(player => [player.id, new Set(partners[player.id])]));
     const baseOpponents = Object.fromEntries(playersList.map(player => [player.id, new Set(opponents[player.id])]));
 
-    // A round may contain multiple matches, but no player may appear twice in that round.
     while (selected.length < pendingNeeded) {
       const roundUsed = new Set();
       let roundAdded = 0;
@@ -1294,7 +1248,6 @@
 
           const [a, b] = candidate.team1;
           const [c, d] = candidate.team2;
-          // Hard rule: do not reuse either doubles partnership.
           if (partners[a].has(b) || partners[c].has(d)) continue;
 
           const ids = [a, b, c, d];
@@ -1306,7 +1259,7 @@
           const minCount = Math.min(...countsForMatch);
           const targetAppearances = Math.floor(desiredTotalMatches * 4 / pCount);
           const totalDeficit = countsForMatch.reduce(
-            (sum, count) => sum + Math.max(0, targetAppearances - count), 0
+                  (sum, count) => sum + Math.max(0, targetAppearances - count), 0
           );
 
           let newOpponentCount = 0;
@@ -1314,9 +1267,8 @@
             if (!opponents[teamOnePlayer].has(teamTwoPlayer)) newOpponentCount++;
           }));
 
-          // Prefer fresh opponents first, then balanced playing time.
           const score = newOpponentCount * 10000 + totalDeficit * 100 +
-            (10 - maxCount) * 20 + (10 - minCount) * 10 - maxCount;
+                  (10 - maxCount) * 20 + (10 - minCount) * 10 - maxCount;
 
           if (score > bestScore) {
             bestScore = score;
@@ -1324,7 +1276,6 @@
           }
         }
 
-        // Start another round instead of forcing a duplicate or reusing a player concurrently.
         if (!best) break;
 
         const [a, b] = best.team1;
@@ -1352,8 +1303,6 @@
       if (roundAdded === 0) break;
     }
 
-    // For small rosters, backtrack if the greedy pass cannot fill the target schedule.
-    // This avoids ending with unused partnership options that cannot form a final match.
     if (selected.length < pendingNeeded && pCount <= 7) {
       const searchCounts = { ...baseCounts };
       const searchPartners = Object.fromEntries(playersList.map(player => [player.id, new Set(basePartners[player.id])]));
@@ -1388,7 +1337,7 @@
             if (!searchOpponents[one].has(two)) freshOpponents++;
           }));
           const score = freshOpponents * 10000 + deficit * 100 +
-            (10 - maxCount) * 20 + (10 - minCount) * 10 - maxCount;
+                  (10 - maxCount) * 20 + (10 - minCount) * 10 - maxCount;
           eligible.push({ candidate, key, ids, score, newOpponents: [[a,c],[a,d],[b,c],[b,d]] });
         }
         eligible.sort((a, b) => b.score - a.score);
@@ -1424,7 +1373,7 @@
           });
           ids.forEach(id => searchCounts[id]--);
           searchPartners[a].delete(b); searchPartners[b].delete(a);
-          searchPartners[c].delete(d); searchPartners[d].delete(c);
+          searchPartners[c].delete(d); searchPartners[c].delete(c);
           searchKeys.delete(key);
           if (visitedNodes > maxSearchNodes) return false;
         }
@@ -1439,7 +1388,6 @@
     return schedulePendingMatches(selected, existingCompleted, pCount);
   }
 
-  // SCHEDULING PENDING MATCHES WITH EXTRA TIME SUPPORT
   function schedulePendingMatches(pending, existingMatches = [], playerCount = tournamentState.players.filter(p => !p.retired).length) {
     const scheduled = [...existingMatches];
     const schedulingCourts = getSchedulingCourts(playerCount);
@@ -1579,7 +1527,6 @@
         const hrs = String(Math.floor(t / 60)).padStart(2, '0');
         const mins = String(t % 60).padStart(2, '0');
 
-        // Mark as Extra Time if scheduled at or after court end time
         const isExtraTime = t >= courtEndMinutes(bestSlot.court);
 
         const scheduledMatch = {
@@ -1594,8 +1541,6 @@
         scheduled.push(scheduledMatch);
         courtClock[bestSlot.court.id] = bestSlot.start + REST_SLOT_MINUTES;
       } else if (candidateCourts.length > 0) {
-        // No safe match fits this time slot. Advance the available courts and retry later;
-        // never force a player into overlapping matches or bypass rest constraints.
         candidateCourts.forEach(court => {
           courtClock[court.id] = currentTime + REST_SLOT_MINUTES;
         });
@@ -1655,30 +1600,32 @@
     const totalLabel = document.getElementById('matchesPerCourtTotal');
     if (!list || !totalLabel) return;
 
-    const courts = tournamentState.courts || [];
-    totalLabel.innerText = `${courts.length} court${courts.length === 1 ? '' : 's'}`;
+    const courts = getSchedulingCourts();
+    const configuredCourts = tournamentState.courts || [];
+    totalLabel.innerText = `${courts.length} active court${courts.length === 1 ? '' : 's'} (of ${configuredCourts.length})`;
     list.innerHTML = '';
 
-    if (courts.length === 0) {
+    if (configuredCourts.length === 0) {
       list.innerHTML = '<div class="text-[10px] text-slate-500 py-1">No courts configured.</div>';
       return;
     }
 
     const courtCounts = {};
-    courts.forEach(c => courtCounts[c.id] = 0);
+    configuredCourts.forEach(c => courtCounts[c.id] = 0);
     tournamentState.matches.forEach(m => {
       if (m.courtId && courtCounts[m.courtId] !== undefined) {
         courtCounts[m.courtId]++;
       }
     });
 
-    courts.forEach((c) => {
+    configuredCourts.forEach((c) => {
       const courtColor = getCourtColor(c.id);
       const cnt = courtCounts[c.id] || 0;
       const completedCnt = tournamentState.matches.filter(m => m.courtId === c.id && m.status === 'COMPLETED').length;
+      const isActive = courts.some(ac => ac.id === c.id);
 
       const item = document.createElement('div');
-      item.className = 'flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800 text-[10px]';
+      item.className = `flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-lg border ${isActive ? 'border-slate-800' : 'border-slate-800/40 opacity-50'} text-[10px]`;
       item.innerHTML = `
         <span class="w-2 h-2 rounded-full shrink-0" style="background:${courtColor.color}"></span>
         <span class="font-semibold text-slate-200">${c.name}:</span>
@@ -1711,7 +1658,7 @@
     const candidates = allCandidates.filter(c => {
       if (existingKeys.has(makeMatchKey(c.match))) return false;
       return !existingPartnerKeys.has(makePartnerKey(c.match.team1[0], c.match.team1[1])) &&
-        !existingPartnerKeys.has(makePartnerKey(c.match.team2[0], c.match.team2[1]));
+              !existingPartnerKeys.has(makePartnerKey(c.match.team2[0], c.match.team2[1]));
     });
     if (candidates.length === 0) return null;
 
@@ -1793,7 +1740,7 @@
     });
     const maxRemainingOnAnyCourt = Object.values(courtRemaining).reduce((max, n) => Math.max(max, n), 0);
     if (maxRemainingOnAnyCourt > 1) {
-      alert("Extra matches can be added when there is a maximum of one scheduled match remaining on each court.");
+      alert("Add Extra Matches constraint not met: Extra matches are only allowed when a maximum of 1 match is pending on any 1 of the courts.");
       return;
     }
     if (remainingCapacity < 1) {
@@ -1803,7 +1750,7 @@
 
     const extraMatches = findBalancedExtraMatches(activePlayers);
     if (!extraMatches || extraMatches.length === 0) {
-      alert("No extra matches are available without repeating a doubles partnership or exceeding a player's match limit.");
+      alert("Cannot add extra matches: No valid combination found to add matches for all players without repeating a doubles partnership or exceeding match limits.");
       return;
     }
 
@@ -1834,7 +1781,7 @@
     const values = activePlayers.map(p => counts[p.id] || 0);
     const min = Math.min(...values);
     const max = Math.max(...values);
-    alert(`Added ${newMatches.length} extra match${newMatches.length === 1 ? '' : 'es'}. Final match totals are ${min}–${max} per player.`);
+    alert(`Successfully added ${newMatches.length} extra match(es) for all players. Final match totals are ${min}–${max} per player.`);
   }
 
   function renderFixturesList() {
@@ -1850,7 +1797,6 @@
     const container = document.getElementById('fixturesListContainer');
     const previousPositions = new Map([...container.querySelectorAll('[data-match-id]')].map(el => [el.dataset.matchId, el.getBoundingClientRect().top]));
 
-    // ALWAYS DYNAMICALLY REFRESH COURT SELECT OPTIONS
     const courtSelect = document.getElementById('filterCourtSelect');
     const currentSelected = courtSelect.value || 'ALL';
     courtSelect.innerHTML = '<option value="ALL">All Courts</option>';
@@ -1895,7 +1841,6 @@
       const p3 = getPlayer(m.team2[0]), p4 = getPlayer(m.team2[1]);
       const isCompleted = m.status === 'COMPLETED';
 
-      // Court Name font color matches completed match scheme if done, else court tile scheme
       const courtNameColor = isCompleted
               ? (tournamentState.completedMatchColor || '#7dd3fc')
               : courtColor.color;
@@ -1912,8 +1857,7 @@
       card.style.borderLeftWidth = '4px'; card.style.borderLeftColor = isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : courtColor.color;
 
       card.innerHTML = `
-          <!-- Header Info Badge -->
-          <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/80 pb-1.5">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/85 pb-1.5">
             <div class="flex items-center gap-1">
               <span class="px-2 py-0.5 rounded-md font-extrabold font-mono text-[10px]" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">#${m.matchNum}</span>
               <span class="px-2 py-0.5 rounded-md font-mono text-[10px] font-black" style="background:${tournamentState.themeColor || '#10b981'};color:#020617">R${m.roundNum || 1}</span>
@@ -1925,22 +1869,18 @@
             </span>
           </div>
 
-          <!-- Teams vs Layout -->
           <div class="grid grid-cols-12 items-center gap-1 text-xs">
             <div class="col-span-5 space-y-0.5">
               <div class="font-bold text-slate-100 truncate">${p1.name}</div>
               <div class="font-bold text-slate-100 truncate">${p2.name}</div>
             </div>
-
             <div class="col-span-2 text-center font-black text-[10px] text-slate-500">VS</div>
-
             <div class="col-span-5 text-right space-y-0.5">
               <div class="font-bold text-slate-100 truncate">${p3.name}</div>
               <div class="font-bold text-slate-100 truncate">${p4.name}</div>
             </div>
           </div>
 
-          <!-- Score Direct Text Inputs + Stepper Controls -->
           <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1.5">
             <div class="grid grid-cols-2 gap-2 items-center">
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
@@ -1966,7 +1906,6 @@
       container.appendChild(card);
     });
 
-    // SMOOTH & SLOWED DOWN MOVEMENT ANIMATION (4.5 SECONDS)
     const moving = container.querySelectorAll('[data-match-id]');
     moving.forEach(el => {
       const oldTop = previousPositions.get(el.dataset.matchId);
@@ -2046,8 +1985,8 @@
     if (allCompleted) {
       if (banner) banner.classList.remove('hidden');
       const signature = tournamentState.matches
-        .map(m => `${m.id}:${m.status}:${m.score1}:${m.score2}`)
-        .join('|');
+              .map(m => `${m.id}:${m.status}:${m.score1}:${m.score2}`)
+              .join('|');
       const historyId = `${tournamentState.name}_${tournamentState.date}`;
       const archivedRecord = getHistoryArray().find(h => h.id === historyId);
       const newCompletion = tournamentState.autoArchivedSignature !== signature;
@@ -2057,7 +1996,6 @@
         tournamentState.autoArchivedSignature = signature;
         tournamentState.completionCelebratedSignature = signature;
       }
-      // Also repair a missing/stale history entry, but never show the manual-archive alert.
       if (newCompletion || !archiveIsCurrent) archiveCurrentTournament(true);
 
       if (newCompletion && typeof confetti === 'function') {
@@ -2065,8 +2003,6 @@
       }
     } else {
       if (banner) banner.classList.add('hidden');
-      // If extra/late matches were added after a completed tournament, its next
-      // completion is a new archive update and must not reuse the previous signature.
       if (tournamentState.autoArchivedSignature) {
         tournamentState.autoArchivedSignature = '';
         tournamentState.isArchived = false;
@@ -2118,42 +2054,31 @@
 
   function renderStandingsData() {
     const sorted = calculateStandingsData();
-    const container = document.getElementById('mobileLeaderboardCards');
-    if (!container) return;
-    container.innerHTML = '';
-
-    if (!sorted.length) {
-      container.innerHTML = '<div class="rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-center text-xs text-slate-500">Add players and generate a schedule to see standings.</div>';
+    const tableBody = document.getElementById('standingsTableBody');
+    if (tableBody) {
+      tableBody.innerHTML = '';
+      if (!sorted.length) {
+        tableBody.innerHTML = '<tr><td colspan="9" class="py-3 text-center text-slate-500">No standings available yet.</td></tr>';
+      } else {
+        sorted.forEach((p, idx) => {
+          const row = document.createElement('tr');
+          row.className = `border-b border-slate-800/80 hover:bg-slate-900/60 ${p.retired ? 'opacity-50 line-through text-red-400' : 'text-slate-200'}`;
+          const diffStr = (p.diff > 0 ? '+' : '') + p.diff;
+          row.innerHTML = `
+            <td class="py-1.5 px-1 font-bold text-slate-400">${idx + 1}</td>
+            <td class="py-1.5 px-1 font-semibold truncate max-w-[100px]" title="${p.name}">${p.name}</td>
+            <td class="py-1.5 px-1 text-center font-mono">${p.played}</td>
+            <td class="py-1.5 px-1 text-center font-mono text-emerald-400">${p.wins}</td>
+            <td class="py-1.5 px-1 text-center font-mono text-red-400">${p.losses}</td>
+            <td class="py-1.5 px-1 text-center font-mono">${p.pointsWon}</td>
+            <td class="py-1.5 px-1 text-center font-mono">${p.pointsConceded}</td>
+            <td class="py-1.5 px-1 text-center font-mono ${p.diff >= 0 ? 'text-emerald-400' : 'text-red-400'}">${diffStr}</td>
+            <td class="py-1.5 px-1 text-center font-mono font-bold text-brand-400">${p.tourneyPoints}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
     }
-
-    sorted.forEach((p, idx) => {
-      const card = document.createElement('div');
-      card.className = 'rounded-lg border border-slate-800 bg-slate-950/70 p-2.5';
-      const diffClass = p.diff >= 0 ? 'text-emerald-400' : 'text-red-400';
-      const stat = (label, value, valueClass = 'text-slate-100') => `
-        <div class="min-w-0 rounded-md bg-slate-900/80 px-1 py-1.5 text-center">
-          <div class="text-[9px] leading-tight font-bold uppercase tracking-wide text-slate-500">${label}</div>
-          <div class="mt-0.5 text-[11px] leading-tight font-extrabold font-mono ${valueClass}">${value}</div>
-        </div>`;
-      card.innerHTML = `
-        <div class="mb-2 flex min-w-0 items-center justify-between gap-2">
-          <div class="flex min-w-0 items-center gap-2">
-            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[10px] font-black text-slate-300">${idx + 1}</span>
-            <span class="min-w-0 break-words text-xs font-extrabold leading-tight ${p.retired ? 'line-through text-red-400' : 'text-white'}">${p.name}</span>
-          </div>
-          <span class="shrink-0 rounded-md border border-brand-500/30 bg-brand-500/10 px-1.5 py-1 text-[10px] font-black text-brand-400">${p.tourneyPoints} TP</span>
-        </div>
-        <div class="grid grid-cols-4 gap-1.5">
-          ${stat('Played', p.played)}
-          ${stat('Wins', p.wins, 'text-emerald-400')}
-          ${stat('Losses', p.losses, 'text-red-400')}
-          ${stat('Pts Won', p.pointsWon)}
-          ${stat('Pts Against', p.pointsConceded)}
-          ${stat('Diff', `${p.diff > 0 ? '+' : ''}${p.diff}`, diffClass)}
-          ${stat('Tourney Pts', p.tourneyPoints, 'text-brand-400')}
-        </div>`;
-      container.appendChild(card);
-    });
 
     const topMen = sorted.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
     const topWomen = sorted.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
@@ -2273,7 +2198,6 @@
     renderSearchChips();
   }
 
-  // SEARCH MATCHES: COMPLETED MATCHES REFLECT COMPLETED COLOR SCHEME
   function executeMatchSearch() {
     const container = document.getElementById('searchResultsContainer');
     container.innerHTML = '';
@@ -2325,7 +2249,6 @@
     });
   }
 
-  // UPDATED WHATSAPP FORMAT (Exact sequence numbers e.g., #1, #2 and 12h timings)
   function updateWhatsAppExportText() {
     let text = `🏸 *${tournamentState.name.toUpperCase()}* 🏸\n`;
     text += `📅 Date: ${formatTournamentDate(tournamentState.date)}\n\n`;
@@ -2368,7 +2291,6 @@
     const history = getHistoryArray();
     const recordId = `${tournamentState.name}_${tournamentState.date}`;
     tournamentState.isArchived = true;
-    // Preserve an independent snapshot so later live changes do not mutate history.
     const snapshot = JSON.parse(JSON.stringify(tournamentState));
     const record = {
       id: recordId,
@@ -2449,6 +2371,7 @@
     renderHistoryList();
   }
 
+  // ENHANCED PDF EXPORT MATCHING v2.8 REQUIREMENTS
   function exportTournamentPDF() {
     const jsPDF = window.jspdf && window.jspdf.jsPDF;
     if (!jsPDF) {
@@ -2465,7 +2388,7 @@
       navy: [15, 23, 42], navyLight: [30, 41, 59], green: [5, 150, 105],
       greenPale: [236, 253, 245], white: [255, 255, 255], ink: [30, 41, 59],
       muted: [100, 116, 139], border: [226, 232, 240], paper: [248, 250, 252],
-      red: [220, 38, 38], amber: [217, 119, 6]
+      red: [220, 38, 38], amber: [217, 119, 6], goldBg: [254, 243, 199], goldBorder: [245, 158, 11]
     };
     const standings = calculateStandingsData();
     const topMen = standings.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
@@ -2489,7 +2412,7 @@
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(203, 213, 225);
-      doc.text(`${formatTournamentDate(tournamentState.date)}  |  TOURNAMENT REPORT`, margin, 23);
+      doc.text(`${formatTournamentDate(tournamentState.date)}  |  TOURNAMENT REPORT (v2.8)`, margin, 23);
     };
     const newPage = () => {
       doc.addPage();
@@ -2536,7 +2459,6 @@
     textMetric('Courts Used', usedCourtIds.length || 0, margin + metricW + gap, y, metricW);
     y += 18;
 
-    // Clear status line under the summary metrics.
     ensureSpace(10);
     const isComplete = totalMatches > 0 && completedMatches === totalMatches;
     doc.setFillColor(...(isComplete ? colors.greenPale : [255, 247, 237]));
@@ -2548,62 +2470,103 @@
     doc.text(isComplete ? 'TOURNAMENT COMPLETED  •  AUTO-ARCHIVED' : 'TOURNAMENT IN PROGRESS', margin + 4, y + 5.2);
     y += 12;
 
-    sectionTitle('TOP PERFORMERS');
-    const drawPodiumGroup = (label, players) => {
-      ensureSpace(Math.max(9, players.length * 7 + 4));
+    // 1. STYLISH TOP PERFORMERS PODIUM IN PDF
+    sectionTitle('TOP PERFORMERS (WINNERS PODIUM)');
+    const drawPodiumGroupPDF = (label, players) => {
+      ensureSpace(Math.max(12, players.length * 9 + 6));
+      doc.setFillColor(...colors.goldBg);
+      doc.setDrawColor(...colors.goldBorder);
+      doc.roundedRect(margin, y, contentWidth, players.length * 9 + 4, 1.5, 1.5, 'FD');
+
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
-      doc.setTextColor(...colors.green);
-      doc.text(label, margin + 1, y + 3.5);
-      y += 5;
+      doc.setTextColor(...colors.amber);
+      doc.text(label, margin + 3, y + 4.5);
+      y += 6;
+
       if (!players.length) {
         doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...colors.muted);
-        doc.text('No eligible players', margin + 2, y + 3.5);
-        y += 6;
+        doc.text('No eligible players', margin + 3, y + 3.5);
+        y += 7;
         return;
       }
       players.forEach((p, idx) => {
-        ensureSpace(7);
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.ink);
-        const playerText = `#${idx + 1}  ${safe(p.name)}`;
-        doc.text(doc.splitTextToSize(playerText, contentWidth - 43).slice(0, 1)[0], margin + 2, y + 3.5);
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(...colors.navy);
+        const playerText = `👑 #${idx + 1}  ${safe(p.name)}`;
+        doc.text(doc.splitTextToSize(playerText, contentWidth - 40).slice(0, 1)[0], margin + 3, y + 3.5);
         doc.setFont('helvetica', 'bold'); doc.setTextColor(...colors.green);
-        doc.text(`${p.tourneyPoints} TP  |  ${p.diff > 0 ? '+' : ''}${p.diff}`, pageWidth - margin - 2, y + 3.5, { align: 'right' });
-        y += 6.5;
+        doc.text(`${p.tourneyPoints} TP  |  Diff: ${p.diff > 0 ? '+' : ''}${p.diff}`, pageWidth - margin - 3, y + 3.5, { align: 'right' });
+        y += 8;
       });
-      y += 1;
+      y += 3;
     };
-    drawPodiumGroup('MEN', topMen);
-    drawPodiumGroup('WOMEN', topWomen);
+    drawPodiumGroupPDF('TOP MEN', topMen);
+    drawPodiumGroupPDF('TOP WOMEN', topWomen);
 
+    // 2. OVERALL STANDINGS TABLE IN PDF WITH ABBREVIATIONS & LEGEND
     sectionTitle('OVERALL STANDINGS');
     if (!standings.length) {
       ensureSpace(12);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.muted);
       doc.text('No player standings are available yet.', margin + 1, y + 4);
       y += 8;
-    }
-    standings.forEach((p, idx) => {
-      const playerName = safe(p.name) || 'Unnamed Player';
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
-      const nameLines = doc.splitTextToSize(`${idx + 1}. ${playerName}${p.retired ? ' (RETIRED)' : ''}`, contentWidth - 7).slice(0, 2);
-      const cardH = 18 + (nameLines.length - 1) * 4;
-      ensureSpace(cardH + 1);
-      doc.setFillColor(...colors.paper);
-      doc.setDrawColor(...colors.border);
-      doc.roundedRect(margin, y, contentWidth, cardH, 1.8, 1.8, 'FD');
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
-      doc.setTextColor(...(p.retired ? colors.red : colors.ink));
-      doc.text(nameLines, margin + 3, y + 5);
-      const metricsY = y + 5 + nameLines.length * 4.1;
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.6); doc.setTextColor(...colors.muted);
-      doc.text(`Played ${p.played}  |  Wins ${p.wins}  |  Losses ${p.losses}`, margin + 3, metricsY);
-      doc.setTextColor(...colors.ink);
-      doc.text(`Pts won ${p.pointsWon}  |  Against ${p.pointsConceded}  |  Diff ${p.diff > 0 ? '+' : ''}${p.diff}  |  Tourney pts ${p.tourneyPoints}`, margin + 3, metricsY + 4);
-      y += cardH + 2;
-    });
+    } else {
+      const tableHeaders = ['Rk', 'Player Name', 'P', 'W', 'L', 'PW', 'PA', 'PD', 'TP'];
+      const colWidths = [10, 36, 11, 11, 11, 13, 13, 13, 13]; // Sums to 128 mm (contentWidth for A5 portrait)
+      let tableX = margin;
 
-    sectionTitle('MATCH LOG');
+      ensureSpace(8);
+      doc.setFillColor(...colors.navy);
+      doc.setTextColor(...colors.white);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      let currX = tableX;
+      tableHeaders.forEach((h, idx) => {
+        doc.rect(currX, y, colWidths[idx], 6, 'F');
+        doc.text(h, currX + colWidths[idx] / 2, y + 4, { align: 'center' });
+        currX += colWidths[idx];
+      });
+      y += 6;
+
+      standings.forEach((p, idx) => {
+        ensureSpace(7);
+        doc.setFillColor(...(idx % 2 === 0 ? colors.white : colors.paper));
+        doc.setDrawColor(...colors.border);
+        currX = tableX;
+        let rowData = [
+          String(idx + 1),
+          safe(p.name),
+          String(p.played),
+          String(p.wins),
+          String(p.losses),
+          String(p.pointsWon),
+          String(p.pointsConceded),
+          (p.diff > 0 ? '+' : '') + p.diff,
+          String(p.tourneyPoints)
+        ];
+        rowData.forEach((cellVal, cIdx) => {
+          doc.rect(currX, y, colWidths[cIdx], 6, 'FD');
+          doc.setFont('helvetica', cIdx === 1 ? 'bold' : 'normal');
+          doc.setFontSize(7);
+          doc.setTextColor(...(p.retired && cIdx === 1 ? colors.red : colors.ink));
+          const align = cIdx === 1 ? 'left' : 'center';
+          const textX = cIdx === 1 ? currX + 2 : currX + colWidths[cIdx] / 2;
+          doc.text(doc.splitTextToSize(cellVal, colWidths[cIdx] - (cIdx === 1 ? 4 : 1))[0], textX, y + 4, { align });
+          currX += colWidths[cIdx];
+        });
+        y += 6;
+      });
+
+      // Legend below standings table
+      ensureSpace(14);
+      y += 3;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(...colors.muted);
+      doc.text('LEGEND: Rk=Rank, P=Played, W=Wins, L=Losses, PW=Points Won, PA=Points Against, PD=Point Diff, TP=Tourney Points (2 pts/win)', margin, y);
+      y += 6;
+    }
+
+    // 3. MATCH LOG: SINGLE LINE SUMMARY FOR EACH MATCH
+    sectionTitle('MATCH LOG (SUMMARY)');
     if (!tournamentState.matches.length) {
       ensureSpace(12);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.muted);
@@ -2614,47 +2577,40 @@
       const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
       const team1 = `${safe(getPlayer(m.team1[0]).name)} & ${safe(getPlayer(m.team1[1]).name)}`;
       const team2 = `${safe(getPlayer(m.team2[0]).name)} & ${safe(getPlayer(m.team2[1]).name)}`;
-      const matchupLines = doc.splitTextToSize(`${team1}  vs  ${team2}`, contentWidth - 6).slice(0, 3);
-      const meta = `${safe(court.name)}  |  ${format12HourTime(m.startTime) || 'Time not set'}${m.isExtraTime ? '  |  Extra time' : ''}`;
-      const result = m.status === 'COMPLETED'
-        ? `FINAL SCORE  ${m.score1} - ${m.score2}  |  ${m.score1 > m.score2 ? 'Team 1 won' : 'Team 2 won'}`
-        : 'PENDING  |  Not played yet';
-      const cardH = 14 + matchupLines.length * 4 + 4;
-      ensureSpace(cardH + 1);
+      const timeStr = format12HourTime(m.startTime) || 'Time not set';
+      const resultText = m.status === 'COMPLETED'
+              ? `Score: ${m.score1}-${m.score2} (${m.score1 > m.score2 ? 'Team 1 Won' : 'Team 2 Won'})`
+              : 'Status: Pending';
+
+      const singleLineStr = `#${m.matchNum} | ${court.name} (${timeStr})${m.isExtraTime ? ' [Extra Time]' : ''} | ${team1} vs ${team2} | ${resultText}`;
+      const wrappedLine = doc.splitTextToSize(singleLineStr, contentWidth - 6);
+      const cardH = wrappedLine.length * 4 + 4;
+
+      ensureSpace(cardH + 2);
       doc.setFillColor(...colors.white);
       doc.setDrawColor(...colors.border);
-      doc.roundedRect(margin, y, contentWidth, cardH, 1.8, 1.8, 'FD');
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(...colors.ink);
-      doc.text(`MATCH #${m.matchNum || ''}`, margin + 3, y + 4.5);
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.2);
-      doc.setTextColor(...(m.status === 'COMPLETED' ? colors.green : colors.amber));
-      doc.text(m.status === 'COMPLETED' ? 'COMPLETED' : 'PENDING', pageWidth - margin - 3, y + 4.5, { align: 'right' });
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(...colors.muted);
-      doc.text(doc.splitTextToSize(meta, contentWidth - 6).slice(0, 1)[0], margin + 3, y + 8.5);
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(...colors.ink);
-      doc.text(matchupLines, margin + 3, y + 13);
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
-      doc.setTextColor(...(m.status === 'COMPLETED' ? colors.green : colors.muted));
-      doc.text(result, margin + 3, y + 13 + matchupLines.length * 4);
-      y += cardH + 2;
+      doc.roundedRect(margin, y, contentWidth, cardH, 1.2, 1.2, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...colors.ink);
+      doc.text(wrappedLine, margin + 3, y + 3.8);
+      y += cardH + 1.5;
     });
 
-    // Consistent footers on every page, added after all page breaks are known.
     const pageCount = doc.internal.getNumberOfPages();
     for (let page = 1; page <= pageCount; page++) {
       doc.setPage(page);
       doc.setDrawColor(...colors.border);
       doc.line(margin, pageHeight - 9, pageWidth - margin, pageHeight - 9);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(...colors.muted);
-      doc.text(`SmashMaster v2.7  •  Page ${page} of ${pageCount}`, margin, pageHeight - 4.5);
+      doc.text(`SmashMaster v2.8  •  Page ${page} of ${pageCount}`, margin, pageHeight - 4.5);
       doc.text('Generated tournament report', pageWidth - margin, pageHeight - 4.5, { align: 'right' });
     }
 
     const cleanName = safe(tournamentState.name).replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Badminton_Tournament';
-    doc.save(`${cleanName}_v2.7_Tournament_Report.pdf`);
+    doc.save(`${cleanName}_v2.8_Tournament_Report.pdf`);
   }
 
-  // SHARED SESSION SYNC
   let sharedSessionId = '';
   let sharedRevision = 0;
   let sharedEventSource = null;
@@ -2820,7 +2776,7 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
-        tournamentState.version = '2.7';
+        tournamentState.version = '2.8';
         tournamentState.courts = (tournamentState.courts || []).map(c => ({...c, color: c.color || '#059669'}));
         tournamentState.themeColor = tournamentState.themeColor || '#10b981';
         tournamentState.completedMatchColor = tournamentState.completedMatchColor || '#7dd3fc';
@@ -2838,7 +2794,7 @@
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '2.7',
+        version: '2.8',
         themeColor: '#10b981', completedMatchColor: '#7dd3fc',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
