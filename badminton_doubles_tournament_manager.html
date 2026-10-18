@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v2.9 - Doubles Badminton Manager</title>
+  <title>SmashMaster v3.0 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -179,7 +179,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.9</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v3.0</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -681,7 +681,7 @@
   }
 
   let tournamentState = {
-    version: '2.9',
+    version: '3.0',
     themeColor: '#10b981',
     completedMatchColor: '#7dd3fc',
     name: AMUSING_NAMES[0],
@@ -701,7 +701,7 @@
     lucide.createIcons();
 
     const splash = document.getElementById('firstLoadSplash');
-    const splashKey = 'smashmaster_first_load_animation_seen_v2.9';
+    const splashKey = 'smashmaster_first_load_animation_seen_v3.0';
     if (localStorage.getItem(splashKey) === '1') {
       splash.classList.add('splash-hide');
     } else {
@@ -2371,7 +2371,7 @@
     renderHistoryList();
   }
 
-  // ENHANCED PDF EXPORT MATCHING v2.9 REQUIREMENTS
+  // ENHANCED PDF EXPORT MATCHING v3.0 REQUIREMENTS
   function exportTournamentPDF() {
     const jsPDF = window.jspdf && window.jspdf.jsPDF;
     if (!jsPDF) {
@@ -2568,6 +2568,8 @@
   let sharedRevision = 0;
   let sharedEventSource = null;
   let sharedSaveTimer = null;
+  let sharedPollTimer = null;
+  let sharedPollInFlight = false;
   let lastSharedState = null;
   let sharedSyncReady = false;
 
@@ -2632,29 +2634,81 @@
     }
   }
 
+  function renderIncomingSharedState(nextState) {
+    tournamentState = nextState;
+    localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
+    document.getElementById('displayTournamentName').innerText = tournamentState.name || 'SmashMaster';
+    document.getElementById('topHeaderTitle').innerText = tournamentState.name || 'SmashMaster';
+    renderCourtInputs();
+    updatePlayerListUI();
+    calculateCourtEstimates();
+    renderFixturesList();
+    renderStandingsData();
+    renderSearchChips();
+    checkTournamentCompletion();
+  }
+
+  function handleIncomingSharedPayload(payload) {
+    const incomingRevision = Number(payload?.revision) || 0;
+    if (!payload?.state || incomingRevision <= sharedRevision) return;
+
+    // Preserve local edits made since the last server snapshot while accepting
+    // updates from another device. The normal save path resolves the merge.
+    const previousSnapshot = lastSharedState ? JSON.parse(JSON.stringify(lastSharedState)) : null;
+    const localHasPendingChanges = previousSnapshot &&
+      JSON.stringify(tournamentState) !== JSON.stringify(previousSnapshot);
+    const remoteState = payload.state;
+    sharedRevision = incomingRevision;
+    lastSharedState = JSON.parse(JSON.stringify(remoteState));
+
+    if (localHasPendingChanges) {
+      tournamentState = mergeSharedStates(remoteState, tournamentState, previousSnapshot);
+      renderIncomingSharedState(tournamentState);
+      scheduleSharedSave();
+    } else {
+      renderIncomingSharedState(remoteState);
+    }
+    sharedSyncReady = true;
+    setSharedStatus('Live sync', 'text-brand-400');
+  }
+
+  async function pollSharedState() {
+    if (!sharedApiAvailable() || !sharedSessionId || !sharedSyncReady || sharedPollInFlight) return;
+    if (document.visibilityState === 'hidden') return;
+    sharedPollInFlight = true;
+    try {
+      const response = await fetch(`/api/session/${encodeURIComponent(sharedSessionId)}`, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Sync check failed (${response.status})`);
+      const payload = await response.json();
+      handleIncomingSharedPayload(payload);
+    } catch (err) {
+      // Keep trying in the background; EventSource may still be working.
+      setSharedStatus('Reconnecting…', 'text-amber-400');
+      console.warn('Shared polling failed:', err.message);
+    } finally {
+      sharedPollInFlight = false;
+    }
+  }
+
   function connectSharedEvents() {
     if (sharedEventSource) sharedEventSource.close();
-    sharedEventSource = new EventSource(`/api/session/${encodeURIComponent(sharedSessionId)}/events`);
-    sharedEventSource.onmessage = event => {
-      try {
-        const payload = JSON.parse(event.data);
-        if (!payload.state || Number(payload.revision) <= sharedRevision) return;
-        tournamentState = payload.state;
-        sharedRevision = Number(payload.revision);
-        lastSharedState = JSON.parse(JSON.stringify(tournamentState));
-        localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
-        renderCourtInputs();
-        updatePlayerListUI();
-        calculateCourtEstimates();
-        renderFixturesList();
-        renderStandingsData();
-        renderSearchChips();
-        checkTournamentCompletion();
-      } catch (err) {
-        console.warn('Invalid shared update:', err);
-      }
-    };
-    sharedEventSource.onerror = () => setSharedStatus('Reconnecting…', 'text-amber-400');
+    try {
+      sharedEventSource = new EventSource(`/api/session/${encodeURIComponent(sharedSessionId)}/events`);
+      sharedEventSource.onmessage = event => {
+        try { handleIncomingSharedPayload(JSON.parse(event.data)); }
+        catch (err) { console.warn('Invalid shared update:', err); }
+      };
+      sharedEventSource.onopen = () => setSharedStatus('Live sync', 'text-brand-400');
+      sharedEventSource.onerror = () => setSharedStatus('Auto-sync retrying…', 'text-amber-400');
+    } catch (err) {
+      console.warn('Live event stream unavailable; polling will keep sync active:', err.message);
+    }
+
+    // Polling is a safety net if server-sent events are blocked or dropped.
+    // This also refreshes changes made on other devices without manual reloads.
+    if (sharedPollTimer) clearInterval(sharedPollTimer);
+    sharedPollTimer = setInterval(pollSharedState, 2500);
+    pollSharedState();
   }
 
   function mergeSharedStates(remote, local, base) {
@@ -2729,7 +2783,7 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
-        tournamentState.version = '2.9';
+        tournamentState.version = '3.0';
         tournamentState.courts = (tournamentState.courts || []).map(c => ({...c, color: c.color || '#059669'}));
         tournamentState.themeColor = tournamentState.themeColor || '#10b981';
         tournamentState.completedMatchColor = tournamentState.completedMatchColor || '#7dd3fc';
@@ -2750,7 +2804,7 @@
       const archivedHistory = localStorage.getItem('smashmaster_tourney_history');
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '2.9',
+        version: '3.0',
         themeColor: '#10b981', completedMatchColor: '#7dd3fc',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
