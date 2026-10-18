@@ -1884,15 +1884,25 @@
           <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1.5">
             <div class="grid grid-cols-2 gap-2 items-center">
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
-                <button onclick="stepMatchScore('${m.id}', 1, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
+                <button onclick="stepMatchScore('${m.id}', 1, -1)" aria-label="Decrease Team 1 score" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
                 <input type="number" id="txtS1_${m.id}" value="${s1}" min="0" max="11" style="color:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="w-10 text-center font-mono font-black text-xs bg-transparent focus:outline-none">
-                <button onclick="stepMatchScore('${m.id}', 1, 1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
+                <button onclick="stepMatchScore('${m.id}', 1, 1)" aria-label="Increase Team 1 score" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
               </div>
 
               <div class="flex items-center justify-between bg-slate-900 rounded-md p-0.5 border border-slate-800">
-                <button onclick="stepMatchScore('${m.id}', 2, -1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
+                <button onclick="stepMatchScore('${m.id}', 2, -1)" aria-label="Decrease Team 2 score" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">-</button>
                 <input type="number" id="txtS2_${m.id}" value="${s2}" min="0" max="11" style="color:${isCompleted ? (tournamentState.completedMatchColor || '#7dd3fc') : (tournamentState.themeColor || '#10b981')}" class="w-10 text-center font-mono font-black text-xs bg-transparent focus:outline-none">
-                <button onclick="stepMatchScore('${m.id}', 2, 1)" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
+                <button onclick="stepMatchScore('${m.id}', 2, 1)" aria-label="Increase Team 2 score" class="w-7 h-7 rounded bg-slate-800 active:bg-slate-700 text-white font-bold flex items-center justify-center text-xs">+</button>
+              </div>
+            </div>
+            <div class="space-y-1 pt-1">
+              <div class="flex items-center gap-1">
+                <span class="w-[3.25rem] shrink-0 text-[9px] font-bold text-slate-500">TEAM 1</span>
+                <div class="flex flex-1 flex-wrap gap-0.5">${Array.from({length:12}, (_, n) => `<button type="button" onclick="setMatchScore('${m.id}',1,${n})" aria-label="Set Team 1 score to ${n}" class="w-5 h-5 rounded text-[10px] font-bold border border-slate-700 bg-slate-900 text-slate-200 active:bg-emerald-500 active:text-slate-950">${n}</button>`).join('')}</div>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="w-[3.25rem] shrink-0 text-[9px] font-bold text-slate-500">TEAM 2</span>
+                <div class="flex flex-1 flex-wrap gap-0.5">${Array.from({length:12}, (_, n) => `<button type="button" onclick="setMatchScore('${m.id}',2,${n})" aria-label="Set Team 2 score to ${n}" class="w-5 h-5 rounded text-[10px] font-bold border border-slate-700 bg-slate-900 text-slate-200 active:bg-emerald-500 active:text-slate-950">${n}</button>`).join('')}</div>
               </div>
             </div>
 
@@ -1930,10 +1940,19 @@
     lucide.createIcons();
   }
 
+  function setMatchScore(mId, teamNum, value) {
+    const inputEl = document.getElementById(`txtS${teamNum}_${mId}`);
+    if (!inputEl) return;
+    const score = Number(value);
+    if (!Number.isInteger(score) || score < 0 || score > 11) return;
+    inputEl.value = String(score);
+    inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
   function stepMatchScore(mId, teamNum, delta) {
     const inputEl = document.getElementById(`txtS${teamNum}_${mId}`);
     if (!inputEl) return;
-    let curr = inputEl.value.trim() === '' ? 0 : parseInt(inputEl.value);
+    let curr = inputEl.value.trim() === '' ? 0 : parseInt(inputEl.value, 10);
     curr = Math.max(0, Math.min(11, curr + delta));
     inputEl.value = curr;
   }
