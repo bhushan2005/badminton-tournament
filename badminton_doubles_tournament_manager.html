@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SmashMaster v2.8 - Doubles Badminton Manager</title>
+  <title>SmashMaster v2.9 - Doubles Badminton Manager</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -179,7 +179,7 @@
           <h1 id="topHeaderTitle" onclick="playBadmintonAnimation()" title="Play badminton animation" class="text-sm font-extrabold font-heading text-white truncate leading-tight cursor-pointer">
             Shuttle Smashers
           </h1>
-          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.8</span>
+          <span class="text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-md shrink-0">v2.9</span>
         </div>
         <div class="flex items-center gap-1 text-[10px] text-brand-400 font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping"></span>
@@ -681,7 +681,7 @@
   }
 
   let tournamentState = {
-    version: '2.8',
+    version: '2.9',
     themeColor: '#10b981',
     completedMatchColor: '#7dd3fc',
     name: AMUSING_NAMES[0],
@@ -701,7 +701,7 @@
     lucide.createIcons();
 
     const splash = document.getElementById('firstLoadSplash');
-    const splashKey = 'smashmaster_first_load_animation_seen_v2.8';
+    const splashKey = 'smashmaster_first_load_animation_seen_v2.9';
     if (localStorage.getItem(splashKey) === '1') {
       splash.classList.add('splash-hide');
     } else {
@@ -2371,7 +2371,7 @@
     renderHistoryList();
   }
 
-  // ENHANCED PDF EXPORT MATCHING v2.8 REQUIREMENTS
+  // ENHANCED PDF EXPORT MATCHING v2.9 REQUIREMENTS
   function exportTournamentPDF() {
     const jsPDF = window.jspdf && window.jspdf.jsPDF;
     if (!jsPDF) {
@@ -2379,236 +2379,189 @@
       return;
     }
 
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5', compress: true });
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 10;
-    const contentWidth = pageWidth - margin * 2;
-    const colors = {
-      navy: [15, 23, 42], navyLight: [30, 41, 59], green: [5, 150, 105],
-      greenPale: [236, 253, 245], white: [255, 255, 255], ink: [30, 41, 59],
-      muted: [100, 116, 139], border: [226, 232, 240], paper: [248, 250, 252],
-      red: [220, 38, 38], amber: [217, 119, 6], goldBg: [254, 243, 199], goldBorder: [245, 158, 11]
-    };
+    const safe = value => String(value == null ? '' : value)
+      .replace(/[\u0000-\u001F]/g, ' ').replace(/\s+/g, ' ').trim();
+    const cleanName = safe(tournamentState.name).replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Badminton_Tournament';
     const standings = calculateStandingsData();
     const topMen = standings.filter(p => p.gender === 'Male' && !p.retired).slice(0, 2);
     const topWomen = standings.filter(p => p.gender === 'Female' && !p.retired).slice(0, 2);
-    const totalMatches = tournamentState.matches.length;
-    const completedMatches = tournamentState.matches.filter(m => m.status === 'COMPLETED').length;
-    const usedCourtIds = [...new Set(tournamentState.matches.map(m => m.courtId).filter(Boolean))];
-    let y = 0;
-
-    const safe = value => String(value == null ? '' : value).replace(/[\u0000-\u001F]/g, ' ').trim();
-    const addPageHeader = () => {
-      doc.setFillColor(...colors.navy);
-      doc.rect(0, 0, pageWidth, 29, 'F');
-      doc.setFillColor(...colors.green);
-      doc.rect(0, 0, 3, 29, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(14);
-      doc.setTextColor(...colors.white);
-      let titleLines = doc.splitTextToSize(safe(tournamentState.name || 'Badminton Tournament'), contentWidth).slice(0, 2);
-      doc.text(titleLines, margin, 9);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
-      doc.setTextColor(203, 213, 225);
-      doc.text(`${formatTournamentDate(tournamentState.date)}  |  TOURNAMENT REPORT (v2.8)`, margin, 23);
-    };
-    const newPage = () => {
-      doc.addPage();
-      addPageHeader();
-      y = 35;
-    };
-    const ensureSpace = height => {
-      if (y + height > pageHeight - 12) newPage();
-    };
-    const sectionTitle = title => {
-      ensureSpace(10);
-      doc.setFillColor(...colors.green);
-      doc.roundedRect(margin, y, 2, 6, 0.8, 0.8, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(...colors.ink);
-      doc.text(title, margin + 5, y + 4.8);
-      y += 9;
-    };
-    const textMetric = (label, value, x, top, w) => {
-      doc.setFillColor(...colors.paper);
-      doc.setDrawColor(...colors.border);
-      doc.roundedRect(x, top, w, 14, 1.5, 1.5, 'FD');
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(...colors.muted);
-      doc.text(label.toUpperCase(), x + 3, top + 4.5);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.setTextColor(...colors.ink);
-      doc.text(String(value), x + 3, top + 10.5);
-    };
-
-    addPageHeader();
-    y = 35;
-
-    sectionTitle('TOURNAMENT OVERVIEW');
-    const gap = 3;
-    const metricW = (contentWidth - gap) / 2;
-    textMetric('Players', tournamentState.players.length, margin, y, metricW);
-    textMetric('Matches', totalMatches, margin + metricW + gap, y, metricW);
-    y += 17;
-    textMetric('Completed', `${completedMatches}/${totalMatches}`, margin, y, metricW);
-    textMetric('Courts Used', usedCourtIds.length || 0, margin + metricW + gap, y, metricW);
-    y += 18;
-
-    ensureSpace(10);
+    const matches = tournamentState.matches || [];
+    const totalMatches = matches.length;
+    const completedMatches = matches.filter(m => m.status === 'COMPLETED').length;
+    const usedCourtIds = [...new Set(matches.map(m => m.courtId).filter(Boolean))];
     const isComplete = totalMatches > 0 && completedMatches === totalMatches;
-    doc.setFillColor(...(isComplete ? colors.greenPale : [255, 247, 237]));
-    doc.setDrawColor(...(isComplete ? [167, 243, 208] : [253, 230, 138]));
-    doc.roundedRect(margin, y, contentWidth, 8, 1.5, 1.5, 'FD');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8.5);
-    doc.setTextColor(...(isComplete ? colors.green : colors.amber));
-    doc.text(isComplete ? 'TOURNAMENT COMPLETED  •  AUTO-ARCHIVED' : 'TOURNAMENT IN PROGRESS', margin + 4, y + 5.2);
-    y += 12;
-
-    // 1. STYLISH TOP PERFORMERS PODIUM IN PDF
-    sectionTitle('TOP PERFORMERS (WINNERS PODIUM)');
-    const drawPodiumGroupPDF = (label, players) => {
-      ensureSpace(Math.max(12, players.length * 9 + 6));
-      doc.setFillColor(...colors.goldBg);
-      doc.setDrawColor(...colors.goldBorder);
-      doc.roundedRect(margin, y, contentWidth, players.length * 9 + 4, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(...colors.amber);
-      doc.text(label, margin + 3, y + 4.5);
-      y += 6;
-
-      if (!players.length) {
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...colors.muted);
-        doc.text('No eligible players', margin + 3, y + 3.5);
-        y += 7;
-        return;
-      }
-      players.forEach((p, idx) => {
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(...colors.navy);
-        const playerText = `👑 #${idx + 1}  ${safe(p.name)}`;
-        doc.text(doc.splitTextToSize(playerText, contentWidth - 40).slice(0, 1)[0], margin + 3, y + 3.5);
-        doc.setFont('helvetica', 'bold'); doc.setTextColor(...colors.green);
-        doc.text(`${p.tourneyPoints} TP  |  Diff: ${p.diff > 0 ? '+' : ''}${p.diff}`, pageWidth - margin - 3, y + 3.5, { align: 'right' });
-        y += 8;
-      });
-      y += 3;
+    const C = {
+      bg: [2, 6, 23], panel: [15, 23, 42], panel2: [30, 41, 59],
+      green: [16, 185, 129], greenDark: [6, 78, 59], white: [248, 250, 252],
+      text: [226, 232, 240], muted: [148, 163, 184], border: [51, 65, 85],
+      amber: [251, 191, 36], blue: [96, 165, 250], pink: [244, 114, 182],
+      red: [248, 113, 113], cyan: [125, 211, 252]
     };
-    drawPodiumGroupPDF('TOP MEN', topMen);
-    drawPodiumGroupPDF('TOP WOMEN', topWomen);
+    // Page 1: A4 portrait, dark-theme standings summary. Page 2: A4 landscape, compact match log.
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+    const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+    const M = 8, CW = W - 2 * M;
+    const bg = () => { doc.setFillColor(...C.bg); doc.rect(0, 0, W, H, 'F'); };
+    const header = (pageTitle, landscape = false) => {
+      const w = doc.internal.pageSize.getWidth();
+      doc.setFillColor(...C.panel); doc.rect(0, 0, w, 23, 'F');
+      doc.setFillColor(...C.green); doc.rect(0, 0, 2.5, 23, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(...C.white);
+      doc.text(doc.splitTextToSize(safe(tournamentState.name || 'Badminton Tournament'), w - 2*M).slice(0,1), M, 8.5);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(...C.muted);
+      doc.text(`${formatTournamentDate(tournamentState.date)}  |  ${pageTitle}`, M, 17);
+    };
+    const section = (label, y, x=M, width=CW) => {
+      doc.setFillColor(...C.greenDark); doc.roundedRect(x, y, width, 6.5, 1, 1, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(...C.green);
+      doc.text(label, x+2.5, y+4.4);
+      return y+8;
+    };
+    const panel = (x,y,w,h, fill=C.panel) => {
+      doc.setFillColor(...fill); doc.setDrawColor(...C.border);
+      doc.roundedRect(x,y,w,h,1.5,1.5,'FD');
+    };
+    const metric = (label, value, x, y, w, h=10) => {
+      panel(x,y,w,h);
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...C.muted);
+      doc.text(label.toUpperCase(),x+2,y+3.4);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...C.white);
+      doc.text(safe(value),x+2,y+7.7);
+    };
+    const fitText = (text, maxW, fontSize, font='normal') => {
+      doc.setFont('helvetica', font); doc.setFontSize(fontSize);
+      let value = safe(text);
+      while (value.length > 1 && doc.getTextWidth(value) > maxW) value = value.slice(0,-2) + '…';
+      return value;
+    };
 
-    // 2. OVERALL STANDINGS TABLE IN PDF WITH ABBREVIATIONS & LEGEND
-    sectionTitle('OVERALL STANDINGS');
+    // PAGE 1 — overview, the same two podium groups, and the complete overall standings table.
+    bg(); header('TOURNAMENT OVERVIEW & OVERALL STANDINGS');
+    let y = 27;
+    y = section('TOURNAMENT OVERVIEW', y);
+    const g=2, mw=(CW-g)/2;
+    metric('Players', tournamentState.players.length, M, y, mw);
+    metric('Matches', totalMatches, M+mw+g, y, mw); y+=11;
+    metric('Completed', `${completedMatches}/${totalMatches}`, M, y, mw);
+    metric('Courts Used', usedCourtIds.length, M+mw+g, y, mw); y+=12;
+    panel(M,y,CW,7,isComplete ? C.greenDark : C.panel2);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...(isComplete?C.green:C.amber));
+    doc.text(isComplete ? 'TOURNAMENT COMPLETED  •  AUTO-ARCHIVED' : 'TOURNAMENT IN PROGRESS', M+3, y+4.7); y+=9;
+
+    y = section('WINNERS PODIUM', y);
+    const podiumGroup = (label, players, x, top, w, accent) => {
+      const h=23; panel(x,top,w,h);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...accent);
+      doc.text(label,x+2.5,top+4.2);
+      if (!players.length) {
+        doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(...C.muted);
+        doc.text(label.includes('MEN')?'No active male players':'No active female players',x+2.5,top+10);
+      } else players.forEach((p,i)=>{
+        const yy=top+9+i*6.2;
+        doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...C.white);
+        doc.text(fitText(`#${i+1}  ${p.name}`,w-28,7,'bold'),x+2.5,yy);
+        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...C.green);
+        doc.text(`${p.tourneyPoints} pts (${p.diff>0?'+':''}${p.diff})`,x+w-2.5,yy,{align:'right'});
+      });
+    };
+    const pgap=3, pw=(CW-pgap)/2;
+    podiumGroup('TOP 2 MEN',topMen,M,y,pw,C.blue);
+    podiumGroup('TOP 2 WOMEN',topWomen,M+pw+pgap,y,pw,C.pink);
+    y+=26;
+    y = section('OVERALL STANDINGS', y);
+    const tableX=M, tableW=CW;
+    const headers=['Rk','Player','P','W','L','PW','PA','PD','TP'];
+    const widths=[8, tableW-8-7*8-10, 8,8,8,10,10,10,10];
+    // Ensure column widths exactly fill the available width.
+    widths[1]=tableW-widths.reduce((sum,v,i)=>sum+(i===1?0:v),0);
+    const remainingH=Math.max(18,H-10-y-13);
+    const headerH=5.5;
+    const rowH=Math.max(0.8,Math.min(6.2,(remainingH-headerH-9)/Math.max(1,standings.length)));
+    const tableFont=Math.max(2.5,Math.min(7,rowH*1.08));
+    let x=tableX;
+    doc.setFillColor(...C.panel2); doc.rect(tableX,y,tableW,headerH,'F');
+    headers.forEach((h,i)=>{doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(...C.white);doc.text(h,x+widths[i]/2,y+3.8,{align:'center'});x+=widths[i];});
+    y+=headerH;
     if (!standings.length) {
-      ensureSpace(12);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.muted);
-      doc.text('No player standings are available yet.', margin + 1, y + 4);
-      y += 8;
-    } else {
-      const tableHeaders = ['Rk', 'Player Name', 'P', 'W', 'L', 'PW', 'PA', 'PD', 'TP'];
-      const colWidths = [10, 36, 11, 11, 11, 13, 13, 13, 13]; // Sums to 128 mm (contentWidth for A5 portrait)
-      let tableX = margin;
-
-      ensureSpace(8);
-      doc.setFillColor(...colors.navy);
-      doc.setTextColor(...colors.white);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7.5);
-      let currX = tableX;
-      tableHeaders.forEach((h, idx) => {
-        doc.rect(currX, y, colWidths[idx], 6, 'F');
-        doc.text(h, currX + colWidths[idx] / 2, y + 4, { align: 'center' });
-        currX += colWidths[idx];
+      doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...C.muted);
+      doc.text('No player standings are available yet.',tableX+2,y+4); y+=6;
+    } else standings.forEach((p,idx)=>{
+      doc.setFillColor(...(idx%2===0?C.panel:C.bg)); doc.rect(tableX,y,tableW,rowH,'F');
+      doc.setDrawColor(...C.border);doc.setLineWidth(.12);doc.line(tableX,y+rowH,tableX+tableW,y+rowH);
+      const vals=[String(idx+1),safe(p.name),String(p.played),String(p.wins),String(p.losses),String(p.pointsWon),String(p.pointsConceded),`${p.diff>0?'+':''}${p.diff}`,String(p.tourneyPoints)];
+      x=tableX;
+      vals.forEach((v,i)=>{
+        doc.setFont('helvetica',i===1?'bold':'normal');doc.setFontSize(tableFont);
+        doc.setTextColor(...(p.retired&&i===1?C.red:(i===8?C.green:C.text)));
+        const maxW=widths[i]-(i===1?3:1.2);
+        const shown=fitText(v,maxW,tableFont,i===1?'bold':'normal');
+        if(i===1) doc.text(shown,x+1.5,y+rowH*.68);
+        else doc.text(shown,x+widths[i]/2,y+rowH*.68,{align:'center'});
+        x+=widths[i];
       });
-      y += 6;
-
-      standings.forEach((p, idx) => {
-        ensureSpace(7);
-        doc.setFillColor(...(idx % 2 === 0 ? colors.white : colors.paper));
-        doc.setDrawColor(...colors.border);
-        currX = tableX;
-        let rowData = [
-          String(idx + 1),
-          safe(p.name),
-          String(p.played),
-          String(p.wins),
-          String(p.losses),
-          String(p.pointsWon),
-          String(p.pointsConceded),
-          (p.diff > 0 ? '+' : '') + p.diff,
-          String(p.tourneyPoints)
-        ];
-        rowData.forEach((cellVal, cIdx) => {
-          doc.rect(currX, y, colWidths[cIdx], 6, 'FD');
-          doc.setFont('helvetica', cIdx === 1 ? 'bold' : 'normal');
-          doc.setFontSize(7);
-          doc.setTextColor(...(p.retired && cIdx === 1 ? colors.red : colors.ink));
-          const align = cIdx === 1 ? 'left' : 'center';
-          const textX = cIdx === 1 ? currX + 2 : currX + colWidths[cIdx] / 2;
-          doc.text(doc.splitTextToSize(cellVal, colWidths[cIdx] - (cIdx === 1 ? 4 : 1))[0], textX, y + 4, { align });
-          currX += colWidths[cIdx];
-        });
-        y += 6;
-      });
-
-      // Legend below standings table
-      ensureSpace(14);
-      y += 3;
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(...colors.muted);
-      doc.text('LEGEND: Rk=Rank, P=Played, W=Wins, L=Losses, PW=Points Won, PA=Points Against, PD=Point Diff, TP=Tourney Points (2 pts/win)', margin, y);
-      y += 6;
-    }
-
-    // 3. MATCH LOG: SINGLE LINE SUMMARY FOR EACH MATCH
-    sectionTitle('MATCH LOG (SUMMARY)');
-    if (!tournamentState.matches.length) {
-      ensureSpace(12);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...colors.muted);
-      doc.text('No matches have been scheduled.', margin + 1, y + 4);
-      y += 8;
-    }
-    tournamentState.matches.forEach(m => {
-      const court = tournamentState.courts.find(c => c.id === m.courtId) || { name: 'Court' };
-      const team1 = `${safe(getPlayer(m.team1[0]).name)} & ${safe(getPlayer(m.team1[1]).name)}`;
-      const team2 = `${safe(getPlayer(m.team2[0]).name)} & ${safe(getPlayer(m.team2[1]).name)}`;
-      const timeStr = format12HourTime(m.startTime) || 'Time not set';
-      const resultText = m.status === 'COMPLETED'
-              ? `Score: ${m.score1}-${m.score2} (${m.score1 > m.score2 ? 'Team 1 Won' : 'Team 2 Won'})`
-              : 'Status: Pending';
-
-      const singleLineStr = `#${m.matchNum} | ${court.name} (${timeStr})${m.isExtraTime ? ' [Extra Time]' : ''} | ${team1} vs ${team2} | ${resultText}`;
-      const wrappedLine = doc.splitTextToSize(singleLineStr, contentWidth - 6);
-      const cardH = wrappedLine.length * 4 + 4;
-
-      ensureSpace(cardH + 2);
-      doc.setFillColor(...colors.white);
-      doc.setDrawColor(...colors.border);
-      doc.roundedRect(margin, y, contentWidth, cardH, 1.2, 1.2, 'FD');
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(...colors.ink);
-      doc.text(wrappedLine, margin + 3, y + 3.8);
-      y += cardH + 1.5;
+      y+=rowH;
     });
+    // Legend remains visible beneath the table; table rows compress to reserve space for it.
+    const legendY=Math.min(H-12,y+2);
+    doc.setFont('helvetica','normal');doc.setFontSize(5.4);doc.setTextColor(...C.muted);
+    doc.text('LEGEND  Rk Rank  •  P Played  •  W Wins  •  L Losses  •  PW Points Won  •  PA Points Against  •  PD Point Difference  •  TP Tournament Points (2 pts/win)',M,legendY);
+    doc.setFontSize(6);doc.text('SmashMaster  •  Page 1 of 2',W-M,H-4,{align:'right'});
 
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let page = 1; page <= pageCount; page++) {
-      doc.setPage(page);
-      doc.setDrawColor(...colors.border);
-      doc.line(margin, pageHeight - 9, pageWidth - margin, pageHeight - 9);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(...colors.muted);
-      doc.text(`SmashMaster v2.8  •  Page ${page} of ${pageCount}`, margin, pageHeight - 4.5);
-      doc.text('Generated tournament report', pageWidth - margin, pageHeight - 4.5, { align: 'right' });
+    // PAGE 2 — all matches on one landscape page, one compact row per match.
+    doc.addPage('a4','landscape');
+    const W2=doc.internal.pageSize.getWidth(), H2=doc.internal.pageSize.getHeight(), M2=7, CW2=W2-14;
+    doc.setFillColor(...C.bg);doc.rect(0,0,W2,H2,'F');
+    doc.setFillColor(...C.panel);doc.rect(0,0,W2,19,'F');doc.setFillColor(...C.green);doc.rect(0,0,2.5,19,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(...C.white);
+    doc.text(doc.splitTextToSize(safe(tournamentState.name || 'Badminton Tournament'),CW2).slice(0,1),M2,7.5);
+    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...C.muted);
+    doc.text(`${formatTournamentDate(tournamentState.date)}  |  MATCH RESULTS  |  ${completedMatches}/${totalMatches} COMPLETED`,M2,14);
+    let my=22;
+    const mh=5;
+    const cols=[
+      {label:'#',w:9,align:'center'},
+      {label:'Court / Time',w:28,align:'left'},
+      {label:'Team 1',w:58,align:'left'},
+      {label:'Score',w:19,align:'center'},
+      {label:'Team 2',w:58,align:'left'},
+      {label:'Status',w:CW2-9-28-58-19-58,align:'center'}
+    ];
+    doc.setFillColor(...C.panel2);doc.rect(M2,my,CW2,mh,'F');
+    let cx=M2;doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(...C.white);
+    cols.forEach(c=>{doc.text(c.label,cx+(c.align==='center'?c.w/2:1.5),my+3.5,{align:c.align==='center'?'center':'left'});cx+=c.w;});
+    my+=mh;
+    const availableH=H2-my-10;
+    const matchRowH=Math.max(0.8,Math.min(5.2,availableH/Math.max(1,matches.length)));
+    const matchFont=Math.max(2.5,Math.min(6.5,matchRowH*1.18));
+    if (!matches.length) {
+      doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...C.muted);
+      doc.text('No matches have been scheduled.',M2+2,my+5);
     }
+    matches.forEach((m,idx)=>{
+      const court=tournamentState.courts.find(c=>c.id===m.courtId)||{name:'Court'};
+      const playerName=id=>{const p=getPlayer(id);return p&&p.name?p.name:'Unknown';};
+      const team1=`${playerName(m.team1?.[0])} & ${playerName(m.team1?.[1])}`;
+      const team2=`${playerName(m.team2?.[0])} & ${playerName(m.team2?.[1])}`;
+      const score=m.status==='COMPLETED'?`${m.score1} - ${m.score2}`:'—';
+      const status=m.status==='COMPLETED'?(m.score1>m.score2?'Team 1 won':'Team 2 won'):'Pending';
+      doc.setFillColor(...(idx%2===0?C.panel:C.bg));doc.rect(M2,my,CW2,matchRowH,'F');
+      doc.setDrawColor(...C.border);doc.setLineWidth(.1);doc.line(M2,my+matchRowH,M2+CW2,my+matchRowH);
+      const values=[String(m.matchNum??idx+1),`${safe(court.name)} ${format12HourTime(m.startTime)}`.trim(),team1,score,team2,status];
+      cx=M2;
+      values.forEach((v,i)=>{
+        const c=cols[i], isScore=i===3, isStatus=i===5;
+        doc.setFont('helvetica',(isScore||isStatus)?'bold':'normal');doc.setFontSize(matchFont);
+        doc.setTextColor(...(m.status==='COMPLETED'?(isScore?C.cyan:(isStatus?C.green:C.text)):(isStatus?C.amber:C.text)));
+        const shown=fitText(v,c.w-3,matchFont,(isScore||isStatus)?'bold':'normal');
+        doc.text(shown,cx+(c.align==='center'?c.w/2:1.5),my+matchRowH*.68,{align:c.align==='center'?'center':'left'});
+        cx+=c.w;
+      });
+      my+=matchRowH;
+    });
+    doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(...C.muted);
+    doc.text(`SmashMaster  •  Page 2 of 2  •  ${matches.length} matches`,W2-M2,H2-3,{align:'right'});
 
-    const cleanName = safe(tournamentState.name).replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Badminton_Tournament';
-    doc.save(`${cleanName}_v2.8_Tournament_Report.pdf`);
+    doc.save(`${cleanName}_Tournament_Report.pdf`);
   }
 
   let sharedSessionId = '';
@@ -2776,7 +2729,7 @@
     if (saved) {
       try {
         tournamentState = JSON.parse(saved);
-        tournamentState.version = '2.8';
+        tournamentState.version = '2.9';
         tournamentState.courts = (tournamentState.courts || []).map(c => ({...c, color: c.color || '#059669'}));
         tournamentState.themeColor = tournamentState.themeColor || '#10b981';
         tournamentState.completedMatchColor = tournamentState.completedMatchColor || '#7dd3fc';
@@ -2792,9 +2745,12 @@
 
   async function confirmResetTournament() {
     if (confirm("RESET TOURNAMENT?\n\nThis will permanently clear all players, matches, scores and tournament settings from this browser.\n\nAre you sure you want to continue?")) {
+      // Archive history is intentionally independent of the active tournament.
+      // Preserve it explicitly while clearing only the current tournament state.
+      const archivedHistory = localStorage.getItem('smashmaster_tourney_history');
       localStorage.removeItem('smashmaster_tourney_state');
       tournamentState = {
-        version: '2.8',
+        version: '2.9',
         themeColor: '#10b981', completedMatchColor: '#7dd3fc',
         name: AMUSING_NAMES[Math.floor(Math.random() * AMUSING_NAMES.length)],
         date: getTodayISO(),
@@ -2807,6 +2763,7 @@
         isGenerated: false
       };
       localStorage.setItem('smashmaster_tourney_state', JSON.stringify(tournamentState));
+      if (archivedHistory !== null) localStorage.setItem('smashmaster_tourney_history', archivedHistory);
       clearTimeout(sharedSaveTimer);
       try { await pushSharedState(true); } catch (err) { console.warn('Could not sync reset to shared session:', err.message); }
       location.reload();
