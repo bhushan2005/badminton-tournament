@@ -2519,12 +2519,12 @@
     let my=22;
     const mh=5;
     const cols=[
-      {label:'#',w:9,align:'center'},
-      {label:'Court / Time',w:28,align:'left'},
-      {label:'Team 1',w:58,align:'left'},
-      {label:'Score',w:19,align:'center'},
-      {label:'Team 2',w:58,align:'left'},
-      {label:'Status',w:CW2-9-28-58-19-58,align:'center'}
+      {label:'Serial No.',w:14,align:'center'},
+      {label:'Team 1',w:62,align:'left'},
+      {label:'Team 2',w:62,align:'left'},
+      {label:'Score',w:20,align:'center'},
+      {label:'Winner',w:68,align:'left'},
+      {label:'Match Time',w:CW2-14-62-62-20-68,align:'center'}
     ];
     doc.setFillColor(...C.panel2);doc.rect(M2,my,CW2,mh,'F');
     let cx=M2;doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(...C.white);
@@ -2543,16 +2543,17 @@
       const team1=`${playerName(m.team1?.[0])} & ${playerName(m.team1?.[1])}`;
       const team2=`${playerName(m.team2?.[0])} & ${playerName(m.team2?.[1])}`;
       const score=m.status==='COMPLETED'?`${m.score1} - ${m.score2}`:'—';
-      const status=m.status==='COMPLETED'?(m.score1>m.score2?'Team 1 won':'Team 2 won'):'Pending';
+      const winner=m.status==='COMPLETED'?(m.score1>m.score2?team1:team2):'—';
+      const matchTime=m.startTime?format12HourTime(m.startTime):'—';
       doc.setFillColor(...(idx%2===0?C.panel:C.bg));doc.rect(M2,my,CW2,matchRowH,'F');
       doc.setDrawColor(...C.border);doc.setLineWidth(.1);doc.line(M2,my+matchRowH,M2+CW2,my+matchRowH);
-      const values=[String(m.matchNum??idx+1),`${safe(court.name)} ${format12HourTime(m.startTime)}`.trim(),team1,score,team2,status];
+      const values=[String(idx+1),team1,team2,score,winner,matchTime];
       cx=M2;
       values.forEach((v,i)=>{
-        const c=cols[i], isScore=i===3, isStatus=i===5;
-        doc.setFont('helvetica',(isScore||isStatus)?'bold':'normal');doc.setFontSize(matchFont);
-        doc.setTextColor(...(m.status==='COMPLETED'?(isScore?C.cyan:(isStatus?C.green:C.text)):(isStatus?C.amber:C.text)));
-        const shown=fitText(v,c.w-3,matchFont,(isScore||isStatus)?'bold':'normal');
+        const c=cols[i], isScore=i===3, isWinner=i===4;
+        doc.setFont('helvetica',(isScore||isWinner)?'bold':'normal');doc.setFontSize(matchFont);
+        doc.setTextColor(...(m.status==='COMPLETED'?(isScore?C.cyan:(isWinner?C.green:C.text)):(isWinner?C.amber:C.text)));
+        const shown=fitText(v,c.w-3,matchFont,(isScore||isWinner)?'bold':'normal');
         doc.text(shown,cx+(c.align==='center'?c.w/2:1.5),my+matchRowH*.68,{align:c.align==='center'?'center':'left'});
         cx+=c.w;
       });
